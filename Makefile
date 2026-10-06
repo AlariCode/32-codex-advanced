@@ -1,7 +1,9 @@
 -include .env
 export
 
-.PHONY: setup db-up db-down db-logs db-shell web api worker build check
+.PHONY: setup db-up db-down db-logs db-shell test-db-up test-db-down test-integration openapi web api worker build check
+
+TEST_DATABASE_URL ?= postgres://linkbook_test:linkbook_test_local@127.0.0.1:15433/linkbook_test?sslmode=disable
 
 setup:
 	@test -f .env || cp .env.example .env
@@ -19,6 +21,18 @@ db-logs:
 db-shell:
 	docker compose exec postgres sh -c 'psql -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"'
 
+test-db-up:
+	docker compose -f compose.test.yaml up -d --wait postgres-test
+
+test-db-down:
+	docker compose -f compose.test.yaml down
+
+test-integration:
+	go test -tags=integration ./backend/api/... -count=1 -v
+
+openapi:
+	bash scripts/sync-openapi.sh
+
 web:
 	npm run dev
 
@@ -35,8 +49,7 @@ build:
 	npm run build
 
 check:
-	go test ./backend/api/... ./backend/worker/...
-	go vet ./backend/api/... ./backend/worker/...
+	go test ./backend/api/... ./backend/worker/... ./backend/migrations/...
+	go vet ./backend/api/... ./backend/worker/... ./backend/migrations/...
 	npm run lint
 	npm run typecheck
-

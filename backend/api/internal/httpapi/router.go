@@ -1,12 +1,30 @@
 package httpapi
 
-import "net/http"
+import (
+	"database/sql"
+	"net/http"
 
-func NewHandler() http.Handler {
+	"linkbook/api/internal/user"
+)
+
+func NewHandler(db *sql.DB) http.Handler {
 	mux := http.NewServeMux()
-	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		_, _ = w.Write([]byte("{\"status\":\"ok\"}\n"))
-	})
+	mux.HandleFunc("GET /healthz", health)
+	registration := registrationHandler{users: user.NewService(db)}
+	mux.HandleFunc("POST /api/users/register", registration.register)
 	return mux
+}
+
+type healthResponse struct {
+	Status string `json:"status"`
+}
+
+// health reports that the HTTP process is running.
+// @Summary Check HTTP process health
+// @Tags health
+// @Produce json
+// @Success 200 {object} healthResponse
+// @Router /healthz [get]
+func health(w http.ResponseWriter, r *http.Request) {
+	writeJSON(w, http.StatusOK, healthResponse{Status: "ok"})
 }

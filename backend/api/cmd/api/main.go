@@ -10,9 +10,14 @@ import (
 	"syscall"
 	"time"
 
+	"linkbook/api/internal/database"
 	"linkbook/api/internal/httpapi"
 )
 
+// @title Linkbook API
+// @version 0.1.0
+// @description Linkbook user registration and process health.
+// @BasePath /
 func main() {
 	if err := run(); err != nil {
 		slog.Error("API stopped", "error", err)
@@ -24,6 +29,15 @@ func run() error {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 
+	startupCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
+	db, err := database.Open(startupCtx, os.Getenv("DATABASE_URL"))
+	cancel()
+	if err != nil {
+		return err
+	}
+	defer func() { _ = db.Close() }()
+	slog.Info("PostgreSQL ready; migrations applied")
+
 	port := os.Getenv("API_PORT")
 	if port == "" {
 		port = "8080"
@@ -31,7 +45,7 @@ func run() error {
 
 	server := &http.Server{
 		Addr:              "127.0.0.1:" + port,
-		Handler:           httpapi.NewHandler(),
+		Handler:           httpapi.NewHandler(db),
 		ReadHeaderTimeout: 5 * time.Second,
 		ReadTimeout:       15 * time.Second,
 		WriteTimeout:      15 * time.Second,

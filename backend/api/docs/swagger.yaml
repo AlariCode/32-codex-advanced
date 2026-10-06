@@ -1,0 +1,98 @@
+basePath: /
+definitions:
+  httpapi.errorResponse:
+    properties:
+      code:
+        type: string
+    type: object
+  httpapi.healthResponse:
+    properties:
+      status:
+        type: string
+    type: object
+  httpapi.registerRequest:
+    properties:
+      email:
+        format: email
+        maxLength: 254
+        type: string
+      password:
+        format: password
+        minLength: 8
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  user.User:
+    properties:
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: Linkbook user registration and process health.
+  title: Linkbook API
+  version: 0.1.0
+paths:
+  /api/users/register:
+    post:
+      consumes:
+      - application/json
+      description: |-
+        Email is trimmed and lowercased. Password accepts any characters, minimum 8 Unicode code points.
+        Request body is limited to 1 MiB. Passwords and password hashes are never returned.
+      parameters:
+      - description: Email and password
+        in: body
+        name: registration
+        required: true
+        schema:
+          $ref: '#/definitions/httpapi.registerRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/user.User'
+        "400":
+          description: invalid_request, invalid_email or invalid_password
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "409":
+          description: email_exists
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "413":
+          description: request_too_large
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "415":
+          description: unsupported_media_type
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "500":
+          description: internal_error
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+      summary: Register a user
+      tags:
+      - users
+  /healthz:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpapi.healthResponse'
+      summary: Check HTTP process health
+      tags:
+      - health
+swagger: "2.0"
