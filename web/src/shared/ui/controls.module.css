@@ -1,0 +1,39 @@
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 60px;
+  padding: 18px 24px;
+  border: 1px solid #111;
+  border-radius: 0;
+  background: #111;
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.button:hover:not(:disabled) { background: #333; }
+.button:disabled { opacity: .55; cursor: wait; }
+.button:focus-visible, .inputRow:focus-within { outline: 2px solid #111; outline-offset: 4px; }
+.field { display: grid; gap: 12px; }
+.field label { font-size: 14px; font-weight: 600; }
+.inputRow { display: flex; border: 1px solid #aaa; background: #fff; }
+.inputRow:has(input[aria-invalid="true"]) { border-color: #111; border-width: 2px; }
+.inputRow input {
+  width: 100%;
+  min-width: 0;
+  min-height: 58px;
+  padding: 16px 18px;
+  border: 0;
+  border-radius: 0;
+  outline: none;
+  background: transparent;
+  color: #111;
+  font: inherit;
+}
+.inputRow input::placeholder { color: #777; }
+.inputRow input:disabled { opacity: .65; }
+.hint, .error { margin: 0; font-size: 13px; line-height: 1.5; }
+.hint { color: #666; }
+.error { color: #111; font-weight: 500; }
