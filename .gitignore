@@ -11,3 +11,4 @@ bin/
 *.test
 go.work.sum
 .playwright-cli
+tmp/

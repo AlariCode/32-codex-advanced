@@ -6,7 +6,7 @@ export default function Home() {
       <h1>Linkbook</h1>
       <p>Сохраняйте статьи, чтобы вернуться к ним позже.</p>
       <p className="note">Библиотека ссылок скоро появится здесь.</p>
-      <Link href="/register">Создать аккаунт →</Link>
+      <Link href="/register" className="registration-link">Создать аккаунт <span aria-hidden="true">→</span></Link>
     </main>
   );
 }

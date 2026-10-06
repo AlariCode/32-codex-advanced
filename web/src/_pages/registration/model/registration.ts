@@ -6,8 +6,15 @@ export interface RegistrationErrors {
 
 export function validateRegistration(email: string, password: string): RegistrationErrors {
   const errors: RegistrationErrors = {};
-  if (!email.trim()) errors.email = "Введите email.";
-  // The API owns email syntax validation. Count code points, as the Go API does.
+  const address = email.trim();
+  if (!address) errors.email = "Введите email.";
+  // Catch obvious typos without narrowing the API's supported email syntax.
+  // Quoted local parts and domains without a dot remain the server's decision.
+  else if (!/^[^@]+@[^@\s]+$/.test(address) ||
+    (!address.startsWith('"') && /\s/.test(address))) {
+    errors.email = "Проверьте email. Например: reader@example.com.";
+  }
+  // Count code points, as the Go API does.
   if (Array.from(password).length < 8) errors.password = "Пароль должен содержать минимум 8 символов.";
   return errors;
 }
