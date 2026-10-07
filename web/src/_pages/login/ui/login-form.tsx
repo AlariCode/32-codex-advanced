@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { Button, TextField } from "@/shared/ui";
+import { Button, PasswordVisibilityToggle, TextField } from "@/shared/ui";
 import { loginUser, LoginError, type LoggedInUser } from "../api/login-user";
 import { loginErrors, validateLogin, type LoginErrors } from "../model/login";
 import styles from "./login.module.css";
@@ -77,12 +77,10 @@ export function LoginForm() {
         value={password} readOnly={pending} error={errors.password}
         onChange={event => { setPassword(event.target.value); setErrors(current => ({ ...current, password: undefined, form: undefined })); }}
         action={
-          <button
-            type="button" className={styles.passwordToggle}
-            aria-label={showPassword ? "Скрыть пароль" : "Показать пароль"}
-            aria-pressed={showPassword} aria-controls="login-password" disabled={pending}
-            onClick={() => setShowPassword(value => !value)}
-          >{showPassword ? "Скрыть" : "Показать"}</button>
+          <PasswordVisibilityToggle
+            visible={showPassword} disabled={pending} inputId="login-password"
+            onToggle={() => setShowPassword(value => !value)}
+          />
         }
       />
       {errors.form && <p className={styles.formError} role="alert" tabIndex={-1} ref={errorRef}>{errors.form}</p>}

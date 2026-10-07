@@ -1,36 +1,7 @@
-.page { min-height: 100svh; display: flex; flex-direction: column; }
-.header { display: flex; justify-content: space-between; align-items: center; gap: 24px; padding: 28px 5vw; border-bottom: 1px solid #ddd; }
-.brand { display: inline-flex; align-items: center; gap: 12px; color: #111; font-size: 26px; font-weight: 750; letter-spacing: -1px; text-decoration: none; }
-.brandMark { display: grid; place-items: center; width: 36px; height: 36px; background: #111; color: white; font-size: 25px; }
-.headerNote, .eyebrow, .footer { font-size: 12px; }
-.headerNote { color: #666; }
-.main { width: 100%; max-width: 1440px; padding: 0; margin: auto; display: grid; grid-template-columns: 1.1fr 1fr; }
-.story { padding: 72px 6vw 64px 5vw; border-right: 1px solid #ddd; }
-.eyebrow { display: block; text-transform: uppercase; letter-spacing: .12em; font-weight: 600; }
-.story h1 { margin: 28px 0 24px; font-size: clamp(38px, 4.2vw, 64px); line-height: 1.08; letter-spacing: -.055em; font-weight: 650; }
-.intro { max-width: 390px; color: #666; font-size: 16px; line-height: 1.7; }
-.illustration { margin-top: 48px; max-width: 420px; border: 1px solid #111; }
-.article { position: relative; padding: 28px; background: #111; color: #fff; }
-.article > span:first-child, .articleBottom { font-size: 10px; letter-spacing: .1em; }
-.article strong { display: block; margin: 28px 0; font-size: 23px; font-weight: 500; line-height: 1.35; letter-spacing: -.03em; }
-.articleLines { display: grid; gap: 8px; max-width: 65%; }
-.articleLines i { height: 1px; background: #666; }
-.articleLines i:last-child { width: 65%; }
-.articleArrow { position: absolute; bottom: 24px; right: 28px; font-size: 34px; }
-.articleBottom { display: flex; justify-content: space-between; align-items: center; padding: 18px 28px; }
-.articleBottom span:last-child { font-size: 22px; }
-.storyNote { margin: 20px 0 0; font-size: 12px; color: #666; }
-.registration { display: flex; flex-direction: column; justify-content: center; padding: 72px 5vw 72px 6vw; }
-.formHeading, .form, .success { width: 100%; max-width: 420px; margin-inline: auto; }
-.formHeading h2 { margin: 20px 0 12px; font-size: clamp(32px, 3vw, 42px); font-weight: 600; letter-spacing: -.045em; }
-.formHeading p { margin: 0 0 36px; color: #666; font-size: 15px; }
+.form, .success { width: 100%; max-width: 420px; margin-inline: auto; }
 .form { display: grid; gap: 28px; }
-.passwordToggle { border: 0; background: transparent; padding: 0 16px; color: #555; font: inherit; font-size: 12px; cursor: pointer; }
-.passwordToggle:focus-visible { outline: 2px solid #111; outline-offset: -5px; }
-.passwordToggle:disabled { cursor: wait; }
 .formNote { margin: 0; color: #666; font-size: 12px; line-height: 1.7; }
 .formError { margin: 0; padding: 16px; border: 1px solid #111; font-size: 14px; line-height: 1.5; }
-.footer { display: flex; justify-content: space-between; gap: 24px; padding: 24px 5vw; border-top: 1px solid #ddd; color: #666; }
 .success { padding: 28px; border: 1px solid #111; overflow-wrap: anywhere; }
 .success:focus { outline: 2px solid #111; outline-offset: 4px; }
 .successMark { display: grid; place-items: center; width: 40px; height: 40px; color: white; background: #111; }
@@ -39,20 +10,7 @@
 .homeLink { display: flex; justify-content: space-between; padding-top: 24px; color: #111; font-size: 14px; }
 .accountLink { display: inline-flex; align-items: center; min-height: 44px; padding-inline: 4px; color: #111; font-size: 14px; text-underline-offset: 4px; }
 .accountLink:hover { color: #555; }
-@media (min-width: 1440px) { .story { padding-left: 72px; padding-right: 86px; } .registration { padding-left: 86px; padding-right: 72px; } }
 @media (max-width: 760px) {
-  .header { padding: 18px 24px; }
-  .headerNote { display: none; }
-  .main { grid-template-columns: 1fr; }
-  .story { padding: 24px; border-right: 0; border-bottom: 1px solid #ddd; }
-  .story h1 { margin: 12px 0; font-size: 30px; }
-  .illustration, .storyNote { display: none; }
-  .intro { margin-bottom: 0; font-size: 14px; line-height: 1.5; }
-  .registration { padding: 24px 24px 32px; }
-  .formHeading h2 { margin: 12px 0 8px; }
-  .formHeading p { margin-bottom: 24px; }
   .form { gap: 20px; }
-  .formHeading, .form, .success { max-width: 100%; }
-  .footer { padding: 24px; }
-  .footer span:last-child { display: none; }
+  .form, .success { max-width: 100%; }
 }

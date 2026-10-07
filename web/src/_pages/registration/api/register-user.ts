@@ -1,8 +1,6 @@
-export interface RegisteredUser {
-  id: string;
-  email: string;
-  created_at: string;
-}
+import type { UserDTO } from "@/shared/api";
+
+export type RegisteredUser = UserDTO;
 
 export class RegistrationError extends Error {
   constructor(public readonly code: string) {

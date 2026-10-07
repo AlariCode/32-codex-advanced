@@ -1,12 +1,8 @@
 package httpapi
 
 import (
-	"bytes"
-	"encoding/json"
 	"errors"
-	"io"
 	"log/slog"
-	"mime"
 	"net/http"
 
 	"linkbook/api/internal/user"
@@ -17,10 +13,6 @@ const maxRegistrationBody = 1 << 20
 type registerRequest struct {
 	Email    string `json:"email" binding:"required" format:"email" maxLength:"254"`
 	Password string `json:"password" binding:"required" format:"password" minLength:"8"`
-}
-
-type errorResponse struct {
-	Code string `json:"code"`
 }
 
 type registrationHandler struct {
@@ -43,30 +35,9 @@ type registrationHandler struct {
 // @Failure 500 {object} errorResponse "internal_error"
 // @Router /api/users/register [post]
 func (handler registrationHandler) register(w http.ResponseWriter, r *http.Request) {
-	mediaType, _, err := mime.ParseMediaType(r.Header.Get("Content-Type"))
-	if err != nil || mediaType != "application/json" {
-		writeJSON(w, http.StatusUnsupportedMediaType, errorResponse{Code: "unsupported_media_type"})
-		return
-	}
-	body, err := io.ReadAll(http.MaxBytesReader(w, r.Body, maxRegistrationBody))
-	if err != nil {
-		var tooLarge *http.MaxBytesError
-		if errors.As(err, &tooLarge) {
-			writeJSON(w, http.StatusRequestEntityTooLarge, errorResponse{Code: "request_too_large"})
-			return
-		}
-		writeJSON(w, http.StatusBadRequest, errorResponse{Code: "invalid_request"})
-		return
-	}
-	var request *registerRequest
-	decoder := json.NewDecoder(bytes.NewReader(body))
-	decoder.DisallowUnknownFields()
-	if err := decoder.Decode(&request); err != nil || request == nil {
-		writeJSON(w, http.StatusBadRequest, errorResponse{Code: "invalid_request"})
-		return
-	}
-	if err := decoder.Decode(&struct{}{}); err != io.EOF {
-		writeJSON(w, http.StatusBadRequest, errorResponse{Code: "invalid_request"})
+	request, requestErr := readJSON[registerRequest](w, r, maxRegistrationBody)
+	if requestErr != nil {
+		writeJSON(w, requestErr.status, errorResponse{Code: requestErr.code})
 		return
 	}
 	registered, err := handler.users.Register(r.Context(), request.Email, request.Password)
@@ -82,13 +53,5 @@ func (handler registrationHandler) register(w http.ResponseWriter, r *http.Reque
 		writeJSON(w, http.StatusInternalServerError, errorResponse{Code: "internal_error"})
 	default:
 		writeJSON(w, http.StatusCreated, registered)
-	}
-}
-
-func writeJSON(w http.ResponseWriter, status int, value any) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(status)
-	if err := json.NewEncoder(w).Encode(value); err != nil {
-		slog.Error("Write JSON response failed", "error", err)
 	}
 }

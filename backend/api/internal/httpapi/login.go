@@ -1,12 +1,8 @@
 package httpapi
 
 import (
-	"bytes"
-	"encoding/json"
 	"errors"
-	"io"
 	"log/slog"
-	"mime"
 	"net/http"
 
 	"linkbook/api/internal/user"
@@ -42,30 +38,9 @@ type loginHandler struct {
 // @Router /api/users/login [post]
 func (handler loginHandler) login(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "no-store")
-	mediaType, _, err := mime.ParseMediaType(r.Header.Get("Content-Type"))
-	if err != nil || mediaType != "application/json" {
-		writeJSON(w, http.StatusUnsupportedMediaType, errorResponse{Code: "unsupported_media_type"})
-		return
-	}
-	body, err := io.ReadAll(http.MaxBytesReader(w, r.Body, maxLoginBody))
-	if err != nil {
-		var tooLarge *http.MaxBytesError
-		if errors.As(err, &tooLarge) {
-			writeJSON(w, http.StatusRequestEntityTooLarge, errorResponse{Code: "request_too_large"})
-		} else {
-			writeJSON(w, http.StatusBadRequest, errorResponse{Code: "invalid_request"})
-		}
-		return
-	}
-	var request *loginRequestBody
-	decoder := json.NewDecoder(bytes.NewReader(body))
-	decoder.DisallowUnknownFields()
-	if err := decoder.Decode(&request); err != nil || request == nil {
-		writeJSON(w, http.StatusBadRequest, errorResponse{Code: "invalid_request"})
-		return
-	}
-	if err := decoder.Decode(&struct{}{}); err != io.EOF {
-		writeJSON(w, http.StatusBadRequest, errorResponse{Code: "invalid_request"})
+	request, requestErr := readJSON[loginRequestBody](w, r, maxLoginBody)
+	if requestErr != nil {
+		writeJSON(w, requestErr.status, errorResponse{Code: requestErr.code})
 		return
 	}
 	authenticated, token, err := handler.users.Login(r.Context(), request.Email, request.Password)

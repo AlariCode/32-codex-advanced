@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { Button, TextField } from "@/shared/ui";
+import { Button, PasswordVisibilityToggle, TextField } from "@/shared/ui";
 import { registerUser, RegistrationError, type RegisteredUser } from "../api/register-user";
 import { registrationErrors, validateRegistration, type RegistrationErrors } from "../model/registration";
 import styles from "./registration.module.css";
@@ -59,8 +59,31 @@ export function RegistrationForm() {
 
   return (
     <form className={styles.form} onSubmit={handleSubmit} noValidate aria-busy={pending}>
-      <TextField id="registration-email" name="email" type="email" label="Email" placeholder="you@example.com" autoComplete="email" autoCapitalize="none" spellCheck={false} required value={email} readOnly={pending} error={errors.email} onChange={event => { setEmail(event.target.value); setErrors(current => ({ ...current, email: undefined, form: undefined })); }} />
-      <TextField id="registration-password" name="password" type={showPassword ? "text" : "password"} label="Пароль" placeholder="Придумайте пароль" autoComplete="new-password" required value={password} readOnly={pending} error={errors.password} hint="Минимум 8 символов. Можно использовать пробелы." onChange={event => { setPassword(event.target.value); setErrors(current => ({ ...current, password: undefined, form: undefined })); }} action={<button type="button" className={styles.passwordToggle} aria-label={showPassword ? "Скрыть пароль" : "Показать пароль"} aria-pressed={showPassword} aria-controls="registration-password" disabled={pending} onClick={() => setShowPassword(value => !value)}>{showPassword ? "Скрыть" : "Показать"}</button>} />
+      <TextField
+        id="registration-email" name="email" type="email" label="Email" placeholder="you@example.com"
+        autoComplete="email" autoCapitalize="none" spellCheck={false} required
+        value={email} readOnly={pending} error={errors.email}
+        onChange={event => {
+          setEmail(event.target.value);
+          setErrors(current => ({ ...current, email: undefined, form: undefined }));
+        }}
+      />
+      <TextField
+        id="registration-password" name="password" type={showPassword ? "text" : "password"}
+        label="Пароль" placeholder="Придумайте пароль" autoComplete="new-password" required
+        value={password} readOnly={pending} error={errors.password}
+        hint="Минимум 8 символов. Можно использовать пробелы."
+        onChange={event => {
+          setPassword(event.target.value);
+          setErrors(current => ({ ...current, password: undefined, form: undefined }));
+        }}
+        action={
+          <PasswordVisibilityToggle
+            visible={showPassword} disabled={pending} inputId="registration-password"
+            onToggle={() => setShowPassword(value => !value)}
+          />
+        }
+      />
       {errors.form && <p className={styles.formError} role="alert">{errors.form}</p>}
       <Button type="submit" disabled={pending}>{pending ? "Создаём аккаунт…" : "Создать аккаунт"}<span aria-hidden="true">↗</span></Button>
       <p className={styles.formNote}>Ваш email нужен только для аккаунта.<br />Пароль хранится в защищённом виде.</p>

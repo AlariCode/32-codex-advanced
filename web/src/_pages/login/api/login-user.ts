@@ -1,8 +1,6 @@
-export interface LoggedInUser {
-  id: string;
-  email: string;
-  created_at: string;
-}
+import type { UserDTO } from "@/shared/api";
+
+export type LoggedInUser = UserDTO;
 
 export class LoginError extends Error {
   constructor(public readonly code: string) {

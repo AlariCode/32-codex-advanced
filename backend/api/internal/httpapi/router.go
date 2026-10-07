@@ -10,9 +10,10 @@ import (
 func NewHandler(db *sql.DB) http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /healthz", health)
-	registration := registrationHandler{users: user.NewService(db)}
+	users := user.NewService(db)
+	registration := registrationHandler{users: users}
 	mux.HandleFunc("POST /api/users/register", registration.register)
-	login := loginHandler{users: user.NewService(db)}
+	login := loginHandler{users: users}
 	mux.HandleFunc("POST /api/users/login", login.login)
 	return mux
 }
