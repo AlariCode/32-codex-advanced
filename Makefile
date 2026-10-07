@@ -1,7 +1,7 @@
 -include .env
 export
 
-.PHONY: setup db-up db-down db-logs db-shell test-db-up test-db-down test-integration openapi web api worker build check
+.PHONY: setup db-up db-down db-logs db-shell test-db-up test-db-down test-integration test-login openapi web api worker build check
 
 TEST_DATABASE_URL ?= postgres://linkbook_test:linkbook_test_local@127.0.0.1:15433/linkbook_test?sslmode=disable
 
@@ -29,6 +29,9 @@ test-db-down:
 
 test-integration:
 	go test -tags=integration ./backend/api/... -count=1 -v
+
+test-login:
+	go test -tags=integration ./backend/api/internal/httpapi -run '^TestLoginIntegration' -count=1 -v
 
 openapi:
 	bash scripts/sync-openapi.sh

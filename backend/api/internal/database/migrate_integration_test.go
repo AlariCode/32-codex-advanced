@@ -6,6 +6,7 @@ import (
 	"context"
 	"crypto/rand"
 	"database/sql"
+	"io/fs"
 	"net/url"
 	"os"
 	"strings"
@@ -95,8 +96,8 @@ func TestMigrationsIntegrationStartupAndRestart(t *testing.T) {
 	if err := second.QueryRowContext(t.Context(), "SELECT count(*) FROM schema_migrations").Scan(&count); err != nil {
 		t.Fatal(err)
 	}
-	if count != 1 {
-		t.Errorf("migration history contains %d entries, want 1", count)
+	if want := len(migrationFiles(t)); count != want {
+		t.Errorf("migration history contains %d entries, want %d", count, want)
 	}
 	var hash string
 	if err := second.QueryRowContext(t.Context(),
@@ -136,8 +137,8 @@ func TestMigrationsIntegrationConcurrentStartup(t *testing.T) {
 	if err := fixture.db.QueryRowContext(t.Context(), "SELECT count(*) FROM schema_migrations").Scan(&count); err != nil {
 		t.Fatal(err)
 	}
-	if count != 1 {
-		t.Errorf("migration history contains %d entries, want 1", count)
+	if want := len(migrationFiles(t)); count != want {
+		t.Errorf("migration history contains %d entries, want %d", count, want)
 	}
 }
 
@@ -161,11 +162,19 @@ func TestMigrationsIntegrationFailedBatchRollsBack(t *testing.T) {
 
 func migrationFiles(t *testing.T) fstest.MapFS {
 	t.Helper()
-	contents, err := migrations.Files.ReadFile("001-create-users.sql")
+	versions, err := fs.Glob(migrations.Files, "*.sql")
 	if err != nil {
 		t.Fatal(err)
 	}
-	return fstest.MapFS{"001-create-users.sql": &fstest.MapFile{Data: contents}}
+	files := fstest.MapFS{}
+	for _, version := range versions {
+		contents, err := migrations.Files.ReadFile(version)
+		if err != nil {
+			t.Fatal(err)
+		}
+		files[version] = &fstest.MapFile{Data: contents}
+	}
+	return files
 }
 
 func assertTableMissing(t *testing.T, db *sql.DB, name string) {
@@ -191,7 +200,7 @@ func TestMigrationsIntegrationUpgradeRollsBack(t *testing.T) {
 		t.Fatal(err)
 	}
 	files := migrationFiles(t)
-	files["002-bad.sql"] = &fstest.MapFile{Data: []byte("CREATE TABLE marker (id INT); SELECT * FROM missing_table")}
+	files["999-bad.sql"] = &fstest.MapFile{Data: []byte("CREATE TABLE marker (id INT); SELECT * FROM missing_table")}
 	if err := applyMigrations(t.Context(), fixture.db, files); err == nil {
 		t.Fatal("invalid upgrade must fail")
 	}
@@ -200,7 +209,7 @@ func TestMigrationsIntegrationUpgradeRollsBack(t *testing.T) {
 	if err := fixture.db.QueryRowContext(t.Context(), "SELECT count(*) FROM schema_migrations").Scan(&count); err != nil {
 		t.Fatal(err)
 	}
-	if count != 1 {
+	if count != len(migrationFiles(t)) {
 		t.Error("failed upgrade changed migration history")
 	}
 	var hash string
@@ -220,7 +229,7 @@ func TestMigrationsIntegrationAppliesNewVersionOnce(t *testing.T) {
 		t.Fatal(err)
 	}
 	files := migrationFiles(t)
-	files["002-marker.sql"] = &fstest.MapFile{Data: []byte("CREATE TABLE marker (id INT PRIMARY KEY)")}
+	files["999-marker.sql"] = &fstest.MapFile{Data: []byte("CREATE TABLE marker (id INT PRIMARY KEY)")}
 	for range 2 {
 		if err := applyMigrations(t.Context(), fixture.db, files); err != nil {
 			t.Fatalf("apply new version: %v", err)
@@ -230,8 +239,8 @@ func TestMigrationsIntegrationAppliesNewVersionOnce(t *testing.T) {
 	if err := fixture.db.QueryRowContext(t.Context(), "SELECT count(*) FROM schema_migrations").Scan(&count); err != nil {
 		t.Fatal(err)
 	}
-	if count != 2 {
-		t.Errorf("migration history contains %d entries, want 2", count)
+	if want := len(files); count != want {
+		t.Errorf("migration history contains %d entries, want %d", count, want)
 	}
 }
 
@@ -251,7 +260,7 @@ func TestMigrationsIntegrationRejectsChangedFile(t *testing.T) {
 func TestMigrationsIntegrationRejectsMissingFile(t *testing.T) {
 	fixture := newMigrationFixture(t)
 	files := migrationFiles(t)
-	files["002-marker.sql"] = &fstest.MapFile{Data: []byte("CREATE TABLE marker (id INT PRIMARY KEY)")}
+	files["999-marker.sql"] = &fstest.MapFile{Data: []byte("CREATE TABLE marker (id INT PRIMARY KEY)")}
 	if err := applyMigrations(t.Context(), fixture.db, files); err != nil {
 		t.Fatal(err)
 	}

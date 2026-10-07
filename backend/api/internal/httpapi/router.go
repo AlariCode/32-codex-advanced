@@ -12,6 +12,8 @@ func NewHandler(db *sql.DB) http.Handler {
 	mux.HandleFunc("GET /healthz", health)
 	registration := registrationHandler{users: user.NewService(db)}
 	mux.HandleFunc("POST /api/users/register", registration.register)
+	login := loginHandler{users: user.NewService(db)}
+	mux.HandleFunc("POST /api/users/login", login.login)
 	return mux
 }
 

@@ -53,8 +53,7 @@ export function RegistrationForm() {
       <span className={styles.successMark} aria-hidden="true">✓</span>
       <h3>Аккаунт создан</h3>
       <p>Вы зарегистрированы с адресом <strong>{user.email}</strong>.</p>
-      <p className={styles.formNote}>Вход и библиотека появятся в следующих обновлениях.</p>
-      <Link href="/" className={styles.homeLink}>На главную <span aria-hidden="true">↗</span></Link>
+      <Link href="/login" className={styles.homeLink}>Войти в аккаунт <span aria-hidden="true">↗</span></Link>
     </div>
   );
 
@@ -65,6 +64,7 @@ export function RegistrationForm() {
       {errors.form && <p className={styles.formError} role="alert">{errors.form}</p>}
       <Button type="submit" disabled={pending}>{pending ? "Создаём аккаунт…" : "Создать аккаунт"}<span aria-hidden="true">↗</span></Button>
       <p className={styles.formNote}>Ваш email нужен только для аккаунта.<br />Пароль хранится в защищённом виде.</p>
+      <p className={styles.formNote}>Уже есть аккаунт? <Link href="/login" className={styles.accountLink}>Войти</Link></p>
     </form>
   );
 }

@@ -15,6 +15,76 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/users/login": {
+            "post": {
+                "description": "Email is trimmed and lowercased; passwords are compared exactly against Argon2id hashes.\nIssues a fresh HttpOnly, Secure, SameSite=Lax linkbook_session cookie. Server sessions expire after 24 hours.\nUnknown users and incorrect passwords return identical errors. Responses use Cache-Control: no-store.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Log in a user",
+                "parameters": [
+                    {
+                        "description": "Email and password",
+                        "name": "credentials",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.loginRequestBody"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/user.User"
+                        },
+                        "headers": {
+                            "Set-Cookie": {
+                                "type": "string",
+                                "description": "linkbook_session; HttpOnly; Secure; SameSite=Lax; Path=/"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "invalid_request, invalid_email or invalid_password",
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.errorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "invalid_credentials",
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.errorResponse"
+                        }
+                    },
+                    "413": {
+                        "description": "request_too_large",
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.errorResponse"
+                        }
+                    },
+                    "415": {
+                        "description": "unsupported_media_type",
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal_error",
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/users/register": {
             "post": {
                 "description": "Email is trimmed and lowercased. Password accepts any characters, minimum 8 Unicode code points.\nRequest body is limited to 1 MiB. Passwords and password hashes are never returned.",
@@ -113,6 +183,24 @@ const docTemplate = `{
             "properties": {
                 "status": {
                     "type": "string"
+                }
+            }
+        },
+        "httpapi.loginRequestBody": {
+            "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "format": "email",
+                    "maxLength": 254
+                },
+                "password": {
+                    "type": "string",
+                    "format": "password"
                 }
             }
         },

@@ -49,3 +49,6 @@ p {
 
 .registration-link:hover { background: #333; }
 .registration-link:active { background: #555; }
+
+.login-link { display: inline-flex; align-items: center; gap: 16px; min-height: 44px; color: #111; text-underline-offset: 4px; }
+.login-link:hover { color: #555; }

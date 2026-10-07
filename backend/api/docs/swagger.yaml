@@ -10,6 +10,19 @@ definitions:
       status:
         type: string
     type: object
+  httpapi.loginRequestBody:
+    properties:
+      email:
+        format: email
+        maxLength: 254
+        type: string
+      password:
+        format: password
+        type: string
+    required:
+    - email
+    - password
+    type: object
   httpapi.registerRequest:
     properties:
       email:
@@ -39,6 +52,55 @@ info:
   title: Linkbook API
   version: 0.1.0
 paths:
+  /api/users/login:
+    post:
+      consumes:
+      - application/json
+      description: |-
+        Email is trimmed and lowercased; passwords are compared exactly against Argon2id hashes.
+        Issues a fresh HttpOnly, Secure, SameSite=Lax linkbook_session cookie. Server sessions expire after 24 hours.
+        Unknown users and incorrect passwords return identical errors. Responses use Cache-Control: no-store.
+      parameters:
+      - description: Email and password
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/httpapi.loginRequestBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          headers:
+            Set-Cookie:
+              description: linkbook_session; HttpOnly; Secure; SameSite=Lax; Path=/
+              type: string
+          schema:
+            $ref: '#/definitions/user.User'
+        "400":
+          description: invalid_request, invalid_email or invalid_password
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "401":
+          description: invalid_credentials
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "413":
+          description: request_too_large
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "415":
+          description: unsupported_media_type
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "500":
+          description: internal_error
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+      summary: Log in a user
+      tags:
+      - users
   /api/users/register:
     post:
       consumes:
