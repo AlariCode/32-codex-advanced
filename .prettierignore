@@ -1,0 +1,12 @@
+node_modules/
+web/.next/
+web/out/
+coverage/
+bin/
+tmp/
+.agents/
+.codex/
+backend/api/docs/
+package-lock.json
+web/package-lock.json
+skills-lock.json

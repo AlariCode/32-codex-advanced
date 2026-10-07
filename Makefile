@@ -1,12 +1,13 @@
 -include .env
 export
 
-.PHONY: setup db-up db-down db-logs db-shell test-db-up test-db-down test-integration test-login openapi web api worker build check
+.PHONY: setup db-up db-down db-logs db-shell test test-db-up test-db-down test-integration test-login openapi web api worker build check
 
 TEST_DATABASE_URL ?= postgres://linkbook_test:linkbook_test_local@127.0.0.1:15433/linkbook_test?sslmode=disable
 
 setup:
 	@test -f .env || cp .env.example .env
+	npm ci
 	npm ci --prefix web
 
 db-up:
@@ -26,6 +27,9 @@ test-db-up:
 
 test-db-down:
 	docker compose -f compose.test.yaml down
+
+test: test-db-up
+	go test -tags=integration ./backend/api/... ./backend/worker/... ./backend/migrations/... -count=1
 
 test-integration:
 	go test -tags=integration ./backend/api/... -count=1 -v

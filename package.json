@@ -8,8 +8,15 @@
     "dev": "npm run dev --prefix web",
     "build": "npm run build --prefix web",
     "start": "npm run start --prefix web",
-    "lint": "npm run lint --prefix web",
+    "lint": "npm run lint --prefix web && go vet ./backend/api/... ./backend/worker/... ./backend/migrations/...",
+    "format": "prettier --write",
+    "prepare": "lefthook install",
     "typecheck": "npm run typecheck --prefix web",
+    "test": "make test",
     "test:e2e": "npm run test:e2e --prefix web"
+  },
+  "devDependencies": {
+    "lefthook": "^2.1.17",
+    "prettier": "^3.9.9"
   }
 }

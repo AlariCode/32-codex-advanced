@@ -1,0 +1,19 @@
+pre-commit:
+  jobs:
+    - name: format
+      glob: "*.{js,jsx,ts,tsx,mjs,cjs,json,css,md,yml,yaml}"
+      run: npm run format -- {staged_files}
+      stage_fixed: true
+    - name: format-go
+      glob: "*.go"
+      run: gofmt -w {staged_files}
+      stage_fixed: true
+    - name: lint
+      run: npm run lint
+    - name: typecheck
+      run: npm run typecheck
+
+pre-push:
+  jobs:
+    - name: tests
+      run: npm test
