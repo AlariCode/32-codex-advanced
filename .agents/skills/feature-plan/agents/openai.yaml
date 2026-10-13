@@ -1,0 +1,3 @@
+interface:
+  display_name: "Feature Plan"
+  short_description: "План фичи по фазам с согласованием каркаса"
