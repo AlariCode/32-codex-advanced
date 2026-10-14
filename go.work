@@ -2,6 +2,7 @@ go 1.26.0
 
 use (
 	./backend/api
+	./backend/linkprocessing
 	./backend/migrations
 	./backend/worker
 )

@@ -29,7 +29,7 @@ test-db-down:
 	docker compose -f compose.test.yaml down
 
 test: test-db-up
-	go test -tags=integration ./backend/api/... ./backend/worker/... ./backend/migrations/... -count=1
+	go test -tags=integration ./backend/api/... ./backend/worker/... ./backend/migrations/... ./backend/linkprocessing/... -count=1
 
 test-integration:
 	go test -tags=integration ./backend/api/... -count=1 -v
@@ -56,7 +56,7 @@ build:
 	npm run build
 
 check:
-	go test ./backend/api/... ./backend/worker/... ./backend/migrations/...
-	go vet ./backend/api/... ./backend/worker/... ./backend/migrations/...
+	go test ./backend/api/... ./backend/worker/... ./backend/migrations/... ./backend/linkprocessing/...
+	go vet ./backend/api/... ./backend/worker/... ./backend/migrations/... ./backend/linkprocessing/...
 	npm run lint
 	npm run typecheck

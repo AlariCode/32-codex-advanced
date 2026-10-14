@@ -37,6 +37,58 @@ definitions:
     - email
     - password
     type: object
+  httpapi.saveLinkRequest:
+    properties:
+      url:
+        type: string
+    type: object
+  httpapi.saveLinkResponse:
+    properties:
+      created:
+        type: boolean
+      link:
+        $ref: '#/definitions/link.Card'
+      server_time:
+        type: string
+    type: object
+  link.Card:
+    properties:
+      can_read:
+        type: boolean
+      created_at:
+        type: string
+      deadline_at:
+        type: string
+      generation:
+        type: integer
+      id:
+        type: string
+      reason:
+        type: string
+      requested_at:
+        type: string
+      state:
+        type: string
+      submitted_url:
+        type: string
+      title:
+        type: string
+      warnings:
+        items:
+          type: string
+        type: array
+    type: object
+  link.Page:
+    properties:
+      links:
+        items:
+          $ref: '#/definitions/link.Card'
+        type: array
+      next_cursor:
+        type: string
+      server_time:
+        type: string
+    type: object
   user.User:
     properties:
       created_at:
@@ -52,6 +104,124 @@ info:
   title: Linkbook API
   version: 0.1.0
 paths:
+  /api/links:
+    get:
+      parameters:
+      - description: Page size (1–100, default 20)
+        in: query
+        name: limit
+        type: integer
+      - description: Opaque keyset cursor
+        in: query
+        name: cursor
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/link.Page'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+      summary: List current user's links
+      tags:
+      - links
+    post:
+      consumes:
+      - application/json
+      description: Requires session cookie and Origin matching PUBLIC_ORIGIN, through
+        the loopback Next.js proxy. Private responses are no-store. Normalized duplicates
+        return the existing card without enqueueing again.
+      parameters:
+      - description: Submitted HTTP(S) URL
+        in: body
+        name: link
+        required: true
+        schema:
+          $ref: '#/definitions/httpapi.saveLinkRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Already saved
+          schema:
+            $ref: '#/definitions/httpapi.saveLinkResponse'
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/httpapi.saveLinkResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "413":
+          description: Request Entity Too Large
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "415":
+          description: Unsupported Media Type
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+      summary: Save a link in the current user's library
+      tags:
+      - links
+  /api/links/{id}:
+    get:
+      parameters:
+      - description: Link UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/link.Card'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+      summary: Get a saved link
+      tags:
+      - links
   /api/users/login:
     post:
       consumes:
@@ -99,6 +269,26 @@ paths:
           schema:
             $ref: '#/definitions/httpapi.errorResponse'
       summary: Log in a user
+      tags:
+      - users
+  /api/users/me:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user.User'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+      summary: Get current user
       tags:
       - users
   /api/users/register:

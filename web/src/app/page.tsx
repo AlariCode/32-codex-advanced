@@ -1,13 +1,1 @@
-import Link from "next/link";
-
-export default function Home() {
-  return (
-    <main>
-      <h1>Linkbook</h1>
-      <p>Сохраняйте статьи, чтобы вернуться к ним позже.</p>
-      <p className="note">Библиотека ссылок скоро появится здесь.</p>
-      <Link href="/register" className="registration-link">Создать аккаунт <span aria-hidden="true">→</span></Link>
-      <p><Link href="/login" className="login-link">Уже есть аккаунт? Войти <span aria-hidden="true">→</span></Link></p>
-    </main>
-  );
-}
+export { LibraryPage as default } from "@/_pages/library";
