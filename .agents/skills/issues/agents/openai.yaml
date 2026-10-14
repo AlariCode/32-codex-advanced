@@ -1,0 +1,6 @@
+interface:
+  display_name: "Issues"
+  short_description: "Нарезка фазы плана на GitHub issues с согласованием"
+  default_prompt: "Используй $issues: прочитай план по указанному пути, нарежь выбранную фазу на задачи и создай GitHub issues после согласования списка."
+policy:
+  allow_implicit_invocation: false
