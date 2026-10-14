@@ -6,8 +6,11 @@ require (
 	github.com/jackc/pgx/v5 v5.11.0
 	github.com/swaggo/swag v1.16.6
 	golang.org/x/crypto v0.57.0
+	linkbook/linkprocessing v0.0.0
 	linkbook/migrations v0.0.0
 )
+
+replace linkbook/linkprocessing => ../linkprocessing
 
 replace linkbook/migrations => ../migrations
 

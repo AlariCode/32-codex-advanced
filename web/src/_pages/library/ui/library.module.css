@@ -1,0 +1,143 @@
+.library {
+  max-width: 56rem;
+  padding-top: 2rem;
+  padding-bottom: 4rem;
+}
+.header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 3.5rem;
+}
+.brand {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+}
+.account {
+  font-size: 0.875rem;
+  color: #555;
+  overflow-wrap: anywhere;
+  text-align: right;
+}
+.library h1 {
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  margin-bottom: 0.75rem;
+}
+.intro {
+  color: #555;
+  margin: 0 0 2rem;
+}
+.saveForm {
+  display: grid;
+  gap: 1rem;
+  align-items: end;
+}
+.message {
+  min-height: 1.6em;
+  margin: 1rem 0;
+  color: #285536;
+}
+.empty {
+  border-top: 1px solid #d7d9d7;
+  padding: 2rem 0;
+}
+.empty h2 {
+  font-size: 1.25rem;
+}
+.empty p {
+  color: #555;
+}
+.card,
+.draft {
+  border-top: 1px solid #d7d9d7;
+  padding: 1.5rem 0;
+  scroll-margin: 1rem;
+}
+.card:focus {
+  outline: 2px solid #111;
+  outline-offset: 6px;
+}
+.eyebrow {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+  color: #555;
+}
+.address {
+  overflow-wrap: anywhere;
+  margin: 0 0 0.75rem;
+  line-height: 1.6;
+}
+.card h2 {
+  font-size: 1.25rem;
+}
+.actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+}
+.actions a,
+.actions button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  color: #111;
+  font: inherit;
+  text-underline-offset: 4px;
+}
+.actions button {
+  padding: 0;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.actions button:disabled {
+  cursor: wait;
+  color: #555;
+}
+.library button:focus-visible,
+.draft input:focus-visible {
+  outline: 2px solid #111;
+  outline-offset: 4px;
+}
+.draft {
+  border-top-color: #8b5b25;
+}
+.draft [role="alert"] {
+  color: #8a2e18;
+}
+.draft form {
+  display: grid;
+  gap: 0.75rem;
+}
+.draft label {
+  font-weight: 600;
+}
+.draft input {
+  width: 100%;
+  min-width: 0;
+  min-height: 48px;
+  padding: 0.75rem;
+  border: 1px solid #777;
+  border-radius: 0;
+  font: inherit;
+}
+@media (min-width: 641px) {
+  .saveForm {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+  }
+  .saveForm > button {
+    margin-top: 1.75rem;
+  }
+}
+@media (max-width: 640px) {
+  .header {
+    padding-bottom: 2.5rem;
+  }
+}
