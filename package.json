@@ -13,7 +13,8 @@
     "prepare": "lefthook install",
     "typecheck": "npm run typecheck --prefix web",
     "test": "make test",
-    "test:e2e": "npm run test:e2e --prefix web"
+    "test:e2e": "npm run test:e2e --prefix web",
+    "test:e2e:integration": "npm run test:e2e:integration --prefix web"
   },
   "devDependencies": {
     "lefthook": "^2.1.17",

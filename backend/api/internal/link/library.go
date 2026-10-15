@@ -145,6 +145,9 @@ func ValidID(id string) bool {
 	return true
 }
 func (s *Service) List(ctx context.Context, owner, encoded string, limit int) (Page, error) {
+	return s.list(ctx, owner, encoded, limit, false)
+}
+func (s *Service) list(ctx context.Context, owner, encoded string, limit int, active bool) (Page, error) {
 	page := Page{Links: []Card{}}
 	var after cursor
 	if encoded != "" {
@@ -161,6 +164,9 @@ func (s *Service) List(ctx context.Context, owner, encoded string, limit int) (P
 	}
 	query := `SELECT ` + columns + ` FROM links WHERE user_id=$1`
 	args := []any{owner, limit + 1}
+	if active {
+		query += ` AND state='processing'`
+	}
 	if encoded != "" {
 		query += ` AND (created_at,id)<($3,$4)`
 		args = append(args, after.CreatedAt, after.ID)

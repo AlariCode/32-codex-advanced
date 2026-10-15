@@ -78,6 +78,21 @@ definitions:
           type: string
         type: array
     type: object
+  link.DocumentResponse:
+    properties:
+      document:
+        $ref: '#/definitions/linkprocessing.Document'
+      generation:
+        type: integer
+      submitted_url:
+        type: string
+      title:
+        type: string
+      warnings:
+        items:
+          type: string
+        type: array
+    type: object
   link.Page:
     properties:
       links:
@@ -88,6 +103,30 @@ definitions:
         type: string
       server_time:
         type: string
+    type: object
+  linkprocessing.Block:
+    properties:
+      items:
+        items:
+          type: string
+        type: array
+      kind:
+        type: string
+      level:
+        type: integer
+      ordered:
+        type: boolean
+      text:
+        type: string
+    type: object
+  linkprocessing.Document:
+    properties:
+      blocks:
+        items:
+          $ref: '#/definitions/linkprocessing.Block'
+        type: array
+      schema_version:
+        type: integer
     type: object
   user.User:
     properties:
@@ -220,6 +259,82 @@ paths:
           schema:
             $ref: '#/definitions/httpapi.errorResponse'
       summary: Get a saved link
+      tags:
+      - links
+  /api/links/{id}/document:
+    get:
+      parameters:
+      - description: Link UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/link.DocumentResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "409":
+          description: article_not_ready, article_unavailable or unsupported_document
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+      summary: Read an archived text article
+      tags:
+      - links
+  /api/links/statuses:
+    get:
+      parameters:
+      - description: Up to 100 comma-separated UUIDs; omitted to discover processing
+          cards
+        in: query
+        name: ids
+        type: string
+      - description: Active page size, 1–100
+        in: query
+        name: limit
+        type: integer
+      - description: Active keyset cursor
+        in: query
+        name: cursor
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/link.Page'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+      summary: Poll current user's link statuses
       tags:
       - links
   /api/users/login:

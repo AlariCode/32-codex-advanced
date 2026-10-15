@@ -44,6 +44,8 @@ function isCard(value: LinkCard) {
     typeof value.submitted_url === "string" &&
     /^https?:\/\//i.test(value.submitted_url) &&
     typeof value.created_at === "string" &&
+    Number.isInteger(value.generation) &&
+    value.generation > 0 &&
     ["processing", "ready", "unavailable", "failed"].includes(value.state)
   );
 }
@@ -85,4 +87,23 @@ export async function getLink(
   const card = await request(`/api/links/${encodeURIComponent(id)}`, signal);
   if (!isCard(card)) throw new Error("invalid_response");
   return card;
+}
+
+export async function statuses(
+  signal: AbortSignal,
+  ids?: string[],
+  cursor = "",
+): Promise<{ links: LinkCard[]; next_cursor: string; server_time: string }> {
+  const query = ids
+    ? `ids=${encodeURIComponent(ids.join(","))}`
+    : `limit=100${cursor ? `&cursor=${encodeURIComponent(cursor)}` : ""}`;
+  const page = await request(`/api/links/statuses?${query}`, signal);
+  if (
+    !Array.isArray(page.links) ||
+    !page.links.every(isCard) ||
+    typeof page.next_cursor !== "string" ||
+    typeof page.server_time !== "string"
+  )
+    throw new Error("invalid_response");
+  return page;
 }
