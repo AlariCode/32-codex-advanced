@@ -17,7 +17,7 @@ type Execution struct {
 }
 
 // Claim commits before returning; neither the SQL transaction nor a connection
-// is retained during HTTP or extraction. Recovery of expired leases is phase #4.
+// is retained during HTTP or extraction. Reclaim preserves the attempt deadline.
 func Claim(ctx context.Context, db *sql.DB) (*Execution, error) {
 	tx, err := db.BeginTx(ctx, nil)
 	if err != nil {
@@ -27,7 +27,7 @@ func Claim(ctx context.Context, db *sql.DB) (*Execution, error) {
 	var e Execution
 	err = tx.QueryRowContext(ctx, `SELECT j.id::text,l.id::text,l.fetch_url,j.generation,LEAST(j.deadline_at,l.deadline_at)
  FROM processing_jobs j JOIN links l ON l.id=j.link_id
- WHERE j.state='queued' AND l.state='processing' AND j.generation=l.generation
+	WHERE (j.state='queued' OR (j.state='running' AND j.lease_expires_at<=clock_timestamp())) AND l.state='processing' AND j.generation=l.generation
  AND j.available_at<=clock_timestamp() AND j.deadline_at>clock_timestamp() AND l.deadline_at>clock_timestamp()
  ORDER BY j.available_at,j.id FOR UPDATE OF j SKIP LOCKED LIMIT 1`).Scan(&e.JobID, &e.LinkID, &e.FetchURL, &e.Generation, &e.Deadline)
 	if errors.Is(err, sql.ErrNoRows) {
@@ -37,7 +37,7 @@ func Claim(ctx context.Context, db *sql.DB) (*Execution, error) {
 		return nil, err
 	}
 	err = tx.QueryRowContext(ctx, `UPDATE processing_jobs SET state='running',execution_token=gen_random_uuid(),
- lease_expires_at=LEAST(deadline_at,clock_timestamp()+($2*interval '1 second')),executions=executions+1 WHERE id=$1 RETURNING execution_token::text`, e.JobID, int(LeaseDuration/time.Second)).Scan(&e.Token)
+ lease_expires_at=LEAST(deadline_at,$3,clock_timestamp()+($2*interval '1 second')),executions=executions+1 WHERE id=$1 RETURNING execution_token::text`, e.JobID, int(LeaseDuration/time.Second), e.Deadline).Scan(&e.Token)
 	if err != nil {
 		return nil, err
 	}

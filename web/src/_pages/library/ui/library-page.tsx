@@ -37,6 +37,8 @@ function processingReason(reason?: string | null) {
         unsupported_content: "По этому адресу нет HTML-страницы.",
         redirect_limit: "Сайт перенаправляет слишком много раз.",
         processing_error: "Не удалось обработать текст статьи.",
+        timeout:
+          "Не удалось обработать ссылку за две минуты. Откройте оригинал.",
       } as Record<string, string>
     )[reason ?? ""] ?? "Не удалось обработать ссылку."
   );
@@ -124,6 +126,16 @@ export function LibraryPage() {
   const [status, setStatus] = useState<
     "checking" | "anonymous" | "ready" | "error"
   >("checking");
+  const serverClock = useRef({ server: 0, local: 0 });
+  const [monotonicNow, setMonotonicNow] = useState(0);
+  const syncClock = useCallback((serverTime: string) => {
+    const server = Date.parse(serverTime);
+    if (Number.isFinite(server)) {
+      const local = performance.now();
+      serverClock.current = { server, local };
+      setMonotonicNow(local);
+    }
+  }, []);
   const [cards, setCards] = useState<LinkCard[]>([]);
   const [drafts, setDrafts] = useState<Draft[]>([]);
   const [url, setURL] = useState("");
@@ -202,6 +214,7 @@ export function LibraryPage() {
         const page = await listLinks(controller.signal);
         if (controller.signal.aborted) return;
         setUser(identity);
+        syncClock(page.server_time);
         setCards(page.links);
         setCursor(page.next_cursor);
         page.links
@@ -225,6 +238,7 @@ export function LibraryPage() {
         do {
           const page = await statuses(controller.signal, undefined, cursor);
           if (controller.signal.aborted) return;
+          syncClock(page.server_time);
           page.links.forEach((card) => active.current.add(card.id));
           setCards((current) => mergeCards(current, page.links));
           cursor = page.next_cursor;
@@ -249,6 +263,8 @@ export function LibraryPage() {
           const batch = ids.slice(i, i + 100);
           const page = await statuses(controller.signal, batch);
           if (controller.signal.aborted) return;
+          syncClock(page.server_time);
+          setError("");
           const returned = new Set(page.links.map((card) => card.id));
           page.links.forEach((card) => {
             if (card.state !== "processing") active.current.delete(card.id);
@@ -273,6 +289,9 @@ export function LibraryPage() {
         polling = false;
       }
     }
+    const clockTimer = window.setInterval(() => {
+      if (active.current.size) setMonotonicNow(performance.now());
+    }, 1000);
     const timer = window.setInterval(() => {
       void refresh();
     }, 2000);
@@ -294,8 +313,9 @@ export function LibraryPage() {
       window.removeEventListener("online", restore);
       document.removeEventListener("visibilitychange", restore);
       window.clearInterval(timer);
+      window.clearInterval(clockTimer);
     };
-  }, [unauthorized]);
+  }, [unauthorized, syncClock]);
 
   async function send(id: string, raw: string) {
     if (busy.current.has(id)) return;
@@ -316,6 +336,7 @@ export function LibraryPage() {
     try {
       const result = await saveLink(controller.signal, normalized);
       if (controller.signal.aborted) return;
+      syncClock(result.server_time);
       focusCard.current = result.link.id;
       if (result.link.state === "processing")
         active.current.add(result.link.id);
@@ -355,6 +376,7 @@ export function LibraryPage() {
     try {
       const page = await listLinks(controller.signal, cursor);
       if (!controller.signal.aborted) {
+        syncClock(page.server_time);
         page.links
           .filter((card) => card.state === "processing")
           .forEach((card) => active.current.add(card.id));
@@ -468,10 +490,17 @@ export function LibraryPage() {
             className={styles.card}
             aria-label={`Сохранённая ссылка ${card.submitted_url}`}
           >
-            <p className={styles.eyebrow}>
+            <p className={styles.eyebrow} role="status">
               {
                 {
-                  processing: "Обрабатываем",
+                  processing:
+                    serverClock.current.server +
+                      monotonicNow -
+                      serverClock.current.local -
+                      Date.parse(card.requested_at) >=
+                    30_000
+                      ? "Обработка занимает больше времени"
+                      : "Обрабатываем",
                   ready: "Готово",
                   unavailable: "Текст статьи недоступен",
                   failed: "Ошибка обработки",

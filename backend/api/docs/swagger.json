@@ -135,6 +135,7 @@
         },
         "/api/links/statuses": {
             "get": {
+                "description": "Expired processing attempts are failed with reason timeout, independently of worker availability. server_time anchors the 30-second waiting message; reload does not reset requested_at or deadline_at.",
                 "produces": [
                     "application/json"
                 ],

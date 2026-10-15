@@ -13,6 +13,7 @@ import (
 
 // statuses returns a bounded batch, or a keyset page of active cards.
 // @Summary Poll current user's link statuses
+// @Description Expired processing attempts are failed with reason timeout, independently of worker availability. server_time anchors the 30-second waiting message; reload does not reset requested_at or deadline_at.
 // @Tags links
 // @Produce json
 // @Param ids query string false "Up to 100 comma-separated UUIDs; omitted to discover processing cards"

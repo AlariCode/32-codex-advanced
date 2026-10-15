@@ -13,9 +13,26 @@ export default defineConfig({
     screenshot: "only-on-failure",
   },
   projects: [
-    { name: "mobile", use: { viewport: { width: 375, height: 812 } } },
-    { name: "tablet", use: { viewport: { width: 768, height: 1024 } } },
-    { name: "desktop", use: { viewport: { width: 1440, height: 900 } } },
+    {
+      name: "mobile",
+      testIgnore: "**/recovery.spec.ts",
+      use: { viewport: { width: 375, height: 812 } },
+    },
+    {
+      name: "tablet",
+      testIgnore: "**/recovery.spec.ts",
+      use: { viewport: { width: 768, height: 1024 } },
+    },
+    {
+      name: "desktop",
+      testIgnore: "**/recovery.spec.ts",
+      use: { viewport: { width: 1440, height: 900 } },
+    },
+    {
+      name: "recovery",
+      testMatch: "**/recovery.spec.ts",
+      use: { viewport: { width: 1440, height: 900 } },
+    },
   ],
   webServer: {
     command: "node ../scripts/start-integration.mjs",
