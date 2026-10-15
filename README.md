@@ -8,7 +8,7 @@
 
 - Web: Next.js 16, React 19, TypeScript, App Router, обычный CSS, npm.
 - API: Go 1.26, стандартный `net/http`.
-- Worker: отдельный Go-модуль; пока ожидает завершения по SIGINT/SIGTERM.
+- Worker: PostgreSQL-очередь, защищённая загрузка HTTP(S), Readeck и текстовый архив.
 - База: PostgreSQL 18, pgvector 0.8.6, Docker Compose.
 
 ## Структура
@@ -20,6 +20,8 @@ web/
   src/app/                  # Маршруты Next.js и корневой layout
   src/_pages/registration/  # FSD-слайс регистрации: ui, model, api
   src/_pages/login/         # FSD-слайс входа: ui, model, api
+  src/_pages/library/       # Библиотека и polling
+  src/_pages/reader/        # Читалка ограниченной текстовой схемы
   src/shared/ui/            # Общие поля и кнопки с публичным API
 backend/
   api/
@@ -31,7 +33,7 @@ backend/
     go.mod
   worker/
     cmd/worker/             # Запуск Worker
-    internal/worker/        # Каркас обработки фоновых задач
+    internal/worker/        # Исполнение очереди и атомарная публикация
     go.mod
   migrations/               # Go-модуль со встроенными SQL-миграциями
 infra/postgres/init/        # Первичная настройка pgvector
@@ -74,13 +76,25 @@ make worker
 по lock-файлам в корне и в `web/`, а также устанавливает Git-хуки Lefthook.
 Make передаёт настройки `.env` Go-процессам, а Compose читает
 его автоматически. Примерные учётные данные предназначены для локальной разработки.
-Если изменён `POSTGRES_PORT`, обновите также `DATABASE_URL`.
+Если изменён `POSTGRES_PORT`, обновите также `DATABASE_URL`,
+`WORKER_DATABASE_URL` и `WORKER_DATABASE_PORT`. Для существующего `.env` добавьте
+поля worker из `.env.example`. `WORKER_DATABASE_HOST`/`PORT` должны обозначать
+тот же контейнерно-доступный PostgreSQL endpoint, что и `WORKER_DATABASE_URL`.
+
+`make worker` запускает `compose.worker.yaml`: firewall блокирует внутренние сети,
+разрешая только точный endpoint PostgreSQL и DNS; IPv6 egress в этом окружении
+закрыт. После настройки firewall процесс теряет capabilities и работает как UID
+65532, с ограничениями 512 MiB RAM, одного CPU, 64 процессов и 256 файлов.
+`make worker-dev` запускает Go-процесс без контейнерной сетевой изоляции;
+используйте его только для локальной отладки. Проверка deployment-policy:
+`sh scripts/check-worker-egress.sh`.
 
 API требует `DATABASE_URL`, подключается к PostgreSQL и применяет миграции перед
 запуском HTTP-сервера. Если база недоступна или миграция не проходит, API завершает
 запуск с ошибкой. `/healthz` проверяет доступность HTTP-процесса.
-Worker пока не подключается к БД. Исполнение очереди, парсинг статей, генерация embeddings
-и семантический поиск будут добавлены отдельно.
+Worker подключается к PostgreSQL и до 60 секунд ожидает совместимую схему 001–005
+с диагностикой; миграции применяет только API. Генерация embeddings и семантический
+поиск пока не реализованы.
 
 `POST /api/users/register` принимает JSON с `email` и `password`, создаёт
 пользователя и возвращает `201` с `id`, нормализованным `email` и `created_at`.
@@ -121,9 +135,14 @@ URL сохраняется вместе с durable-заданием в одно�
 Сохранённые карточки переживают reload; 401 скрывает личное содержимое.
 
 Задайте API `PUBLIC_ORIGIN`, совпадающий с origin браузера (по умолчанию
-`http://localhost:3000`). Новые миграции добавляют links и processing_jobs,
+`http://localhost:3000`). Миграции добавляют links, processing_jobs и snapshots,
 а общий модуль `backend/linkprocessing` входит в workspace и проверки.
-Исполнение worker, polling и читалка в этом этапе ещё не реализованы.
+Worker загружает HTML до 3 MiB после декомпрессии и извлекает текст через Readeck.
+Библиотека опрашивает processing каждые две секунды, включая карточки вне текущей
+страницы; скрытая вкладка приостанавливает частый polling. Готовая карточка
+открывает `/links/[id]`; читалка получает сохранённый документ из PostgreSQL
+и работает при отключённом оригинале. Сетевые ошибки остаются в карточке.
+Изображения, расширенная схема, retry и восстановление lease пока не реализованы.
 Подробный [контракт библиотеки и покрытие критериев](backend/api/library.md).
 
 ## База данных
@@ -253,3 +272,31 @@ make openapi
 
 - [Установка Next.js](https://nextjs.org/docs/app/getting-started/installation).
 - [pgvector: включение расширения и работа с векторами](https://github.com/pgvector/pgvector).
+
+## Сквозная проверка архива
+
+```sh
+make test-db-up
+npm run test:e2e:integration
+```
+
+Команда запускает отдельный Next.js на 3200, настоящий API на 18080, worker,
+HTTP fixture-server на 39876 и локальный управляющий endpoint на 39877.
+Нужны свободные порты и зависимости из `make setup`; PostgreSQL — из
+`compose.test.yaml`. `TEST_DATABASE_URL` необязателен, по умолчанию используется
+локальная `linkbook_test` на 15433. Другую базу harness не принимает.
+Каждый запуск создаёт собственную схему `e2e_*`, применяет реальные миграции
+и удаляет схему/процессы при штатном завершении. При SIGKILL схема может остаться;
+её точное имя можно найти в тестовой БД и удалить через harness-команду
+`TEST_DATABASE_URL=... tmp/integration/integration-db drop e2e_<имя>`.
+
+Тестовое разрешение действует только для одного точного loopback HTTP origin
+в отдельном `cmd/integration-worker`. Production-бинарник не читает
+`FIXTURE_ORIGIN` и не содержит настройки отключения policy. Production-защита
+дополнительно проверяется Go-тестами с реальными UDP DNS и HTTP/TLS sockets,
+включёнными в `make test`. Fixtures проекта не зависят от публичных сайтов.
+
+Mock-прогон `npm run test:e2e` запускается отдельно. Прогоны Next.js одного
+checkout следует запускать последовательно: dev-сервер использует общий lock.
+Видео обоих наборов сохраняются в `tmp/playwright/videos/`, включая успешные
+сценарии и второй браузер владельца. [Покрытие #2 и #3](docs/verification/issue-2-3.md).

@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"log/slog"
 	"os"
 	"os/signal"
 	"syscall"
@@ -12,5 +13,8 @@ import (
 func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
-	worker.Run(ctx)
+	if err := worker.Run(ctx); err != nil && ctx.Err() == nil {
+		slog.Error("Worker stopped", "error", err)
+		os.Exit(1)
+	}
 }

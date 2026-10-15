@@ -1,7 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type FormEvent,
+} from "react";
 import type { UserDTO } from "@/shared/api";
 import { Button, TextField } from "@/shared/ui";
 import {
@@ -10,6 +16,7 @@ import {
   LibraryError,
   listLinks,
   saveLink,
+  statuses,
 } from "../api/library";
 import {
   mergeCards,
@@ -18,6 +25,22 @@ import {
   type LinkCard,
 } from "../model/library";
 import styles from "./library.module.css";
+
+function processingReason(reason?: string | null) {
+  return (
+    (
+      {
+        destination_blocked: "Этот адрес недоступен для безопасной загрузки.",
+        network_error: "Не удалось связаться с сайтом.",
+        http_error: "Сайт не отдал страницу.",
+        html_too_large: "Страница превышает допустимый размер.",
+        unsupported_content: "По этому адресу нет HTML-страницы.",
+        redirect_limit: "Сайт перенаправляет слишком много раз.",
+        processing_error: "Не удалось обработать текст статьи.",
+      } as Record<string, string>
+    )[reason ?? ""] ?? "Не удалось обработать ссылку."
+  );
+}
 
 function Welcome({ children }: { children?: React.ReactNode }) {
   return (
@@ -111,6 +134,7 @@ export function LibraryPage() {
   const [opening, setOpening] = useState<string | null>(null);
   const scope = useRef(new AbortController());
   const busy = useRef(new Set<string>());
+  const active = useRef(new Set<string>());
   const moreBusy = useRef(false);
   const openBusy = useRef(false);
   const focusCard = useRef<string | null>(null);
@@ -125,10 +149,11 @@ export function LibraryPage() {
   }, [cards]);
   const reload = useRef<() => void>(() => {});
 
-  function invalidate() {
+  const invalidate = useCallback(() => {
     scope.current.abort();
     focusCard.current = null;
     busy.current.clear();
+    active.current.clear();
     moreBusy.current = false;
     openBusy.current = false;
     setUser(null);
@@ -141,14 +166,17 @@ export function LibraryPage() {
     setLoadingMore(false);
     setOpening(null);
     setStatus("anonymous");
-  }
-  function unauthorized(error: unknown) {
-    if (error instanceof LibraryError && error.status === 401) {
-      invalidate();
-      return true;
-    }
-    return false;
-  }
+  }, []);
+  const unauthorized = useCallback(
+    (error: unknown) => {
+      if (error instanceof LibraryError && error.status === 401) {
+        invalidate();
+        return true;
+      }
+      return false;
+    },
+    [invalidate],
+  );
   useEffect(() => {
     async function load() {
       scope.current.abort();
@@ -156,6 +184,7 @@ export function LibraryPage() {
       const controller = new AbortController();
       scope.current = controller;
       busy.current.clear();
+      active.current.clear();
       moreBusy.current = false;
       openBusy.current = false;
       setStatus("checking");
@@ -175,7 +204,11 @@ export function LibraryPage() {
         setUser(identity);
         setCards(page.links);
         setCursor(page.next_cursor);
+        page.links
+          .filter((card) => card.state === "processing")
+          .forEach((card) => active.current.add(card.id));
         setStatus("ready");
+        void discover(controller);
       } catch (error) {
         if (controller.signal.aborted) return;
         setStatus(
@@ -185,6 +218,64 @@ export function LibraryPage() {
         );
       }
     }
+    let polling = false;
+    async function discover(controller: AbortController) {
+      try {
+        let cursor = "";
+        do {
+          const page = await statuses(controller.signal, undefined, cursor);
+          if (controller.signal.aborted) return;
+          page.links.forEach((card) => active.current.add(card.id));
+          setCards((current) => mergeCards(current, page.links));
+          cursor = page.next_cursor;
+        } while (cursor && !controller.signal.aborted);
+      } catch (error) {
+        if (!controller.signal.aborted) unauthorized(error);
+      }
+    }
+    async function refresh() {
+      if (
+        polling ||
+        document.visibilityState !== "visible" ||
+        !navigator.onLine ||
+        active.current.size === 0
+      )
+        return;
+      polling = true;
+      const controller = scope.current;
+      try {
+        const ids = [...active.current];
+        for (let i = 0; i < ids.length; i += 100) {
+          const batch = ids.slice(i, i + 100);
+          const page = await statuses(controller.signal, batch);
+          if (controller.signal.aborted) return;
+          const returned = new Set(page.links.map((card) => card.id));
+          page.links.forEach((card) => {
+            if (card.state !== "processing") active.current.delete(card.id);
+          });
+          const completed = page.links.filter(
+            (card) => card.state !== "processing",
+          );
+          if (completed.length)
+            setMessage(`Обработка завершена: ${completed.length}.`);
+          setCards((current) => mergeCards(current, page.links));
+          if (batch.some((id) => !returned.has(id))) {
+            await load();
+            return;
+          }
+        }
+      } catch (error) {
+        if (!controller.signal.aborted && !unauthorized(error))
+          setError(
+            "Не удалось обновить статусы. Проверим снова при восстановлении связи.",
+          );
+      } finally {
+        polling = false;
+      }
+    }
+    const timer = window.setInterval(() => {
+      void refresh();
+    }, 2000);
     reload.current = () => {
       void load();
     };
@@ -194,12 +285,17 @@ export function LibraryPage() {
     };
     window.addEventListener("pageshow", restore);
     window.addEventListener("focus", restore);
+    window.addEventListener("online", restore);
+    document.addEventListener("visibilitychange", restore);
     return () => {
       scope.current.abort();
       window.removeEventListener("pageshow", restore);
       window.removeEventListener("focus", restore);
+      window.removeEventListener("online", restore);
+      document.removeEventListener("visibilitychange", restore);
+      window.clearInterval(timer);
     };
-  }, []);
+  }, [unauthorized]);
 
   async function send(id: string, raw: string) {
     if (busy.current.has(id)) return;
@@ -221,6 +317,8 @@ export function LibraryPage() {
       const result = await saveLink(controller.signal, normalized);
       if (controller.signal.aborted) return;
       focusCard.current = result.link.id;
+      if (result.link.state === "processing")
+        active.current.add(result.link.id);
       setCards((current) => mergeCards(current, [result.link]));
       setDrafts((current) => current.filter((item) => item.id !== id));
       setMessage(result.created ? "Ссылка сохранена" : "Ссылка уже сохранена");
@@ -257,6 +355,9 @@ export function LibraryPage() {
     try {
       const page = await listLinks(controller.signal, cursor);
       if (!controller.signal.aborted) {
+        page.links
+          .filter((card) => card.state === "processing")
+          .forEach((card) => active.current.add(card.id));
         setCards((current) => mergeCards(current, page.links));
         setCursor(page.next_cursor);
       }
@@ -379,15 +480,22 @@ export function LibraryPage() {
             </p>
             {card.title && <h2>{card.title}</h2>}
             <p className={styles.address}>{card.submitted_url}</p>
+            {card.state === "failed" && <p>{processingReason(card.reason)}</p>}
             <div className={styles.actions}>
-              <button
-                disabled={opening !== null}
-                onClick={() => {
-                  void openCard(card.id);
-                }}
-              >
-                {opening === card.id ? "Открываем…" : "Открыть карточку"}
-              </button>
+              {card.state === "ready" && card.can_read !== false && (
+                <Link href={`/links/${card.id}`}>Читать статью</Link>
+              )}
+
+              {card.state !== "ready" && (
+                <button
+                  disabled={opening !== null}
+                  onClick={() => {
+                    void openCard(card.id);
+                  }}
+                >
+                  {opening === card.id ? "Открываем…" : "Открыть карточку"}
+                </button>
+              )}
               <a
                 href={card.submitted_url}
                 target="_blank"

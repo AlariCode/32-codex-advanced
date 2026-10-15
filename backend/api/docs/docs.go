@@ -140,6 +140,63 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/links/statuses": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "links"
+                ],
+                "summary": "Poll current user's link statuses",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Up to 100 comma-separated UUIDs; omitted to discover processing cards",
+                        "name": "ids",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Active page size, 1–100",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Active keyset cursor",
+                        "name": "cursor",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/link.Page"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.errorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/links/{id}": {
             "get": {
                 "produces": [
@@ -179,6 +236,64 @@ const docTemplate = `{
                     },
                     "404": {
                         "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/links/{id}/document": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "links"
+                ],
+                "summary": "Read an archived text article",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Link UUID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/link.DocumentResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.errorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.errorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.errorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "article_not_ready, article_unavailable or unsupported_document",
                         "schema": {
                             "$ref": "#/definitions/httpapi.errorResponse"
                         }
@@ -494,6 +609,29 @@ const docTemplate = `{
                 }
             }
         },
+        "link.DocumentResponse": {
+            "type": "object",
+            "properties": {
+                "document": {
+                    "$ref": "#/definitions/linkprocessing.Document"
+                },
+                "generation": {
+                    "type": "integer"
+                },
+                "submitted_url": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "warnings": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
         "link.Page": {
             "type": "object",
             "properties": {
@@ -508,6 +646,43 @@ const docTemplate = `{
                 },
                 "server_time": {
                     "type": "string"
+                }
+            }
+        },
+        "linkprocessing.Block": {
+            "type": "object",
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "kind": {
+                    "type": "string"
+                },
+                "level": {
+                    "type": "integer"
+                },
+                "ordered": {
+                    "type": "boolean"
+                },
+                "text": {
+                    "type": "string"
+                }
+            }
+        },
+        "linkprocessing.Document": {
+            "type": "object",
+            "properties": {
+                "blocks": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/linkprocessing.Block"
+                    }
+                },
+                "schema_version": {
+                    "type": "integer"
                 }
             }
         },

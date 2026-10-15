@@ -1,4 +1,4 @@
-# Личная библиотека: сохранение ссылки
+# Личная библиотека и текстовый архив
 
 Все маршруты требуют существующую HttpOnly cookie `linkbook_session` из входа.
 Владелец определяется сервером по хешу токена и неизёкшей сессии. Все ответы,
@@ -13,14 +13,14 @@
 
 Карточка содержит `id`, `submitted_url`, nullable `title`/`reason`, `warnings`,
 `state`, `generation`, `created_at`, `requested_at`, `deadline_at`, `can_read`.
-В этой задаче новая карточка остаётся `processing`: worker, polling и читалка
-реализуются отдельно. Внутренние fetch URL, ключ дедупликации и execution token
+Новая карточка начинается с `processing`; worker публикует `ready` вместе со
+snapshot или `failed` с безопасным кодом причины. Внутренние fetch URL, ключ дедупликации и execution token
 в ответ не входят.
 
 ## Origin и proxy
 
 API по-прежнему слушает только `127.0.0.1`. Next.js использует явные rewrites
-с серверным `API_ORIGIN` для четырёх новых маршрутов. POST требует Origin,
+с серверным `API_ORIGIN` для приватных маршрутов. POST требует Origin,
 точно совпадающий с серверным `PUBLIC_ORIGIN` (по умолчанию
 `http://localhost:3000`), и loopback-подключение. Для другого публичного адреса,
 включая `http://127.0.0.1:3000`, задайте соответствующий `PUBLIC_ORIGIN` API.
@@ -34,7 +34,8 @@ API по-прежнему слушает только `127.0.0.1`. Next.js ис�
 исходную схему и query, исключая fragment. `dedup_key` рассчитывается существующей
 `NormalizeURL` без изменений её правил. URL с userinfo, пробелами/обратными слешами,
 невалидным UTF-8 или длиной более 64 KiB отклоняются; тело POST ограничено 128 KiB.
-Нормализатор не служит защитой загрузки: SSRF-проверки относятся к будущему worker.
+Нормализатор не служит защитой загрузки: worker отдельно проверяет URL, DNS,
+все redirect и привязывает соединение к проверенному публичному IP.
 
 Транзакция блокирует группу `(user_id, SHA-256 ключа)` advisory lock PostgreSQL,
 сравнивает полный ключ и создаёт запись в свободном `dedup_slot` под UNIQUE
@@ -49,7 +50,10 @@ API по-прежнему слушает только `127.0.0.1`. Next.js ис�
 расходует; PostgreSQL не предоставляет будущий точный timestamp commit,
 поэтому между установкой timestamp и commit остаётся короткий SQL-хвост.
 Начальное задание — `queued`, generation 1, без lease/execution token.
-Миграции предусматривают эти поля для последующего исполнения worker.
+Worker захватывает queued короткой транзакцией с SKIP LOCKED и lease до
+45 секунд, затем выполняет сеть вне транзакции. Публикация проверяет состояние,
+существование, generation, execution token, оба durable deadline и lease;
+snapshot, ready и завершение job фиксируются вместе.
 
 Список фильтруется по владельцу и упорядочен `(created_at DESC, id DESC)`.
 Keyset cursor хранит оба значения; вставки новых записей между страницами
@@ -73,3 +77,27 @@ Keyset cursor хранит оба значения; вставки новых з
 `make build`, `make openapi`. UI-тесты моделируют ответы для управляемых UX-сбоев;
 атомарность, конкуренция и миграции проверяются на настоящей PostgreSQL.
 Видео всех UI-прогонов — `tmp/playwright/videos/`, временные артефакты исключены из Git.
+
+## Статусы и документ
+
+- `GET /api/links/statuses?ids=<uuid>,<uuid>` — до 100 IDs; возвращает только
+  свои карточки с generation, серверными датами и `server_time`. Чужие и
+  отсутствующие IDs одинаково отсутствуют в `links`. Без `ids` возвращается
+  keyset-страница processing (`limit` 1–100, `cursor`), независимо от страницы
+  библиотеки. Пропавший известный ID заставляет UI сверить список.
+- `GET /api/links/{id}/document` — `{document, title, submitted_url, warnings,
+generation}`. `document.schema_version` равен 1; блоки: paragraph, heading
+  (уровни 2–6), list (массив текстовых items, ordered), quote. Текст — строка,
+  никогда HTML/props/style; inline ссылки сохраняют текст без внешних ресурсов.
+- Чужой и отсутствующий документ дают одинаковый 404; нет сессии — 401.
+  Неготовый документ — 409 `article_not_ready`, unavailable —
+  `article_unavailable`, несовместимая/невалидная схема — `unsupported_document`.
+- Ошибки worker: `destination_blocked`, `network_error`, `http_error`,
+  `html_too_large`, `unsupported_content`, `redirect_limit`, `processing_error`.
+  Диагностика не содержит сетевых адресов, query или stack traces.
+- HTML свыше 3 MiB после gzip отклоняется целиком. Усечённый документ не
+  публикуется. Известные пропуски media/таблиц обозначаются предупреждением
+  `text_only_archive`; исходный HTML не хранится и не выдаётся.
+
+Все маршруты session/owner-scoped и no-store. Полный контракт доступен в OpenAPI;
+[матрица проверок #2/#3](../../docs/verification/issue-2-3.md).

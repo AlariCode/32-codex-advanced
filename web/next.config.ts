@@ -5,6 +5,22 @@ const apiOrigin = (
 ).replace(/\/$/, "");
 
 const nextConfig: NextConfig = {
+  async headers() {
+    return [
+      {
+        source: "/links/:id",
+        headers: [
+          { key: "Cache-Control", value: "no-store" },
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          {
+            key: "Content-Security-Policy",
+            value:
+              "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'",
+          },
+        ],
+      },
+    ];
+  },
   async rewrites() {
     return [
       {
@@ -17,6 +33,14 @@ const nextConfig: NextConfig = {
       },
       { source: "/api/users/me", destination: `${apiOrigin}/api/users/me` },
       { source: "/api/links", destination: `${apiOrigin}/api/links` },
+      {
+        source: "/api/links/statuses",
+        destination: `${apiOrigin}/api/links/statuses`,
+      },
+      {
+        source: "/api/links/:id/document",
+        destination: `${apiOrigin}/api/links/:id/document`,
+      },
       { source: "/api/links/:id", destination: `${apiOrigin}/api/links/:id` },
     ];
   },

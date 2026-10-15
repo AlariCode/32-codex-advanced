@@ -1,0 +1,23 @@
+name: linkbook-worker
+services:
+  worker:
+    build:
+      context: .
+      dockerfile: infra/worker/Dockerfile
+    environment:
+      DATABASE_URL: ${WORKER_DATABASE_URL:?set WORKER_DATABASE_URL using the container-visible PostgreSQL address}
+      WORKER_DATABASE_HOST: ${WORKER_DATABASE_HOST:-host.docker.internal}
+      WORKER_DATABASE_PORT: ${WORKER_DATABASE_PORT:-15432}
+      GOMEMLIMIT: 384MiB
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    cap_drop: [ALL]
+    cap_add: [NET_ADMIN, SETUID, SETGID, SETPCAP]
+    security_opt: ["no-new-privileges:true"]
+    read_only: true
+    tmpfs: ["/tmp:size=16m,noexec,nosuid"]
+    mem_limit: 512m
+    cpus: 1
+    pids_limit: 64
+    ulimits:
+      nofile: { soft: 256, hard: 256 }

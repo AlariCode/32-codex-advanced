@@ -2,11 +2,130 @@ package worker
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 	"log/slog"
+	"os"
+	"time"
+
+	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/stdlib"
+	"linkbook/linkprocessing"
+	"linkbook/worker/internal/extract"
+	"linkbook/worker/internal/safehttp"
 )
 
-func Run(ctx context.Context) {
-	slog.Info("Worker started; link processing is not configured yet")
-	<-ctx.Done()
-	slog.Info("Worker stopped gracefully")
+type Fetcher interface {
+	Fetch(context.Context, string) (safehttp.Page, error)
+}
+
+func Run(ctx context.Context) error { return RunWith(ctx, os.Getenv("DATABASE_URL"), safehttp.New()) }
+
+// RunWith is also the integration harness composition root. The production
+// command always constructs safehttp.New(), without network-policy overrides.
+func RunWith(ctx context.Context, dsn string, client Fetcher) error {
+	if dsn == "" {
+		return errors.New("DATABASE_URL is required")
+	}
+	config, err := pgx.ParseConfig(dsn)
+	if err != nil {
+		return errors.New("invalid DATABASE_URL")
+	}
+	db := stdlib.OpenDB(*config)
+	defer func() { _ = db.Close() }()
+	db.SetMaxOpenConns(4)
+	db.SetMaxIdleConns(2)
+	if err = waitSchema(ctx, db); err != nil {
+		return err
+	}
+	slog.Info("Worker started")
+	ticker := time.NewTicker(500 * time.Millisecond)
+	defer ticker.Stop()
+	for {
+		if ctx.Err() != nil {
+			return nil
+		}
+		exec, err := linkprocessing.Claim(ctx, db)
+		if err != nil {
+			if ctx.Err() != nil {
+				return nil
+			}
+			slog.Error("Worker claim failed")
+			select {
+			case <-ctx.Done():
+				return nil
+			case <-ticker.C:
+			}
+			continue
+		}
+		if exec == nil {
+			select {
+			case <-ctx.Done():
+				return nil
+			case <-ticker.C:
+			}
+			continue
+		}
+		if err = process(ctx, db, client, *exec); err != nil && ctx.Err() == nil {
+			slog.Error("Worker publication failed", "link_id", exec.LinkID)
+		}
+	}
+}
+func process(parent context.Context, db *sql.DB, client Fetcher, e linkprocessing.Execution) error {
+	// The network and parsing stages share a budget shorter than the lease. The
+	// production container additionally bounds memory/CPU/process resources.
+	ctx, cancel := context.WithDeadline(parent, e.Deadline)
+	defer cancel()
+	ctx, cancelWork := context.WithTimeout(ctx, 35*time.Second)
+	defer cancelWork()
+	page, err := client.Fetch(ctx, e.FetchURL)
+	result := linkprocessing.Result{}
+	if err != nil {
+		result.Reason = safehttp.Code(err)
+	} else {
+		result, err = extract.Article(page.HTML, page.FinalURL)
+		if err != nil {
+			result = linkprocessing.Result{Reason: "processing_error"}
+		}
+	}
+	if parent.Err() != nil {
+		return parent.Err()
+	}
+	// Parsing completion doesn't authorize publication: SQL checks durable clocks.
+	commitCtx, cancelCommit := context.WithTimeout(parent, 5*time.Second)
+	defer cancelCommit()
+	_, err = linkprocessing.Publish(commitCtx, db, e, result)
+	return err
+}
+func waitSchema(ctx context.Context, db *sql.DB) error {
+	deadline := time.NewTimer(60 * time.Second)
+	defer deadline.Stop()
+	ticker := time.NewTicker(time.Second)
+	defer ticker.Stop()
+	warned := false
+	for {
+		probe, cancel := context.WithTimeout(ctx, 2*time.Second)
+		var compatible bool
+		err := db.QueryRowContext(probe, `SELECT to_regclass('links') IS NOT NULL AND to_regclass('processing_jobs') IS NOT NULL AND to_regclass('snapshots') IS NOT NULL`).Scan(&compatible)
+		if err == nil && compatible {
+			// Parse all required fields; an older/incompatible shape is not accepted.
+			_, err = db.ExecContext(probe, `SELECT l.fetch_url,l.generation,l.deadline_at,j.execution_token,j.lease_expires_at,s.schema_version,s.document FROM links l LEFT JOIN processing_jobs j ON j.link_id=l.id LEFT JOIN snapshots s ON s.link_id=l.id LIMIT 0`)
+			if err == nil {
+				cancel()
+				return nil
+			}
+		}
+		cancel()
+		if !warned {
+			slog.Warn("Waiting for PostgreSQL and compatible migrations 001–005; start the API to apply migrations")
+			warned = true
+		}
+		select {
+		case <-ctx.Done():
+			return ctx.Err()
+		case <-deadline.C:
+			return errors.New("PostgreSQL schema unavailable or incompatible; API must apply migrations 001–005")
+		case <-ticker.C:
+		}
+	}
 }

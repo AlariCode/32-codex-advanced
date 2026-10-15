@@ -1,7 +1,7 @@
 -include .env
 export
 
-.PHONY: setup db-up db-down db-logs db-shell test test-db-up test-db-down test-integration test-login openapi web api worker build check
+.PHONY: setup db-up db-down db-logs db-shell test test-db-up test-db-down test-integration test-login openapi web api worker worker-dev build check
 
 TEST_DATABASE_URL ?= postgres://linkbook_test:linkbook_test_local@127.0.0.1:15433/linkbook_test?sslmode=disable
 
@@ -47,6 +47,9 @@ api:
 	go run ./backend/api/cmd/api
 
 worker:
+	docker compose -f compose.worker.yaml up --build worker
+
+worker-dev:
 	go run ./backend/worker/cmd/worker
 
 build:
