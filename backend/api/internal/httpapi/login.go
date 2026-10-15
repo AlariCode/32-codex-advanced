@@ -55,10 +55,14 @@ func (handler loginHandler) login(w http.ResponseWriter, r *http.Request) {
 		slog.Error("Login failed", "error", err)
 		writeJSON(w, http.StatusInternalServerError, errorResponse{Code: "internal_error"})
 	default:
-		http.SetCookie(w, &http.Cookie{
-			Name: "linkbook_session", Value: token, Path: "/",
-			HttpOnly: true, Secure: true, SameSite: http.SameSiteLaxMode,
-		})
+		setSessionCookie(w, token)
 		writeJSON(w, http.StatusOK, authenticated)
 	}
+}
+
+func setSessionCookie(w http.ResponseWriter, token string) {
+	http.SetCookie(w, &http.Cookie{
+		Name: "linkbook_session", Value: token, Path: "/",
+		HttpOnly: true, Secure: true, SameSite: http.SameSiteLaxMode,
+	})
 }

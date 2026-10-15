@@ -411,7 +411,7 @@ const docTemplate = `{
         },
         "/api/users/register": {
             "post": {
-                "description": "Email is trimmed and lowercased. Password accepts any characters, minimum 8 Unicode code points.\nRequest body is limited to 1 MiB. Passwords and password hashes are never returned.",
+                "description": "Email is trimmed and lowercased. Password accepts any characters, minimum 8 Unicode code points.\nRequest body is limited to 1 MiB. Passwords and password hashes are never returned.\nCreates the user and a 24-hour session atomically; issues the same secure session cookie as login. Responses are no-store.",
                 "consumes": [
                     "application/json"
                 ],
@@ -660,6 +660,9 @@ const docTemplate = `{
                     }
                 },
                 "kind": {
+                    "type": "string"
+                },
+                "language": {
                     "type": "string"
                 },
                 "level": {

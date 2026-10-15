@@ -12,10 +12,7 @@ async function login(page: Page) {
   await page.getByLabel("Email", { exact: true }).fill(email);
   await page.getByLabel("Пароль", { exact: true }).fill("ReliableArchive42!");
   await page.getByRole("button", { name: "Войти", exact: true }).click();
-  await expect(
-    page.getByRole("heading", { name: "Вход выполнен" }),
-  ).toBeVisible();
-  await page.getByRole("link", { name: "На главную", exact: true }).click();
+  await expect(page).toHaveURL(/\/$/);
   await expect(
     page.getByRole("heading", { name: "Моя библиотека" }),
   ).toBeVisible();
@@ -65,6 +62,12 @@ test("real queue archives complete text and reader survives origin shutdown", as
     article.getByRole("heading", { name: "Keeping the record" }),
   ).toBeVisible();
   await expect(article.getByRole("listitem")).toHaveCount(3);
+  await expect(article.locator("pre code")).toHaveText(
+    "* {\n  margin: 0;\n  padding: 0;\n}\n",
+  );
+  await expect(
+    article.locator("pre code .hljs-attribute").first(),
+  ).toBeVisible();
   await expect(article.locator("blockquote")).toHaveText(
     "A small archive outlasts a broken link.",
   );

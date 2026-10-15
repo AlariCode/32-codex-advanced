@@ -107,6 +107,7 @@ func Article(body []byte, finalURL string) (linkprocessing.Result, error) {
 	clean(root)
 	parser := readability.NewParser()
 	parser.MaxElemsToParse = 50000
+	parser.KeepClasses = true // Read language markers; classes never enter the document.
 	article, err := parser.ParseDocument(root, u)
 	if err != nil {
 		return result, err
@@ -144,7 +145,7 @@ func Article(body []byte, finalURL string) (linkprocessing.Result, error) {
 					}
 				}
 			case "pre":
-				b = linkprocessing.Block{Kind: "paragraph", Text: text(n)}
+				b = linkprocessing.Block{Kind: "code", Text: codeText(n), Language: codeLanguage(n)}
 			}
 			if b.Text != "" || len(b.Items) > 0 {
 				doc.Blocks = append(doc.Blocks, b)
@@ -198,4 +199,66 @@ func text(n *html.Node) string {
 	}
 	visit(n)
 	return strings.Join(strings.Fields(out.String()), " ")
+}
+
+func codeText(n *html.Node) string {
+	var out strings.Builder
+	var visit func(*html.Node)
+	visit = func(n *html.Node) {
+		if n.Type == html.TextNode {
+			out.WriteString(n.Data)
+			return
+		}
+		if n.Type == html.ElementNode {
+			if active(n.Data) {
+				return
+			}
+			if n.Data == "br" {
+				out.WriteByte('\n')
+				return
+			}
+		}
+		for c := n.FirstChild; c != nil; c = c.NextSibling {
+			visit(c)
+		}
+	}
+	visit(n)
+	return out.String()
+}
+func codeLanguage(n *html.Node) string {
+	for _, a := range n.Attr {
+		if a.Key != "class" && a.Key != "data-language" {
+			continue
+		}
+		for _, value := range strings.Fields(a.Val) {
+			if a.Key == "class" {
+				if strings.HasPrefix(value, "language-") {
+					value = strings.TrimPrefix(value, "language-")
+				} else if strings.HasPrefix(value, "lang-") {
+					value = strings.TrimPrefix(value, "lang-")
+				} else {
+					continue
+				}
+			}
+			value = strings.ToLower(value)
+			if len(value) == 0 || len(value) > 40 {
+				continue
+			}
+			valid := true
+			for _, c := range value {
+				if !(c >= 'a' && c <= 'z' || c >= '0' && c <= '9' || strings.ContainsRune("_+#.-", c)) {
+					valid = false
+				}
+			}
+			if valid {
+				return value
+			}
+		}
+	}
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		if language := codeLanguage(c); language != "" {
+			return language
+		}
+	}
+	return ""
 }

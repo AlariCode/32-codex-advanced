@@ -12,6 +12,8 @@
     "test:e2e:integration": "playwright test --config playwright.integration.config.ts"
   },
   "dependencies": {
+    "highlight.js": "^11.12.0",
+    "lowlight": "^3.3.0",
     "next": "^16.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

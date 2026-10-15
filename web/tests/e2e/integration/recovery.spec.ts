@@ -15,7 +15,7 @@ async function login(page: Page, existingEmail?: string) {
   await page.getByLabel("Email", { exact: true }).fill(email);
   await page.getByLabel("Пароль", { exact: true }).fill("ReliableArchive42!");
   await page.getByRole("button", { name: "Войти", exact: true }).click();
-  await page.getByRole("link", { name: "На главную", exact: true }).click();
+  await expect(page).toHaveURL(/\/$/);
   await expect(
     page.getByRole("heading", { name: "Моя библиотека" }),
   ).toBeVisible();

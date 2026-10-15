@@ -3,6 +3,7 @@ package linkprocessing
 import (
 	"encoding/json"
 	"errors"
+	"regexp"
 	"strings"
 	"unicode/utf8"
 )
@@ -11,11 +12,12 @@ const SchemaVersion = 1
 const MaxHTMLBytes = 3 * 1024 * 1024
 
 type Block struct {
-	Kind    string   `json:"kind"`
-	Text    string   `json:"text,omitempty"`
-	Level   int      `json:"level,omitempty"`
-	Ordered bool     `json:"ordered,omitempty"`
-	Items   []string `json:"items,omitempty"`
+	Language string   `json:"language,omitempty"`
+	Kind     string   `json:"kind"`
+	Text     string   `json:"text,omitempty"`
+	Level    int      `json:"level,omitempty"`
+	Ordered  bool     `json:"ordered,omitempty"`
+	Items    []string `json:"items,omitempty"`
 }
 type Document struct {
 	SchemaVersion int     `json:"schema_version"`
@@ -26,6 +28,8 @@ type Result struct {
 	Title, FinalURL, Reason string
 	Warnings                []string
 }
+
+var codeLanguage = regexp.MustCompile(`^[a-z0-9_+#.-]{1,40}$`)
 
 var ErrDocument = errors.New("unsupported_document")
 
@@ -39,9 +43,12 @@ func ValidateDocument(d Document) error {
 		if !utf8.ValidString(b.Text) {
 			return ErrDocument
 		}
+		if b.Language != "" && (b.Kind != "code" || !codeLanguage.MatchString(b.Language)) {
+			return ErrDocument
+		}
 		size += len(b.Text)
 		switch b.Kind {
-		case "paragraph", "quote":
+		case "paragraph", "quote", "code":
 			if strings.TrimSpace(b.Text) == "" || b.Level != 0 || len(b.Items) != 0 || b.Ordered {
 				return ErrDocument
 			}

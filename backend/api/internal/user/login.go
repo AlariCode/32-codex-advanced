@@ -39,18 +39,31 @@ func (service *Service) Login(ctx context.Context, email, password string) (User
 	if !matches {
 		return User{}, "", ErrInvalidCredentials
 	}
-	secret := make([]byte, 32)
-	if _, err := rand.Read(secret); err != nil {
-		return User{}, "", fmt.Errorf("generate session token: %w", err)
-	}
-	token := base64.RawURLEncoding.EncodeToString(secret)
-	digest := sha256.Sum256([]byte(token))
-	if _, err := service.db.ExecContext(ctx, `
-		INSERT INTO user_sessions (token_hash, user_id, expires_at)
-		VALUES ($1, $2, CURRENT_TIMESTAMP + INTERVAL '24 hours')
-	`, digest[:], authenticated.ID); err != nil {
-		return User{}, "", fmt.Errorf("create login session: %w", err)
+	token, err := createSession(ctx, service.db, authenticated.ID)
+	if err != nil {
+		return User{}, "", err
 	}
 	authenticated.PasswordHash = ""
 	return authenticated, token, nil
+}
+
+type sessionWriter interface {
+	ExecContext(context.Context, string, ...any) (sql.Result, error)
+}
+
+func createSession(ctx context.Context, writer sessionWriter, userID string) (string, error) {
+	secret := make([]byte, 32)
+	if _, err := rand.Read(secret); err != nil {
+		return "", fmt.Errorf("generate session token: %w", err)
+	}
+	token := base64.RawURLEncoding.EncodeToString(secret)
+	digest := sha256.Sum256([]byte(token))
+	if _, err := writer.ExecContext(ctx, `
+		INSERT INTO user_sessions (token_hash, user_id, expires_at)
+		VALUES ($1, $2, CURRENT_TIMESTAMP + INTERVAL '24 hours')
+	`, digest[:], userID); err != nil {
+		return "", fmt.Errorf("create login session: %w", err)
+	}
+
+	return token, nil
 }
