@@ -3,6 +3,7 @@ package safehttp
 
 import (
 	"context"
+	"crypto/tls"
 	"errors"
 	"io"
 	"mime"
@@ -10,6 +11,7 @@ import (
 	"net/http"
 	"net/netip"
 	"net/url"
+	"strconv"
 	"strings"
 	"time"
 
@@ -24,6 +26,10 @@ type failure string
 
 func (e failure) Error() string { return string(e) }
 func Code(err error) string {
+	var transient transientFailure
+	if errors.As(err, &transient) {
+		return transient.code
+	}
 	var f failure
 	if errors.As(err, &f) {
 		return string(f)
@@ -121,10 +127,10 @@ func (c *Client) destination(ctx context.Context, u *url.URL) (string, error) {
 	}
 	answers, err := c.lookup(ctx, host)
 	if err != nil {
-		return "", failure("network_error")
+		return "", transientFailure{code: "network_error"}
 	}
 	if len(answers) == 0 {
-		return "", failure("network_error")
+		return "", transientFailure{code: "network_error"}
 	}
 	for _, answer := range answers {
 		ip, ok := netip.AddrFromSlice(answer.IP)
@@ -135,7 +141,54 @@ func (c *Client) destination(ctx context.Context, u *url.URL) (string, error) {
 	ip, _ := netip.AddrFromSlice(answers[0].IP)
 	return net.JoinHostPort(ip.String(), port), nil
 }
-func (c *Client) Fetch(parent context.Context, raw string) (Page, error) {
+
+type transientFailure struct {
+	code    string
+	retryAt time.Time
+}
+
+func (e transientFailure) Error() string { return e.code }
+
+// Fetch retries at most four times within the caller's original attempt budget.
+// Each retry repeats URL/DNS/redirect checks through a fresh pinned transport.
+func (c *Client) Fetch(ctx context.Context, raw string) (Page, error) {
+	var page Page
+	var err error
+	for attempt := 0; attempt < 5; attempt++ {
+		page, err = c.fetchOnce(ctx, raw)
+		if err == nil {
+			return page, nil
+		}
+		var transient transientFailure
+		if !errors.As(err, &transient) || attempt == 4 || ctx.Err() != nil {
+			return Page{}, err
+		}
+		delay := time.Duration(1<<attempt) * 250 * time.Millisecond
+		if remaining := time.Until(transient.retryAt); remaining > delay {
+			delay = remaining
+		}
+		timer := time.NewTimer(delay)
+		select {
+		case <-ctx.Done():
+			timer.Stop()
+			return Page{}, err
+		case <-timer.C:
+		}
+	}
+	return page, err
+}
+func retryAt(value string) time.Time {
+	if seconds, err := strconv.ParseInt(value, 10, 64); err == nil && seconds >= 0 {
+		// Saturate hostile/overflowing values; never wrap into an immediate retry.
+		if seconds > 86400 {
+			seconds = 86400
+		}
+		return time.Now().Add(time.Duration(seconds) * time.Second)
+	}
+	date, _ := http.ParseTime(value)
+	return date
+}
+func (c *Client) fetchOnce(parent context.Context, raw string) (Page, error) {
 	ctx, cancel := context.WithTimeout(parent, 25*time.Second)
 	defer cancel()
 	if len(raw) > 65536 || strings.ContainsAny(raw, "\\\r\n\t ") {
@@ -164,7 +217,11 @@ func (c *Client) Fetch(parent context.Context, raw string) (Page, error) {
 		response, err := transport.RoundTrip(request)
 		if err != nil {
 			transport.CloseIdleConnections()
-			return Page{}, failure("network_error")
+			var certificate *tls.CertificateVerificationError
+			if errors.As(err, &certificate) {
+				return Page{}, failure("network_error")
+			}
+			return Page{}, transientFailure{code: "network_error"}
 		}
 		if response.StatusCode >= 300 && response.StatusCode < 400 {
 			location := response.Header.Get("Location")
@@ -175,7 +232,7 @@ func (c *Client) Fetch(parent context.Context, raw string) (Page, error) {
 			}
 			next, err := url.Parse(location)
 			if err != nil || location == "" {
-				return Page{}, failure("network_error")
+				return Page{}, transientFailure{code: "network_error"}
 			}
 			current = current.ResolveReference(next)
 			continue
@@ -183,6 +240,9 @@ func (c *Client) Fetch(parent context.Context, raw string) (Page, error) {
 		if response.StatusCode < 200 || response.StatusCode >= 300 {
 			_ = response.Body.Close()
 			transport.CloseIdleConnections()
+			if response.StatusCode == 429 || response.StatusCode >= 500 {
+				return Page{}, transientFailure{code: "http_error", retryAt: retryAt(response.Header.Get("Retry-After"))}
+			}
 			return Page{}, failure("http_error")
 		}
 
@@ -203,7 +263,7 @@ func (c *Client) Fetch(parent context.Context, raw string) (Page, error) {
 		_ = response.Body.Close()
 		transport.CloseIdleConnections()
 		if err != nil {
-			return Page{}, failure("network_error")
+			return Page{}, transientFailure{code: "network_error"}
 		}
 		if len(body) > linkprocessing.MaxHTMLBytes {
 			return Page{}, failure("html_too_large")

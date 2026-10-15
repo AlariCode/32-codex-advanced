@@ -1,6 +1,7 @@
 export type Block = {
-  kind: "paragraph" | "heading" | "list" | "quote";
+  kind: "paragraph" | "heading" | "list" | "quote" | "code";
   text?: string;
+  language?: string;
   level?: number;
   ordered?: boolean;
   items?: string[];
@@ -51,7 +52,15 @@ export async function readArticle(
   return data;
 }
 function validBlock(block: Block) {
-  if (!block || !["paragraph", "heading", "list", "quote"].includes(block.kind))
+  if (
+    !block ||
+    !["paragraph", "heading", "list", "quote", "code"].includes(block.kind)
+  )
+    return false;
+  if (
+    block.language !== undefined &&
+    (block.kind !== "code" || !/^[a-z0-9_+#.-]{1,40}$/.test(block.language))
+  )
     return false;
   if (block.kind === "list")
     return (

@@ -58,7 +58,7 @@ export async function currentUser(signal: AbortSignal): Promise<UserDTO> {
 export async function listLinks(
   signal: AbortSignal,
   cursor = "",
-): Promise<{ links: LinkCard[]; next_cursor: string }> {
+): Promise<{ links: LinkCard[]; next_cursor: string; server_time: string }> {
   const page = await request(
     `/api/links?limit=20${cursor ? `&cursor=${encodeURIComponent(cursor)}` : ""}`,
     signal,
@@ -74,7 +74,7 @@ export async function listLinks(
 export async function saveLink(
   signal: AbortSignal,
   url: string,
-): Promise<{ link: LinkCard; created: boolean }> {
+): Promise<{ link: LinkCard; created: boolean; server_time: string }> {
   const result = await request("/api/links", signal, { url });
   if (!isCard(result.link) || typeof result.created !== "boolean")
     throw new Error("invalid_response");

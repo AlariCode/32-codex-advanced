@@ -358,8 +358,8 @@ func TestLoginIntegrationPersistsOnlySessionDigest(t *testing.T) {
 	if err := fixture.db.QueryRowContext(t.Context(), "SELECT count(*) FROM user_sessions").Scan(&count); err != nil {
 		t.Fatal(err)
 	}
-	if count != 1 {
-		t.Errorf("failed login changed sessions: count = %d, want 1", count)
+	if count != 2 { // Registration and login each create a session.
+		t.Errorf("failed login changed sessions: count = %d, want 2", count)
 	}
 }
 

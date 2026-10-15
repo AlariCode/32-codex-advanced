@@ -112,6 +112,8 @@ definitions:
         type: array
       kind:
         type: string
+      language:
+        type: string
       level:
         type: integer
       ordered:
@@ -301,6 +303,9 @@ paths:
       - links
   /api/links/statuses:
     get:
+      description: Expired processing attempts are failed with reason timeout, independently
+        of worker availability. server_time anchors the 30-second waiting message;
+        reload does not reset requested_at or deadline_at.
       parameters:
       - description: Up to 100 comma-separated UUIDs; omitted to discover processing
           cards
@@ -413,6 +418,7 @@ paths:
       description: |-
         Email is trimmed and lowercased. Password accepts any characters, minimum 8 Unicode code points.
         Request body is limited to 1 MiB. Passwords and password hashes are never returned.
+        Creates the user and a 24-hour session atomically; issues the same secure session cookie as login. Responses are no-store.
       parameters:
       - description: Email and password
         in: body

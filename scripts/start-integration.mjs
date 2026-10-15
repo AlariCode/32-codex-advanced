@@ -18,6 +18,10 @@ const baseEnv = { ...process.env, TEST_DATABASE_URL: database.href };
 const children = [];
 let stopping = false;
 let created = false;
+const expectedStops = new WeakSet();
+let worker;
+let workerEnv;
+const retryHits = new Map();
 function run(command, args, env = baseEnv) {
   return new Promise((resolve, reject) => {
     const child = spawn(command, args, { cwd: root, env, stdio: "inherit" });
@@ -37,7 +41,7 @@ function start(command, args, env) {
   children.push(child);
   child.on("error", () => void stop(1));
   child.on("exit", () => {
-    if (!stopping) void stop(1);
+    if (!stopping && !expectedStops.has(child)) void stop(1);
   });
   return child;
 }
@@ -69,6 +73,31 @@ async function fixtureOn() {
       response.end();
       return;
     }
+    if (request.url.startsWith("/retry-once/")) {
+      const count = (retryHits.get(request.url) ?? 0) + 1;
+      retryHits.set(request.url, count);
+      if (count === 1) {
+        response.writeHead(503, { "Retry-After": "35" });
+        response.end();
+        return;
+      }
+    }
+    if (request.url.startsWith("/delay/")) {
+      const milliseconds = Math.min(
+        130000,
+        Math.max(
+          0,
+          Number(
+            new URL(request.url, "http://fixture").searchParams.get("ms"),
+          ) || 0,
+        ),
+      );
+      response.writeHead(200, { "Content-Type": "text/html" });
+      response.flushHeaders();
+      const timer = setTimeout(() => response.end(html), milliseconds);
+      response.on("close", () => clearTimeout(timer));
+      return;
+    }
     if (request.url.startsWith("/slow")) {
       setTimeout(() => {
         response.writeHead(200, { "Content-Type": "text/html" });
@@ -97,9 +126,56 @@ const control = createServer(async (request, response) => {
     response.end("on");
     return;
   }
+  if (request.method === "POST" && request.url === "/worker/off") {
+    if (worker && worker.exitCode === null && worker.signalCode === null) {
+      expectedStops.add(worker);
+      await new Promise((resolve) => {
+        worker.once("exit", resolve);
+        worker.kill("SIGKILL");
+      });
+    }
+    worker = undefined;
+    response.end("worker stopped");
+    return;
+  }
+  if (request.method === "POST" && request.url === "/worker/on") {
+    if (!worker)
+      worker = start(resolve(artifacts, "integration-worker"), [], workerEnv);
+    response.end("worker started");
+    return;
+  }
+  if (request.method === "POST" && request.url.startsWith("/session/expire?")) {
+    const owner = new URL(request.url, "http://control").searchParams.get(
+      "user",
+    );
+    if (!/^[a-f0-9-]{36}$/.test(owner ?? "")) {
+      response.writeHead(400);
+      response.end();
+      return;
+    }
+    try {
+      await run(resolve(artifacts, "integration-db"), [
+        "expire-sessions",
+        schema,
+        owner,
+      ]);
+      response.end("session expired");
+    } catch {
+      response.writeHead(500);
+      response.end();
+    }
+    return;
+  }
   if (request.url === "/stats") {
     response.setHeader("Content-Type", "application/json");
-    response.end(JSON.stringify({ fixtureHits, forbiddenHits }));
+    response.end(
+      JSON.stringify({
+        fixtureHits,
+        forbiddenHits,
+        workerRunning: Boolean(worker),
+        retryHits: Object.fromEntries(retryHits),
+      }),
+    );
     return;
   }
   response.writeHead(404);
@@ -152,7 +228,8 @@ try {
   await fixtureOn();
   await listen(control, 39877);
   start(resolve(artifacts, "api"), [], env);
-  start(resolve(artifacts, "integration-worker"), [], env);
+  workerEnv = env;
+  worker = start(resolve(artifacts, "integration-worker"), [], env);
   start(
     process.execPath,
     [

@@ -20,7 +20,7 @@ func main() {
 	}
 }
 func run() error {
-	if len(os.Args) != 3 || !regexp.MustCompile(`^e2e_[a-z0-9_]+$`).MatchString(os.Args[2]) {
+	if (len(os.Args) != 3 && len(os.Args) != 4) || !regexp.MustCompile(`^e2e_[a-z0-9_]+$`).MatchString(os.Args[2]) {
 		return fmt.Errorf("expected create/drop e2e_<schema>")
 	}
 	config, err := pgx.ParseConfig(os.Getenv("TEST_DATABASE_URL"))
@@ -35,6 +35,11 @@ func run() error {
 	switch os.Args[1] {
 	case "create":
 		result, err = db.ExecContext(ctx, "CREATE SCHEMA "+os.Args[2])
+	case "expire-sessions":
+		if len(os.Args) != 4 || !regexp.MustCompile(`^[a-f0-9-]{36}$`).MatchString(os.Args[3]) {
+			return fmt.Errorf("expected owner UUID")
+		}
+		result, err = db.ExecContext(ctx, "UPDATE "+os.Args[2]+".user_sessions SET expires_at=clock_timestamp()-interval '1 second' WHERE user_id=$1", os.Args[3])
 	case "drop":
 		result, err = db.ExecContext(ctx, "DROP SCHEMA "+os.Args[2]+" CASCADE")
 	default:

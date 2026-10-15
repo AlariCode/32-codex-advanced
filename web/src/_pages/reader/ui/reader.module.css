@@ -82,3 +82,68 @@
     font-size: 1.0625rem;
   }
 }
+.codeBlock {
+  min-width: 0;
+  max-width: 100%;
+  margin: 0 0 1.5rem;
+  background: #141c29;
+  color: #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.codeHeader {
+  padding: 0.6rem 1.25rem;
+  border-bottom: 1px solid #334155;
+  color: #cbd5e1;
+  font:
+    500 0.75rem/1.5 system-ui,
+    sans-serif;
+}
+.code {
+  margin: 0;
+  padding: 1.25rem;
+  max-width: 100%;
+  overflow-x: auto;
+  white-space: pre;
+  overflow-wrap: normal;
+  tab-size: 2;
+  font:
+    0.9375rem/1.7 ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Consolas,
+    monospace;
+}
+.code:focus-visible {
+  outline: 2px solid #7dd3fc;
+  outline-offset: -3px;
+}
+.code code {
+  font: inherit;
+}
+.code :global(.hljs-keyword),
+.code :global(.hljs-selector-tag),
+.code :global(.hljs-literal) {
+  color: #c4b5fd;
+}
+.code :global(.hljs-string),
+.code :global(.hljs-selector-class),
+.code :global(.hljs-selector-id) {
+  color: #86efac;
+}
+.code :global(.hljs-number),
+.code :global(.hljs-attribute),
+.code :global(.hljs-attr),
+.code :global(.hljs-property) {
+  color: #7dd3fc;
+}
+.code :global(.hljs-comment),
+.code :global(.hljs-meta) {
+  color: #94a3b8;
+}
+.code :global(.hljs-title),
+.code :global(.hljs-built_in),
+.code :global(.hljs-tag),
+.code :global(.hljs-name) {
+  color: #fcd34d;
+}

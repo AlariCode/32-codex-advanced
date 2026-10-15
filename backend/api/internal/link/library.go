@@ -41,7 +41,11 @@ type Service struct{ db *sql.DB }
 
 func NewService(db *sql.DB) *Service { return &Service{db: db} }
 
-const columns = `id::text,submitted_url,title,state,generation,reason,warnings,created_at,requested_at,deadline_at`
+// The projection also fences the instant between expiry maintenance and SELECT.
+const columns = `id::text,submitted_url,title,
+ CASE WHEN state='processing' AND deadline_at<=clock_timestamp() THEN 'failed' ELSE state END,
+ generation,CASE WHEN state='processing' AND deadline_at<=clock_timestamp() THEN 'timeout' ELSE reason END,
+ warnings,created_at,requested_at,deadline_at`
 
 type scanner interface{ Scan(...any) error }
 
@@ -77,6 +81,9 @@ func prepareURL(raw string) (submitted, fetch, key string, err error) {
 }
 
 func (s *Service) Save(ctx context.Context, owner, raw string) (Card, bool, error) {
+	if err := linkprocessing.Expire(ctx, s.db, owner); err != nil {
+		return Card{}, false, err
+	}
 	submitted, fetch, key, err := prepareURL(raw)
 	if err != nil {
 		return Card{}, false, err
@@ -121,6 +128,9 @@ func (s *Service) Save(ctx context.Context, owner, raw string) (Card, bool, erro
 	return card, true, nil
 }
 func (s *Service) Get(ctx context.Context, owner, id string) (Card, error) {
+	if err := linkprocessing.Expire(ctx, s.db, owner); err != nil {
+		return Card{}, err
+	}
 	return scanCard(s.db.QueryRowContext(ctx, `SELECT `+columns+` FROM links WHERE user_id=$1 AND id=$2`, owner, id))
 }
 
@@ -148,6 +158,9 @@ func (s *Service) List(ctx context.Context, owner, encoded string, limit int) (P
 	return s.list(ctx, owner, encoded, limit, false)
 }
 func (s *Service) list(ctx context.Context, owner, encoded string, limit int, active bool) (Page, error) {
+	if err := linkprocessing.Expire(ctx, s.db, owner); err != nil {
+		return Page{}, err
+	}
 	page := Page{Links: []Card{}}
 	var after cursor
 	if encoded != "" {

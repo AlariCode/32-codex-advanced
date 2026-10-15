@@ -24,6 +24,9 @@ type DocumentResponse struct {
 }
 
 func (s *Service) Document(ctx context.Context, owner, id string) (DocumentResponse, error) {
+	if err := linkprocessing.Expire(ctx, s.db, owner); err != nil {
+		return DocumentResponse{}, err
+	}
 	var out DocumentResponse
 	var state string
 	var version sql.NullInt64
@@ -49,6 +52,9 @@ func (s *Service) Document(ctx context.Context, owner, id string) (DocumentRespo
 // Statuses either returns a bounded owner-scoped ID batch, or discovers all
 // active cards using keyset pages independently of the visible library page.
 func (s *Service) Statuses(ctx context.Context, owner string, ids []string, encoded string, limit int) (Page, error) {
+	if err := linkprocessing.Expire(ctx, s.db, owner); err != nil {
+		return Page{}, err
+	}
 	if len(ids) == 0 {
 		return s.list(ctx, owner, encoded, limit, true)
 	}

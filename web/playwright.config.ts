@@ -20,6 +20,8 @@ export default defineConfig({
   ],
   webServer: {
     command: "npm run dev -- --port 3100",
+    // Mock tests must never reach the running development API.
+    env: { API_ORIGIN: "http://127.0.0.1:18081" },
     url: "http://127.0.0.1:3100/register",
     reuseExistingServer: false,
     timeout: 60_000,

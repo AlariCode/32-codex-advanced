@@ -12,6 +12,7 @@ import (
 
 	"linkbook/api/internal/database"
 	"linkbook/api/internal/httpapi"
+	"linkbook/linkprocessing"
 )
 
 // @title Linkbook API
@@ -37,6 +38,26 @@ func run() error {
 	}
 	defer func() { _ = db.Close() }()
 	slog.Info("PostgreSQL ready; migrations applied")
+	if err := linkprocessing.Expire(ctx, db, ""); err != nil {
+		return err
+	}
+	go func() {
+		ticker := time.NewTicker(time.Second)
+		defer ticker.Stop()
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			case <-ticker.C:
+				sweep, cancel := context.WithTimeout(ctx, 5*time.Second)
+				err := linkprocessing.Expire(sweep, db, "")
+				cancel()
+				if err != nil && ctx.Err() == nil {
+					slog.Error("Deadline sweep failed")
+				}
+			}
+		}
+	}()
 
 	port := os.Getenv("API_PORT")
 	if port == "" {

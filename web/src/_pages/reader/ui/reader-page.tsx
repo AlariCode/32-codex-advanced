@@ -8,9 +8,12 @@ import {
   type ArchivedArticle,
   type Block,
 } from "../api/document";
+import { CodeBlock } from "./code-block";
 import styles from "./reader.module.css";
 
 function TextBlock({ block }: { block: Block }) {
+  if (block.kind === "code")
+    return <CodeBlock text={block.text!} language={block.language} />;
   if (block.kind === "paragraph") return <p>{block.text}</p>;
   if (block.kind === "quote")
     return (

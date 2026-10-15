@@ -72,12 +72,30 @@ func RunWith(ctx context.Context, dsn string, client Fetcher) error {
 	}
 }
 func process(parent context.Context, db *sql.DB, client Fetcher, e linkprocessing.Execution) error {
-	// The network and parsing stages share a budget shorter than the lease. The
-	// production container additionally bounds memory/CPU/process resources.
+
 	ctx, cancel := context.WithDeadline(parent, e.Deadline)
 	defer cancel()
-	ctx, cancelWork := context.WithTimeout(ctx, 35*time.Second)
-	defer cancelWork()
+	heartbeatDone := make(chan struct{})
+	go func() {
+		defer close(heartbeatDone)
+		ticker := time.NewTicker(10 * time.Second)
+		defer ticker.Stop()
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			case <-ticker.C:
+				renewCtx, stop := context.WithTimeout(ctx, 5*time.Second)
+				ok, err := linkprocessing.Renew(renewCtx, db, e)
+				stop()
+				if err != nil || !ok {
+					cancel()
+					return
+				}
+			}
+		}
+	}()
+	defer func() { cancel(); <-heartbeatDone }()
 	page, err := client.Fetch(ctx, e.FetchURL)
 	result := linkprocessing.Result{}
 	if err != nil {
@@ -91,7 +109,7 @@ func process(parent context.Context, db *sql.DB, client Fetcher, e linkprocessin
 	if parent.Err() != nil {
 		return parent.Err()
 	}
-	// Parsing completion doesn't authorize publication: SQL checks durable clocks.
+	// Parsing completion does not authorize publication: SQL checks durable clocks.
 	commitCtx, cancelCommit := context.WithTimeout(parent, 5*time.Second)
 	defer cancelCommit()
 	_, err = linkprocessing.Publish(commitCtx, db, e, result)

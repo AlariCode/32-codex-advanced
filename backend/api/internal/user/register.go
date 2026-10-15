@@ -9,18 +9,23 @@ import (
 	"github.com/jackc/pgx/v5/pgconn"
 )
 
-func (service *Service) Register(ctx context.Context, email, password string) (User, error) {
+func (service *Service) Register(ctx context.Context, email, password string) (User, string, error) {
 	email, err := normalizeEmail(email)
 	if err != nil {
-		return User{}, err
+		return User{}, "", err
 	}
 	if !utf8.ValidString(password) || utf8.RuneCountInString(password) < 8 {
-		return User{}, ErrInvalidPassword
+		return User{}, "", ErrInvalidPassword
 	}
 	hash := hashPassword(password)
 	id := newID()
+	tx, err := service.db.BeginTx(ctx, nil)
+	if err != nil {
+		return User{}, "", err
+	}
+	defer func() { _ = tx.Rollback() }()
 	var registered User
-	err = service.db.QueryRowContext(ctx, `
+	err = tx.QueryRowContext(ctx, `
 		INSERT INTO users (id, email, password_hash) VALUES ($1, $2, $3)
 		RETURNING id::text, email, created_at
 	`, id, email, hash).Scan(&registered.ID, &registered.Email, &registered.CreatedAt)
@@ -30,10 +35,17 @@ func (service *Service) Register(ctx context.Context, email, password string) (U
 			isDuplicate := postgresError.Code == "23505"
 			isEmailConstraint := postgresError.ConstraintName == "users_email_key"
 			if isDuplicate && isEmailConstraint {
-				return User{}, ErrEmailExists
+				return User{}, "", ErrEmailExists
 			}
 		}
-		return User{}, fmt.Errorf("create user: %w", err)
+		return User{}, "", fmt.Errorf("create user: %w", err)
 	}
-	return registered, nil
+	token, err := createSession(ctx, tx, registered.ID)
+	if err != nil {
+		return User{}, "", err
+	}
+	if err = tx.Commit(); err != nil {
+		return User{}, "", err
+	}
+	return registered, token, nil
 }
