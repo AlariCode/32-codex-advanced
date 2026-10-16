@@ -1,0 +1,9 @@
+{
+  "label": "phase-{phase}",
+  "branch": "ralph/phase-{phase}",
+  "maxIterations": 10,
+  "checks": [
+    ["make", "check"],
+    ["make", "test"]
+  ]
+}
