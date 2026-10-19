@@ -2,14 +2,15 @@ package extract
 
 import (
 	"bytes"
+	"crypto/rand"
 	"errors"
 	"io"
 	"net/url"
-	"strconv"
 	"strings"
 
 	readability "codeberg.org/readeck/go-readability/v2"
 	"golang.org/x/net/html"
+	"golang.org/x/net/html/atom"
 	"linkbook/linkprocessing"
 )
 
@@ -89,10 +90,15 @@ func Article(body []byte, finalURL string) (linkprocessing.Result, error) {
 		for child := n.FirstChild; child != nil; {
 			next := child.NextSibling
 			if child.Type == html.ElementNode {
+				for _, a := range child.Attr {
+					if a.Key == "rowspan" || a.Key == "colspan" || a.Key == "start" {
+						omitted = true
+					}
+				}
 				switch child.Data {
 				case "title":
 					metadata = text(child)
-				case "img", "picture", "video", "audio", "table":
+				case "img", "picture", "video", "audio", "hr", "dl", "sup", "sub", "del", "s":
 					omitted = true
 				}
 				if active(child.Data) {
@@ -105,6 +111,35 @@ func Article(body []byte, finalURL string) (linkprocessing.Result, error) {
 		}
 	}
 	clean(root)
+	// Readeck intentionally unwraps details and can discard short data tables.
+	// Keep their position inside its selected article using text-bearing placeholders.
+	// Only placeholders surviving selection are restored; unrelated page content is never appended.
+	protected := map[string]*html.Node{}
+	restored := map[string]bool{}
+	var protect func(*html.Node)
+	protect = func(n *html.Node) {
+		for c := n.FirstChild; c != nil; {
+			next := c.NextSibling
+			if c.Type == html.ElementNode && (c.Data == "table" || c.Data == "details" || c.Data == "h1") {
+				marker := "LINKBOOKARCHIVE" + rand.Text() + "END"
+				protected[marker] = c
+				placeholder := &html.Node{Type: html.ElementNode, Data: "p", DataAtom: atom.P}
+				// Retain selection hints only inside Readeck; none become archive props.
+				for _, a := range c.Attr {
+					if a.Key == "class" || a.Key == "id" {
+						placeholder.Attr = append(placeholder.Attr, a)
+					}
+				}
+				placeholder.AppendChild(&html.Node{Type: html.TextNode, Data: marker + " " + text(c)})
+				n.InsertBefore(placeholder, c)
+				n.RemoveChild(c)
+			} else {
+				protect(c)
+			}
+			c = next
+		}
+	}
+	protect(root)
 	parser := readability.NewParser()
 	parser.MaxElemsToParse = 50000
 	parser.KeepClasses = true // Read language markers; classes never enter the document.
@@ -119,45 +154,14 @@ func Article(body []byte, finalURL string) (linkprocessing.Result, error) {
 	if result.Title == "" {
 		result.Title = u.Hostname()
 	}
-	doc := linkprocessing.Document{SchemaVersion: 1, Blocks: []linkprocessing.Block{}}
-	var convert func(*html.Node)
-	convert = func(n *html.Node) {
-		if n.Type == html.ElementNode {
-			var b linkprocessing.Block
-			switch n.Data {
-			case "p":
-				b = linkprocessing.Block{Kind: "paragraph", Text: text(n)}
-			case "h1", "h2", "h3", "h4", "h5", "h6":
-				level, _ := strconv.Atoi(n.Data[1:])
-				if level < 2 {
-					level = 2
-				}
-				b = linkprocessing.Block{Kind: "heading", Level: level, Text: text(n)}
-			case "blockquote":
-				b = linkprocessing.Block{Kind: "quote", Text: text(n)}
-			case "ul", "ol":
-				b = linkprocessing.Block{Kind: "list", Ordered: n.Data == "ol"}
-				for c := n.FirstChild; c != nil; c = c.NextSibling {
-					if c.Type == html.ElementNode && c.Data == "li" {
-						if s := text(c); s != "" {
-							b.Items = append(b.Items, s)
-						}
-					}
-				}
-			case "pre":
-				b = linkprocessing.Block{Kind: "code", Text: codeText(n), Language: codeLanguage(n)}
-			}
-			if b.Text != "" || len(b.Items) > 0 {
-				doc.Blocks = append(doc.Blocks, b)
-				return
-			}
-		}
-		for c := n.FirstChild; c != nil; c = c.NextSibling {
-			convert(c)
-		}
-	}
+	doc := linkprocessing.Document{SchemaVersion: linkprocessing.SchemaVersion}
 	if article.Node != nil {
-		convert(article.Node)
+		doc.Blocks = structured(article.Node, u, protected, restored)
+	}
+	for marker := range protected {
+		if !restored[marker] {
+			omitted = true
+		}
 	}
 	if err = linkprocessing.ValidateDocument(doc); err != nil {
 		return result, err
@@ -177,7 +181,7 @@ func voidTag(tag string) bool {
 }
 func active(tag string) bool {
 	switch tag {
-	case "script", "style", "iframe", "svg", "math", "form", "input", "button", "object", "embed", "template", "noscript", "nav", "footer":
+	case "script", "style", "iframe", "svg", "math", "form", "input", "button", "object", "embed", "template", "noscript", "nav", "footer", "aside":
 		return true
 	}
 	return false

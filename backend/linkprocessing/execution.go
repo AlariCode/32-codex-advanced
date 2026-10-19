@@ -92,7 +92,7 @@ func Publish(ctx context.Context, db *sql.DB, e Execution, r Result) (bool, erro
 	state, jobState := "failed", "failed"
 	if r.Document != nil {
 		state, jobState = "ready", "completed"
-		_, err = tx.ExecContext(ctx, `INSERT INTO snapshots(link_id,generation,schema_version,document) VALUES($1,$2,$3,$4)`, e.LinkID, e.Generation, SchemaVersion, raw)
+		_, err = tx.ExecContext(ctx, `INSERT INTO snapshots(link_id,generation,schema_version,document) VALUES($1,$2,$3,$4)`, e.LinkID, e.Generation, r.Document.SchemaVersion, raw)
 		if err != nil {
 			return false, err
 		}
