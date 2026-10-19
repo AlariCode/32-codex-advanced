@@ -101,7 +101,8 @@ export async function markBlocked(
     "--json",
     "name",
   ]);
-  const labels: { name: string }[] = JSON.parse(result.stdout);
+  // gh label list can exit successfully with no output when no labels match.
+  const labels: { name: string }[] = JSON.parse(result.stdout.trim() || "[]");
   if (!labels.some((label) => label.name.toLowerCase() === "blocked")) {
     await run([
       "gh",

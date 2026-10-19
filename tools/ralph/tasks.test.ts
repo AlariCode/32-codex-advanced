@@ -147,3 +147,31 @@ for (const failure of ["list", "create"]) {
     await assert.rejects(markBlocked(run, 8, "Blocked"), /GitHub unavailable/);
   });
 }
+
+for (const stdout of ["", " \n\t"]) {
+  test(`markBlocked creates the label when gh returns empty output: ${JSON.stringify(stdout)}`, async () => {
+    const calls: string[][] = [];
+    const run: CommandRunner = async (command) => {
+      calls.push(command);
+      return { code: 0, stdout, stderr: "" };
+    };
+    await markBlocked(run, 8, "Blocked");
+    assert.deepEqual(
+      calls.map((command) => command.slice(0, 3)),
+      [
+        ["gh", "label", "list"],
+        ["gh", "label", "create"],
+        ["gh", "issue", "edit"],
+        ["gh", "issue", "comment"],
+      ],
+    );
+  });
+}
+
+test("markBlocked rejects malformed label JSON without editing the issue", async () => {
+  const run: CommandRunner = async (command) => {
+    assert.deepEqual(command.slice(0, 3), ["gh", "label", "list"]);
+    return { code: 0, stdout: '[{"name":', stderr: "" };
+  };
+  await assert.rejects(markBlocked(run, 8, "Blocked"), SyntaxError);
+});
