@@ -8,6 +8,7 @@ import {
   type ArchivedArticle,
   type Block,
 } from "../api/document";
+import { RichBlock } from "./rich-block";
 import { CodeBlock } from "./code-block";
 import styles from "./reader.module.css";
 
@@ -126,9 +127,13 @@ export function ReaderPage({ id }: { id: string }) {
             </p>
           )}
           <div className={styles.body}>
-            {article.document.blocks.map((block, index) => (
-              <TextBlock key={index} block={block} />
-            ))}
+            {article.document.blocks.map((block, index) =>
+              article.document.schema_version === 2 ? (
+                <RichBlock key={index} block={block} />
+              ) : (
+                <TextBlock key={index} block={block} />
+              ),
+            )}
           </div>
         </article>
       )}

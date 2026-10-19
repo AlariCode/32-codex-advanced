@@ -106,6 +106,12 @@ definitions:
     type: object
   linkprocessing.Block:
     properties:
+      children:
+        items:
+          $ref: '#/definitions/linkprocessing.Block'
+        type: array
+      href:
+        type: string
       items:
         items:
           type: string

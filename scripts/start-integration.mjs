@@ -56,6 +56,9 @@ const close = (server) =>
     server.closeAllConnections();
   });
 const html = await readFile(resolve(root, "web/tests/fixtures/article.html"));
+const formatting = await readFile(
+  resolve(root, "web/tests/fixtures/formatting.html"),
+);
 let fixture;
 let fixtureHits = 0;
 let forbiddenHits = 0;
@@ -63,6 +66,11 @@ async function fixtureOn() {
   if (fixture?.listening) return;
   fixture = createServer((request, response) => {
     fixtureHits++;
+    if (request.url.startsWith("/formatting/")) {
+      response.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+      response.end(formatting);
+      return;
+    }
     if (request.url.startsWith("/redirect-blocked")) {
       response.writeHead(302, { Location: "http://127.0.0.1:39877/forbidden" });
       response.end();

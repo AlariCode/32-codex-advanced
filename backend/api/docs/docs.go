@@ -653,6 +653,15 @@ const docTemplate = `{
         "linkprocessing.Block": {
             "type": "object",
             "properties": {
+                "children": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/linkprocessing.Block"
+                    }
+                },
+                "href": {
+                    "type": "string"
+                },
                 "items": {
                     "type": "array",
                     "items": {
