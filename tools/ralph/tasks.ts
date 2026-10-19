@@ -90,6 +90,30 @@ export async function markBlocked(
   number: number,
   summary: string,
 ) {
+  const result = await run([
+    "gh",
+    "label",
+    "list",
+    "--search",
+    "blocked",
+    "--limit",
+    "10000",
+    "--json",
+    "name",
+  ]);
+  const labels: { name: string }[] = JSON.parse(result.stdout);
+  if (!labels.some((label) => label.name.toLowerCase() === "blocked")) {
+    await run([
+      "gh",
+      "label",
+      "create",
+      "blocked",
+      "--color",
+      "D93F0B",
+      "--description",
+      "Task cannot proceed until a blocker is resolved",
+    ]);
+  }
   await run(["gh", "issue", "edit", String(number), "--add-label", "blocked"]);
   await commentTask(run, number, summary);
 }

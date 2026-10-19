@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { parseDependencies, selectNextTask } from "./tasks.ts";
+import { markBlocked, parseDependencies, selectNextTask } from "./tasks.ts";
+import type { CommandRunner } from "./exec.ts";
 import type { Task } from "./tasks.ts";
 
 const task = (number: number, body = "", blocked = false): Task => ({
@@ -84,3 +85,65 @@ test("dependency lookup errors are propagated", async () => {
     /GitHub unavailable/,
   );
 });
+
+for (const labels of [
+  [],
+  [{ name: "blocked" }],
+  [{ name: "Blocked" }],
+  [{ name: "blocked-later" }],
+]) {
+  test(`markBlocked ensures the label exists before editing: ${JSON.stringify(labels)}`, async () => {
+    const calls: string[][] = [];
+    const summary =
+      "Needs credentials\n\nSaved changes: git stash apply abc123";
+    const run: CommandRunner = async (command, options) => {
+      calls.push(command);
+      if (command[2] === "comment") assert.equal(options?.input, summary);
+      return { code: 0, stdout: JSON.stringify(labels), stderr: "" };
+    };
+    await markBlocked(run, 8, summary);
+    const needsCreation = !labels.some(
+      (label) => label.name.toLowerCase() === "blocked",
+    );
+    assert.deepEqual(calls, [
+      [
+        "gh",
+        "label",
+        "list",
+        "--search",
+        "blocked",
+        "--limit",
+        "10000",
+        "--json",
+        "name",
+      ],
+      ...(needsCreation
+        ? [
+            [
+              "gh",
+              "label",
+              "create",
+              "blocked",
+              "--color",
+              "D93F0B",
+              "--description",
+              "Task cannot proceed until a blocker is resolved",
+            ],
+          ]
+        : []),
+      ["gh", "issue", "edit", "8", "--add-label", "blocked"],
+      ["gh", "issue", "comment", "8", "--body-file", "-"],
+    ]);
+  });
+}
+
+for (const failure of ["list", "create"]) {
+  test(`markBlocked propagates label ${failure} failures without editing the issue`, async () => {
+    const run: CommandRunner = async (command) => {
+      assert.equal(command[1], "label");
+      if (command[2] === failure) throw new Error("GitHub unavailable");
+      return { code: 0, stdout: "[]", stderr: "" };
+    };
+    await assert.rejects(markBlocked(run, 8, "Blocked"), /GitHub unavailable/);
+  });
+}
