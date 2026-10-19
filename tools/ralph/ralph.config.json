@@ -5,5 +5,6 @@
   "checks": [
     ["make", "check"],
     ["make", "test"]
-  ]
+  ],
+  "maxFixAttempts": 3
 }

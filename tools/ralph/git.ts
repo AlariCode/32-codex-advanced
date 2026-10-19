@@ -68,16 +68,7 @@ export async function commitTask(
   return result.code === 0;
 }
 
-export async function mergeAndPush(
-  run: CommandRunner,
-  number: number,
-  phase: string,
-) {
-  await assertClean(run);
-  await run(["git", "switch", phase]);
-  await run(["git", "merge", "--no-ff", "--no-edit", `issue-${number}`]);
-  await run(["git", "push", "-u", "origin", phase]);
-}
+export { mergeAndPush } from "./git-merge.ts";
 
 export async function parkBlockedChanges(
   run: CommandRunner,

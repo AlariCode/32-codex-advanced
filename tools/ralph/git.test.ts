@@ -1,23 +1,9 @@
 import { test } from "node:test";
-import type { TestContext } from "node:test";
 import assert from "node:assert/strict";
-import { mkdtemp, rm, writeFile } from "node:fs/promises";
-import { tmpdir } from "node:os";
+import { writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { createRunner } from "./exec.ts";
 import { startTaskBranch } from "./git.ts";
-
-async function repository(t: TestContext) {
-  const directory = await mkdtemp(join(tmpdir(), "ralph-git-"));
-  t.after(() => rm(directory, { recursive: true, force: true }));
-  const run = createRunner(directory, () => {});
-  await run(["git", "init", "--initial-branch=ralph/phase-2"]);
-  await run(["git", "config", "user.name", "Ralph Test"]);
-  await run(["git", "config", "user.email", "ralph@example.test"]);
-  await run(["git", "config", "commit.gpgsign", "false"]);
-  await run(["git", "commit", "--allow-empty", "-m", "Initial"]);
-  return { directory, run };
-}
+import { repository } from "./git-test-helpers.ts";
 
 test("startTaskBranch creates a missing task branch from the phase", async (t) => {
   const { run } = await repository(t);
