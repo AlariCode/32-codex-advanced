@@ -83,7 +83,7 @@ async function runLoop() {
         ['gh', 'issue', 'close', String(task.number)],
       ];
       commands.forEach((command) => console.log(formatCommand(command)));
-      console.log('Missing phase branch: create from origin/main and push. On red checks: one retry; blocked: stash and label; failed: comment and stop. At exhaustion: find/create phase PR.');
+      console.log('Existing task branch: switch to it instead of creating it, preserving commits. Missing phase branch: create from origin/main and push. On red checks: one retry; blocked: stash and label; failed: comment and stop. At exhaustion: find/create phase PR.');
     }
     console.log(formatCommand(['gh', 'pr', 'list', '--head', config.branch, '--base', 'main', '--state', 'open', '--json', 'number']));
     console.log('When exhausted and no PR exists: gh pr create --head <phase> --base main --title <title> --body-file -');

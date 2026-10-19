@@ -38,7 +38,20 @@ export async function startTaskBranch(
   phase: string,
 ) {
   await assertClean(run);
-  await run(["git", "switch", "-c", `issue-${number}`, phase]);
+  const branch = `issue-${number}`;
+  const local = await run(
+    ["git", "show-ref", "--verify", "--quiet", `refs/heads/${branch}`],
+    { allowFailure: true },
+  );
+  if (local.code === 0) {
+    await run(["git", "switch", branch]);
+  } else if (local.code === 1) {
+    await run(["git", "switch", "-c", branch, phase]);
+  } else {
+    throw new Error(
+      `Could not check task branch ${branch}: ${local.stderr || local.stdout}`,
+    );
+  }
 }
 
 export async function commitTask(
