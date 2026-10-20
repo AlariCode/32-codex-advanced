@@ -20,7 +20,7 @@
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Page size (1–100, default 20)",
+                        "description": "Page size (1\u2013100, default 20)",
                         "name": "limit",
                         "in": "query"
                     },
@@ -152,7 +152,7 @@
                     },
                     {
                         "type": "integer",
-                        "description": "Active page size, 1–100",
+                        "description": "Active page size, 1\u2013100",
                         "name": "limit",
                         "in": "query"
                     },
@@ -484,6 +484,61 @@
                     }
                 }
             }
+        },
+        "/api/links/{id}/assets/{asset_id}": {
+            "get": {
+                "produces": [
+                    "image/png",
+                    "image/jpeg",
+                    "image/gif"
+                ],
+                "tags": [
+                    "links"
+                ],
+                "summary": "Read a private archived image",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Link UUID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset ID (64 lowercase hex characters)",
+                        "name": "asset_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Verified image bytes; Cache-Control: no-store; X-Content-Type-Options: nosniff",
+                        "schema": {
+                            "type": "file"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.errorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.errorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.errorResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -674,6 +729,15 @@
                     "type": "boolean"
                 },
                 "text": {
+                    "type": "string"
+                },
+                "asset_id": {
+                    "type": "string"
+                },
+                "alt": {
+                    "type": "string"
+                },
+                "omission": {
                     "type": "string"
                 }
             }

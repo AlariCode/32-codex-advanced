@@ -1,9 +1,12 @@
 import { createElement } from "react";
 import type { Block } from "../api/document";
+import { ArchivedImage } from "./archived-image";
 import { CodeBlock } from "./code-block";
 import styles from "./reader.module.css";
 
 const tags = {
+  figure: "figure",
+  figcaption: "figcaption",
   paragraph: "p",
   quote: "blockquote",
   list_item: "li",
@@ -22,11 +25,13 @@ const tags = {
 } as const;
 
 // All tags and props are selected here; archived data is never spread into React.
-export function RichBlock({ block }: { block: Block }) {
+export function RichBlock({ block, linkID }: { block: Block; linkID: string }) {
   const children = block.children?.map((child, index) => (
-    <RichBlock key={index} block={child} />
+    <RichBlock key={index} block={child} linkID={linkID} />
   ));
   switch (block.kind) {
+    case "image":
+      return <ArchivedImage block={block} linkID={linkID} />;
     case "text":
       return block.text;
     case "br":

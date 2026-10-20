@@ -98,7 +98,7 @@ func Article(body []byte, finalURL string) (linkprocessing.Result, error) {
 				switch child.Data {
 				case "title":
 					metadata = text(child)
-				case "img", "picture", "video", "audio", "hr", "dl", "sup", "sub", "del", "s":
+				case "picture", "video", "audio", "hr", "dl", "sup", "sub", "del", "s":
 					omitted = true
 				}
 				if active(child.Data) {
@@ -120,17 +120,28 @@ func Article(body []byte, finalURL string) (linkprocessing.Result, error) {
 	protect = func(n *html.Node) {
 		for c := n.FirstChild; c != nil; {
 			next := c.NextSibling
-			if c.Type == html.ElementNode && (c.Data == "table" || c.Data == "details" || c.Data == "h1") {
+			if c.Type == html.ElementNode && (c.Data == "table" || c.Data == "details" || c.Data == "h1" || c.Data == "figure" || c.Data == "img") {
 				marker := "LINKBOOKARCHIVE" + rand.Text() + "END"
-				protected[marker] = c
 				placeholder := &html.Node{Type: html.ElementNode, Data: "p", DataAtom: atom.P}
+				if c.Data == "img" {
+					// Inline markers must not introduce a paragraph inside a paragraph.
+					// Readeck may unwrap spans or merge adjacent text nodes; structured
+					// restores these image tokens within text, never their ancestors.
+					marker = "LINKBOOKIMAGE" + rand.Text() + ":END"
+					placeholder.Data, placeholder.DataAtom = "span", atom.Span
+				}
+				protected[marker] = c
 				// Retain selection hints only inside Readeck; none become archive props.
 				for _, a := range c.Attr {
 					if a.Key == "class" || a.Key == "id" {
 						placeholder.Attr = append(placeholder.Attr, a)
 					}
 				}
-				placeholder.AppendChild(&html.Node{Type: html.TextNode, Data: marker + " " + text(c)})
+				value := marker + " " + text(c)
+				if c.Data == "img" {
+					value = marker
+				}
+				placeholder.AppendChild(&html.Node{Type: html.TextNode, Data: value})
 				n.InsertBefore(placeholder, c)
 				n.RemoveChild(c)
 			} else {
@@ -168,6 +179,20 @@ func Article(body []byte, finalURL string) (linkprocessing.Result, error) {
 	}
 	if omitted {
 		result.Warnings = append(result.Warnings, "text_only_archive")
+	}
+	var images bool
+	var inspectImages func([]linkprocessing.Block)
+	inspectImages = func(bs []linkprocessing.Block) {
+		for _, b := range bs {
+			if b.Kind == "image" {
+				images = true
+			}
+			inspectImages(b.Children)
+		}
+	}
+	inspectImages(doc.Blocks)
+	if images {
+		result.Warnings = append(result.Warnings, "images_pending")
 	}
 	result.Document = &doc
 	return result, nil

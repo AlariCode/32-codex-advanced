@@ -14,6 +14,10 @@ const SchemaVersion = 2
 const MaxHTMLBytes = 3 * 1024 * 1024
 
 type Block struct {
+	Source   string   `json:"-"` // Worker-only input, never serialized.
+	AssetID  string   `json:"asset_id,omitempty"`
+	Alt      string   `json:"alt,omitempty"`
+	Omission string   `json:"omission,omitempty"`
 	Children []Block  `json:"children,omitempty"`
 	Href     string   `json:"href,omitempty"`
 	Language string   `json:"language,omitempty"`
@@ -28,6 +32,7 @@ type Document struct {
 	Blocks        []Block `json:"blocks"`
 }
 type Result struct {
+	Assets                  []Asset
 	Document                *Document
 	Title, FinalURL, Reason string
 	Warnings                []string
@@ -47,7 +52,7 @@ func ValidateDocument(d Document) error {
 	}
 	size := 0
 	for _, b := range d.Blocks {
-		if len(b.Children) != 0 || b.Href != "" || !utf8.ValidString(b.Text) {
+		if b.AssetID != "" || b.Alt != "" || b.Omission != "" || b.Source != "" || len(b.Children) != 0 || b.Href != "" || !utf8.ValidString(b.Text) {
 			return ErrDocument
 		}
 		if b.Language != "" && (b.Kind != "code" || !codeLanguage.MatchString(b.Language)) {
@@ -107,10 +112,13 @@ func SafeHref(value string) bool {
 func validateTree(d Document) error {
 	count, size := 0, 0
 	var visit func(Block, string, int) bool
-	inline := func(k string) bool { return strings.Contains("|text|strong|em|inline_code|link|br|", "|"+k+"|") }
+	inline := func(k string) bool { return strings.Contains("|text|strong|em|inline_code|link|br|image|", "|"+k+"|") }
 	visit = func(b Block, parent string, depth int) bool {
 		count++
-		size += len(b.Text) + len(b.Href)
+		size += len(b.Text) + len(b.Href) + len(b.Alt) + len(b.AssetID) + len(b.Omission)
+		if !utf8.ValidString(b.Alt) || b.Kind != "image" && (b.AssetID != "" || b.Alt != "" || b.Omission != "" || b.Source != "") {
+			return false
+		}
 		if depth > 64 || count > 10000 || size > MaxHTMLBytes || !utf8.ValidString(b.Text) || len(b.Items) > 0 {
 			return false
 		}
@@ -124,6 +132,17 @@ func validateTree(d Document) error {
 			return false
 		}
 		switch b.Kind {
+		case "image":
+			if b.Text != "" || len(b.Children) > 0 || (b.AssetID == "") == (b.Omission == "") || b.AssetID != "" && !ValidAssetID(b.AssetID) {
+				return false
+			}
+			if b.Omission != "" {
+				switch b.Omission {
+				case "image_not_saved", "image_invalid", "image_too_large", "image_total_limit", "image_count_limit", "image_fetch_failed", "image_source_unsupported":
+				default:
+					return false
+				}
+			}
 		case "text", "code":
 			if b.Text == "" || len(b.Children) > 0 || b.Kind == "code" && strings.TrimSpace(b.Text) == "" {
 				return false
@@ -132,7 +151,7 @@ func validateTree(d Document) error {
 			if b.Text != "" || len(b.Children) > 0 {
 				return false
 			}
-		case "paragraph", "heading", "quote", "list", "list_item", "table", "table_head", "table_body", "table_foot", "table_row", "cell", "header_cell", "caption", "details", "summary", "strong", "em", "inline_code", "link":
+		case "paragraph", "heading", "quote", "list", "list_item", "table", "table_head", "table_body", "table_foot", "table_row", "cell", "header_cell", "caption", "figure", "figcaption", "details", "summary", "strong", "em", "inline_code", "link":
 			if b.Text != "" || len(b.Children) == 0 {
 				return false
 			}
@@ -147,7 +166,7 @@ func validateTree(d Document) error {
 		}
 		// Validate content models so malformed archives cannot produce invalid DOM nesting.
 		switch parent {
-		case "paragraph", "heading", "strong", "em", "inline_code", "link", "summary", "caption":
+		case "paragraph", "heading", "strong", "em", "inline_code", "link", "summary", "caption", "figcaption":
 			if !inline(b.Kind) || parent == "link" && b.Kind == "link" {
 				return false
 			}

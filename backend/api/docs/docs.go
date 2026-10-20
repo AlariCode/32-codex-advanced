@@ -15,6 +15,61 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+    "/api/links/{id}/assets/{asset_id}": {
+        "get": {
+            "produces": [
+                "image/png",
+                "image/jpeg",
+                "image/gif"
+            ],
+            "tags": [
+                "links"
+            ],
+            "summary": "Read a private archived image",
+            "parameters": [
+                {
+                    "type": "string",
+                    "description": "Link UUID",
+                    "name": "id",
+                    "in": "path",
+                    "required": true
+                },
+                {
+                    "type": "string",
+                    "description": "Asset ID (64 lowercase hex characters)",
+                    "name": "asset_id",
+                    "in": "path",
+                    "required": true
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Verified image bytes; Cache-Control: no-store; X-Content-Type-Options: nosniff",
+                    "schema": {
+                        "type": "file"
+                    }
+                },
+                "400": {
+                    "description": "Bad Request",
+                    "schema": {
+                        "$ref": "#/definitions/httpapi.errorResponse"
+                    }
+                },
+                "401": {
+                    "description": "Unauthorized",
+                    "schema": {
+                        "$ref": "#/definitions/httpapi.errorResponse"
+                    }
+                },
+                "404": {
+                    "description": "Not Found",
+                    "schema": {
+                        "$ref": "#/definitions/httpapi.errorResponse"
+                    }
+                }
+            }
+        }
+    },
         "/api/links": {
             "get": {
                 "produces": [
@@ -653,6 +708,9 @@ const docTemplate = `{
         "linkprocessing.Block": {
             "type": "object",
             "properties": {
+                "asset_id": {"type":"string"},
+                "alt": {"type":"string"},
+                "omission": {"type":"string"},
                 "children": {
                     "type": "array",
                     "items": {

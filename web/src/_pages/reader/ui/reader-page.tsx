@@ -122,14 +122,14 @@ export function ReaderPage({ id }: { id: string }) {
           </a>
           {article.warnings?.length > 0 && (
             <p className={styles.warning} role="note">
-              Сохранён текст статьи. Изображения и некоторые элементы оформления
-              пропущены.
+              Часть изображений или оформления не сохранена. Пропущенные
+              изображения отмечены в тексте.
             </p>
           )}
           <div className={styles.body}>
             {article.document.blocks.map((block, index) =>
               article.document.schema_version === 2 ? (
-                <RichBlock key={index} block={block} />
+                <RichBlock key={index} block={block} linkID={id} />
               ) : (
                 <TextBlock key={index} block={block} />
               ),

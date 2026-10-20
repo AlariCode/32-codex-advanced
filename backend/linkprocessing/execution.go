@@ -68,6 +68,9 @@ func Publish(ctx context.Context, db *sql.DB, e Execution, r Result) (bool, erro
 			return false, errors.New("invalid processing reason")
 		}
 	}
+	if err := validateAssets(r); err != nil {
+		return false, err
+	}
 	tx, err := db.BeginTx(ctx, nil)
 	if err != nil {
 		return false, err
@@ -94,6 +97,11 @@ func Publish(ctx context.Context, db *sql.DB, e Execution, r Result) (bool, erro
 		state, jobState = "ready", "completed"
 		_, err = tx.ExecContext(ctx, `INSERT INTO snapshots(link_id,generation,schema_version,document) VALUES($1,$2,$3,$4)`, e.LinkID, e.Generation, r.Document.SchemaVersion, raw)
 		if err != nil {
+			return false, err
+		}
+	}
+	for _, a := range r.Assets {
+		if _, err = tx.ExecContext(ctx, `INSERT INTO assets(link_id,generation,id,mime,data) VALUES($1,$2,$3,$4,$5)`, e.LinkID, e.Generation, a.ID, a.MIME, a.Data); err != nil {
 			return false, err
 		}
 	}

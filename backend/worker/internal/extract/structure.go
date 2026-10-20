@@ -12,27 +12,48 @@ func structured(root *html.Node, base *url.URL, protected map[string]*html.Node,
 	var walk func(*html.Node) []linkprocessing.Block
 	walk = func(n *html.Node) []linkprocessing.Block {
 		if n.Type == html.TextNode {
-			// Collapse HTML whitespace without introducing spaces around inline tags.
-			value := strings.Map(func(r rune) rune {
-				if r == '\n' || r == '\r' || r == '\t' || r == '\f' {
-					return ' '
+			// Image markers are inline tokens. Splitting only their exact text
+			// keeps siblings even if Readeck unwraps spans or merges text nodes.
+			var blocks []linkprocessing.Block
+			value := n.Data
+			for {
+				start := strings.Index(value, "LINKBOOKIMAGE")
+				if start < 0 {
+					break
 				}
-				return r
-			}, n.Data)
-			for strings.Contains(value, "  ") {
-				value = strings.ReplaceAll(value, "  ", " ")
+				end := strings.Index(value[start:], ":END")
+				if end < 0 {
+					break
+				}
+				end += start + len(":END")
+				marker := value[start:end]
+				original, ok := protected[marker]
+				if !ok || original.Data != "img" {
+					// Literal source text with our prefix must not hide a later
+					// genuine marker when Readeck merges adjacent text nodes.
+					if next := strings.Index(value[start+1:end], "LINKBOOKIMAGE"); next >= 0 {
+						end = start + 1 + next
+					}
+					blocks = append(blocks, archiveText(value[:end])...)
+				} else {
+					blocks = append(blocks, archiveText(value[:start])...)
+					if !restored[marker] {
+						restored[marker] = true
+						blocks = append(blocks, walk(original)...)
+					}
+				}
+				value = value[end:]
 			}
-			if value == "" {
-				return nil
-			}
-			return []linkprocessing.Block{{Kind: "text", Text: value}}
+			return append(blocks, archiveText(value)...)
 		}
 		if n.Type == html.ElementNode && active(n.Data) {
 			return nil
 		}
 		if n.Type == html.ElementNode && n.Data == "p" {
 			marker, _, _ := strings.Cut(codeText(n), " ")
-			if original, ok := protected[marker]; ok {
+			if original, ok := protected[marker]; ok && n.FirstChild != nil &&
+				n.FirstChild == n.LastChild && n.FirstChild.Type == html.TextNode &&
+				n.FirstChild.Data == marker+" "+text(original) {
 				if restored[marker] {
 					return nil
 				}
@@ -48,6 +69,21 @@ func structured(root *html.Node, base *url.URL, protected map[string]*html.Node,
 		}
 		b := linkprocessing.Block{}
 		switch n.Data {
+		case "img":
+			b.Kind = "image"
+			b.Omission = "image_source_unsupported"
+			for _, a := range n.Attr {
+				if a.Key == "alt" {
+					b.Alt = a.Val
+				}
+				if a.Key == "src" && linkprocessing.SafeHref(a.Val) {
+					b.Source = a.Val
+					b.Omission = "image_not_saved"
+				}
+			}
+			return []linkprocessing.Block{b}
+		case "figure", "figcaption":
+			b.Kind = n.Data
 		case "p":
 			b.Kind = "paragraph"
 		case "h1", "h2", "h3", "h4", "h5", "h6":
@@ -141,4 +177,21 @@ func structured(root *html.Node, base *url.URL, protected map[string]*html.Node,
 		}
 	}
 	return kept
+}
+
+func archiveText(value string) []linkprocessing.Block {
+	// Collapse HTML whitespace without introducing spaces around inline tags.
+	value = strings.Map(func(r rune) rune {
+		if r == '\n' || r == '\r' || r == '\t' || r == '\f' {
+			return ' '
+		}
+		return r
+	}, value)
+	for strings.Contains(value, "  ") {
+		value = strings.ReplaceAll(value, "  ", " ")
+	}
+	if value == "" {
+		return nil
+	}
+	return []linkprocessing.Block{{Kind: "text", Text: value}}
 }

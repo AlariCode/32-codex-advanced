@@ -106,6 +106,8 @@ func process(parent context.Context, db *sql.DB, client Fetcher, e linkprocessin
 			result = linkprocessing.Result{Reason: "processing_error"}
 		}
 	}
+	images, _ := client.(ImageFetcher)
+	archiveImages(ctx, images, &result)
 	if parent.Err() != nil {
 		return parent.Err()
 	}
@@ -124,7 +126,7 @@ func waitSchema(ctx context.Context, db *sql.DB) error {
 	for {
 		probe, cancel := context.WithTimeout(ctx, 2*time.Second)
 		var compatible bool
-		err := db.QueryRowContext(probe, `SELECT to_regclass('links') IS NOT NULL AND to_regclass('processing_jobs') IS NOT NULL AND to_regclass('snapshots') IS NOT NULL`).Scan(&compatible)
+		err := db.QueryRowContext(probe, `SELECT to_regclass('links') IS NOT NULL AND to_regclass('processing_jobs') IS NOT NULL AND to_regclass('snapshots') IS NOT NULL AND to_regclass('assets') IS NOT NULL`).Scan(&compatible)
 		if err == nil && compatible {
 			// Parse all required fields; an older/incompatible shape is not accepted.
 			_, err = db.ExecContext(probe, `SELECT l.fetch_url,l.generation,l.deadline_at,j.execution_token,j.lease_expires_at,s.schema_version,s.document FROM links l LEFT JOIN processing_jobs j ON j.link_id=l.id LEFT JOIN snapshots s ON s.link_id=l.id LIMIT 0`)
@@ -135,14 +137,14 @@ func waitSchema(ctx context.Context, db *sql.DB) error {
 		}
 		cancel()
 		if !warned {
-			slog.Warn("Waiting for PostgreSQL and compatible migrations 001–005; start the API to apply migrations")
+			slog.Warn("Waiting for PostgreSQL and compatible migrations 001–006; start the API to apply migrations")
 			warned = true
 		}
 		select {
 		case <-ctx.Done():
 			return ctx.Err()
 		case <-deadline.C:
-			return errors.New("PostgreSQL schema unavailable or incompatible; API must apply migrations 001–005")
+			return errors.New("PostgreSQL schema unavailable or incompatible; API must apply migrations 001–006")
 		case <-ticker.C:
 		}
 	}

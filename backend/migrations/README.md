@@ -26,3 +26,8 @@ API применяет миграции до запуска HTTP-сервера;
 
 Расширение `vector` включается отдельно в `infra/postgres/init/001-vector.sql`
 при первом запуске PostgreSQL с пустым volume.
+
+`006-create-assets.sql` добавляет бинарные изображения с MIME и составной
+связью (link_id,generation) с snapshot. Публикация assets, snapshot и итогового
+состояния выполняется одной транзакцией. Ограничения декодирования и контракт
+выдачи описаны в `docs/verification/image-archive.md`.

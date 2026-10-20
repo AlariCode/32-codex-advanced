@@ -1,5 +1,8 @@
 export type Block = {
   kind:
+    | "image"
+    | "figure"
+    | "figcaption"
     | "paragraph"
     | "heading"
     | "list"
@@ -22,6 +25,9 @@ export type Block = {
     | "caption"
     | "details"
     | "summary";
+  asset_id?: string;
+  alt?: string;
+  omission?: string;
   children?: Block[];
   href?: string;
   text?: string;
@@ -118,8 +124,18 @@ function safeHref(value: unknown): value is string {
 function validTree(blocks: Block[]): boolean {
   let count = 0,
     size = 0;
-  const inline = new Set(["text", "strong", "em", "inline_code", "link", "br"]);
+  const inline = new Set([
+    "text",
+    "strong",
+    "em",
+    "inline_code",
+    "link",
+    "br",
+    "image",
+  ]);
   const containers = new Set([
+    "figure",
+    "figcaption",
     "paragraph",
     "heading",
     "quote",
@@ -158,6 +174,9 @@ function validTree(blocks: Block[]): boolean {
       Object.keys(b).some(
         (k) =>
           ![
+            "asset_id",
+            "alt",
+            "omission",
             "kind",
             "children",
             "href",
@@ -169,7 +188,19 @@ function validTree(blocks: Block[]): boolean {
       )
     )
       return false;
-    size += (b.text?.length ?? 0) + (b.href?.length ?? 0);
+    if (
+      [b.alt, b.asset_id, b.omission].some(
+        (v) => v !== undefined && typeof v !== "string",
+      )
+    )
+      return false;
+    if (
+      b.kind !== "image" &&
+      [b.alt, b.asset_id, b.omission].some((v) => v !== undefined)
+    )
+      return false;
+    size +=
+      (b.text?.length ?? 0) + (b.href?.length ?? 0) + (b.alt?.length ?? 0);
     if (
       size > 3 * 1024 * 1024 ||
       (b.href !== undefined && (b.kind !== "link" || !safeHref(b.href))) ||
@@ -186,6 +217,27 @@ function validTree(blocks: Block[]): boolean {
         !b.text ||
         b.children !== undefined ||
         (b.kind === "code" && !b.text.trim())
+      )
+        return false;
+    } else if (b.kind === "image") {
+      if (
+        b.text !== undefined ||
+        b.children !== undefined ||
+        !!b.asset_id === !!b.omission
+      )
+        return false;
+      if (b.asset_id && !/^[a-f0-9]{64}$/.test(b.asset_id)) return false;
+      if (
+        b.omission &&
+        ![
+          "image_not_saved",
+          "image_invalid",
+          "image_too_large",
+          "image_total_limit",
+          "image_count_limit",
+          "image_fetch_failed",
+          "image_source_unsupported",
+        ].includes(b.omission)
       )
         return false;
     } else if (b.kind === "br") {
@@ -213,6 +265,7 @@ function validTree(blocks: Block[]): boolean {
         "link",
         "summary",
         "caption",
+        "figcaption",
       ].includes(parent)
     ) {
       if (!inline.has(b.kind) || (parent === "link" && b.kind === "link"))
