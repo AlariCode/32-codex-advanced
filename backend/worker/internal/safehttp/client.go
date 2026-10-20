@@ -155,7 +155,7 @@ func (c *Client) Fetch(ctx context.Context, raw string) (Page, error) {
 	var page Page
 	var err error
 	for attempt := 0; attempt < 5; attempt++ {
-		page, err = c.fetchOnce(ctx, raw)
+		page, err = c.fetchOnce(ctx, raw, false)
 		if err == nil {
 			return page, nil
 		}
@@ -188,7 +188,7 @@ func retryAt(value string) time.Time {
 	date, _ := http.ParseTime(value)
 	return date
 }
-func (c *Client) fetchOnce(parent context.Context, raw string) (Page, error) {
+func (c *Client) fetchOnce(parent context.Context, raw string, image bool) (Page, error) {
 	ctx, cancel := context.WithTimeout(parent, 25*time.Second)
 	defer cancel()
 	if len(raw) > 65536 || strings.ContainsAny(raw, "\\\r\n\t ") {
@@ -214,6 +214,9 @@ func (c *Client) fetchOnce(parent context.Context, raw string) (Page, error) {
 		}
 		request.Header.Set("User-Agent", "Linkbook/1.0")
 		request.Header.Set("Accept", "text/html, application/xhtml+xml")
+		if image {
+			request.Header.Set("Accept", "image/png, image/jpeg, image/gif")
+		}
 		response, err := transport.RoundTrip(request)
 		if err != nil {
 			transport.CloseIdleConnections()
@@ -254,21 +257,34 @@ func (c *Client) fetchOnce(parent context.Context, raw string) (Page, error) {
 			return Page{}, failure("unsupported_content")
 		}
 		media, _, err := mime.ParseMediaType(response.Header.Get("Content-Type"))
-		if err != nil || (media != "text/html" && media != "application/xhtml+xml") {
+		if !image && (err != nil || (media != "text/html" && media != "application/xhtml+xml")) {
 			_ = response.Body.Close()
 			transport.CloseIdleConnections()
 			return Page{}, failure("unsupported_content")
 		}
-		body, err := io.ReadAll(io.LimitReader(response.Body, linkprocessing.MaxHTMLBytes+1))
+		limit := linkprocessing.MaxHTMLBytes
+		if image {
+			limit = linkprocessing.MaxImageBytes
+		}
+		body, err := io.ReadAll(io.LimitReader(response.Body, int64(limit+1)))
 		_ = response.Body.Close()
 		transport.CloseIdleConnections()
 		if err != nil {
 			return Page{}, transientFailure{code: "network_error"}
 		}
-		if len(body) > linkprocessing.MaxHTMLBytes {
+		if len(body) > limit {
+			if image {
+				return Page{}, failure("image_too_large")
+			}
 			return Page{}, failure("html_too_large")
 		}
 		return Page{HTML: body, FinalURL: current.String()}, nil
 	}
 	return Page{}, failure("redirect_limit")
+}
+
+// FetchImage uses exactly the HTML destination, DNS, pinned dial and redirect policy.
+func (c *Client) FetchImage(ctx context.Context, raw string) ([]byte, error) {
+	page, err := c.fetchOnce(ctx, raw, true)
+	return page.HTML, err
 }

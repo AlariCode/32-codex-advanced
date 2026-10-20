@@ -1,3 +1,4 @@
+import { imageFixture } from "./image-fixtures.mjs";
 import { spawn } from "node:child_process";
 import { mkdir, readFile } from "node:fs/promises";
 import { createServer } from "node:http";
@@ -66,6 +67,7 @@ async function fixtureOn() {
   if (fixture?.listening) return;
   fixture = createServer((request, response) => {
     fixtureHits++;
+    if (imageFixture(request, response)) return;
     if (request.url.startsWith("/formatting/")) {
       response.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
       response.end(formatting);

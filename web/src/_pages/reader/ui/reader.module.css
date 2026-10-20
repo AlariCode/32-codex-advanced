@@ -199,3 +199,23 @@
   text-align: left;
   font-weight: 600;
 }
+
+.archivedImage {
+  max-width: 100%;
+  height: auto;
+}
+.body figure {
+  margin: 1.5rem 0;
+}
+.body figcaption {
+  font-size: 0.9em;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.imagePlaceholder {
+  display: inline-block;
+  max-width: 100%;
+  padding: 0.75rem;
+  border: 1px solid currentColor;
+  overflow-wrap: anywhere;
+}
