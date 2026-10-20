@@ -8,6 +8,9 @@ export type Config = {
   branch: string;
   maxIterations: number;
   maxFixAttempts: number;
+  maxConsecutiveFailures: number;
+  maxMinutes?: number;
+  maxTokens?: number;
   checks: string[][];
   review: ReviewConfig;
 };
@@ -28,6 +31,7 @@ export function parseOptions() {
   const { values } = parseArgs({
     options: {
       phase: { type: "string" },
+      "skip-preflight": { type: "boolean", default: false },
       "dry-run": { type: "boolean", default: false },
       "max-iterations": { type: "string" },
     },
@@ -37,6 +41,7 @@ export function parseOptions() {
   const max = values["max-iterations"];
   return {
     phase,
+    skipPreflight: values["skip-preflight"],
     dryRun: values["dry-run"],
     max:
       max === undefined ? undefined : positiveInteger(max, "--max-iterations"),
@@ -70,6 +75,20 @@ export function loadConfig(file: string, phase: number): Config {
     config.maxFixAttempts,
     "maxFixAttempts",
   );
+  for (const field of [
+    "maxConsecutiveFailures",
+    "maxMinutes",
+    "maxTokens",
+  ] as const) {
+    const value =
+      config[field] === undefined && field === "maxConsecutiveFailures"
+        ? 2
+        : config[field];
+    if (value === undefined) continue;
+    if (typeof value !== "number")
+      throw new Error(`${field} must be a positive integer`);
+    config[field] = positiveInteger(value, field);
+  }
   config.review = parseReviewConfig(config.review);
   config.label = config.label.replaceAll("{phase}", String(phase));
   config.branch = config.branch.replaceAll("{phase}", String(phase));

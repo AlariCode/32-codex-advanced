@@ -1,3 +1,4 @@
+import { runPhaseTasks } from "./phase-loop.ts";
 import * as fs from "node:fs";
 import { join } from "node:path";
 import { createRunner } from "./exec.ts";
@@ -5,131 +6,104 @@ import * as tasks from "./tasks.ts";
 import * as git from "./git.ts";
 import { loadConfig, parseOptions } from "./config.ts";
 import { showDryRun } from "./dry-run.ts";
-import { runTaskAttempts } from "./iteration.ts";
-import { mergeTask } from "./merge-task.ts";
-import { closingSummary } from "./review-step.ts";
+import { preflight } from "./preflight.ts";
+import { collectUsage, renderSummary } from "./summary.ts";
+import type { RunSummary } from "./summary.ts";
 
 async function runLoop() {
+  const started = Date.now();
   const options = parseOptions();
   const startupLog: string[] = [];
   const initial = createRunner(process.cwd(), (line) => startupLog.push(line));
   const root = (
     await initial(["git", "rev-parse", "--show-toplevel"])
   ).stdout.trim();
-  const config = loadConfig(
-    join(root, "tools/ralph/ralph.config.json"),
-    options.phase,
-  );
   const directory = join(
     root,
     ".ralph/runs",
-    new Date().toISOString().replaceAll(":", "-") + `-${process.pid}`,
+    new Date(started).toISOString().replaceAll(":", "-") + `-${process.pid}`,
   );
   const log = join(directory, "run.log");
+  const summaryPath = join(directory, "summary.md");
   if (!options.dryRun) {
     fs.mkdirSync(directory, { recursive: true });
     fs.writeFileSync(log, startupLog.join(""));
   } else process.stdout.write(startupLog.join(""));
   const run = createRunner(root, options.dryRun ? undefined : log);
-  await git.assertClean(run);
-  const next = async () =>
-    tasks.selectNextTask(await tasks.listTasks(run, config.label), (number) =>
-      tasks.dependencyState(run, number),
+  const state: RunSummary = {
+    phase: String(options.phase),
+    started,
+    ended: started,
+    usage: { input: 0, cached: 0, output: 0 },
+    closed: [],
+    blocked: [],
+    failed: [],
+    returns: { check: 0, review: 0 },
+    reason: "ошибка раннера",
+  };
+  let config: ReturnType<typeof loadConfig> | undefined;
+  let phaseReady = false;
+  try {
+    config = loadConfig(
+      join(root, "tools/ralph/ralph.config.json"),
+      options.phase,
     );
-  let task = await next();
-  if (options.dryRun) {
-    showDryRun(task, config, options.max);
-    return;
-  }
-  await git.ensurePhaseBranch(run, config.branch);
-  const template = fs.readFileSync(join(root, "tools/ralph/ralph.md"), "utf8");
-  const fixTemplate = fs.readFileSync(
-    join(root, "tools/ralph/ralph-fix.md"),
-    "utf8",
-  );
-  const reviewTemplate = config.review.enabled
-    ? fs.readFileSync(join(root, "tools/ralph/ralph-review.md"), "utf8")
-    : undefined;
-  const closed: number[] = [];
-  for (
-    let iteration = 0;
-    iteration < (options.max ?? config.maxIterations);
-    iteration++
-  ) {
-    if (!task) {
-      await tasks.ensurePhasePR(run, config.branch, closed);
+    state.phase = `${options.phase} (${config.branch})`;
+    await git.assertClean(run);
+    const next = async () =>
+      tasks.selectNextTask(
+        await tasks.listTasks(run, config!.label),
+        (number) => tasks.dependencyState(run, number),
+      );
+    if (options.dryRun) {
+      showDryRun(await next(), config, options.max, options.skipPreflight);
       return;
     }
-    const current = task;
-    const artifacts = join(directory, `issue-${current.number}`);
-    fs.mkdirSync(artifacts, { recursive: true });
-    try {
-      await git.startTaskBranch(run, current.number, config.branch);
-      const { report, nonBlocking } = await runTaskAttempts({
-        run,
-        directory: artifacts,
-        log,
-        task: current,
-        template,
-        fixTemplate,
-        checks: config.checks,
-        maxFixAttempts: config.maxFixAttempts,
-        review: config.review,
-        reviewTemplate,
-      });
-      if (report.status === "blocked") {
-        const stash = await git.parkBlockedChanges(
-          run,
-          config.branch,
-          current.number,
-        );
-        fs.appendFileSync(
-          log,
-          `blocked #${current.number} stash=${stash || "none"}\n`,
-        );
-        await tasks.markBlocked(
-          run,
-          current.number,
-          report.summary +
-            (stash ? `\n\nSaved changes: git stash apply ${stash}` : ""),
-        );
-      } else if (report.status === "failed") {
-        throw new Error(
-          `Agent failed on #${current.number}: ${report.summary}`,
-        );
-      } else {
-        await mergeTask(
-          run,
-          current.number,
-          config.branch,
-          artifacts,
-          log,
-          config.checks,
-        );
-        await tasks.closeTask(
-          run,
-          current.number,
-          closingSummary(report.summary, nonBlocking),
-        );
-        closed.push(current.number);
-      }
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      fs.appendFileSync(log, `${message}\n`);
-      await tasks
-        .commentTask(run, current.number, `Ralph stopped: ${message}`)
-        .catch((failure) => {
-          fs.appendFileSync(log, `Could not comment: ${String(failure)}\n`);
-        });
-      throw error;
+    await git.ensurePhaseBranch(run, config.branch);
+    phaseReady = true;
+    if (
+      !options.skipPreflight &&
+      !(await preflight(run, config.checks, directory))
+    ) {
+      state.reason = "preflight";
+      state.detail = "окружение или ветка фазы уже красные";
+      process.exitCode = 1;
+      return;
     }
-    task = await next();
+    await runPhaseTasks(run, config, state, {
+      root,
+      directory,
+      log,
+      max: options.max,
+    });
+  } catch (error) {
+    state.reason = "ошибка раннера";
+    state.detail = error instanceof Error ? error.message : String(error);
+    if (options.dryRun) throw error;
+    fs.appendFileSync(log, `${state.detail}\n`);
+    process.exitCode = 1;
+  } finally {
+    if (!options.dryRun) {
+      state.ended = Date.now();
+      state.usage = collectUsage(directory);
+      fs.writeFileSync(summaryPath, renderSummary(state));
+      try {
+        if (config && phaseReady)
+          await tasks.ensurePhasePR(run, config.branch, renderSummary(state));
+      } catch (error) {
+        state.reason = "ошибка раннера";
+        state.detail = `${state.detail ? state.detail + "; " : ""}Публикация отчёта: ${String(error)}`;
+        fs.appendFileSync(log, `${state.detail}\n`);
+        fs.writeFileSync(summaryPath, renderSummary(state));
+        process.exitCode = 1;
+      } finally {
+        console.log(renderSummary(state));
+        console.log(summaryPath);
+      }
+    }
   }
-  if (!task) await tasks.ensurePhasePR(run, config.branch, closed);
-  else console.log("Iteration limit reached; loop stopped.");
 }
-
 runLoop().catch((error) => {
-  console.error(error instanceof Error ? error.message : error);
+  console.error(String(error));
   process.exitCode = 1;
 });

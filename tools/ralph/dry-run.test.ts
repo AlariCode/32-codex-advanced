@@ -12,6 +12,7 @@ test("dry-run shows resume with sandbox and output flags before the subcommand",
       branch: "ralph/phase-2",
       maxIterations: 10,
       maxFixAttempts: 3,
+      maxConsecutiveFailures: 2,
       checks: [["make", "check"]],
       review: { enabled: false, blockingPriorities: [0, 1] },
     },
@@ -37,6 +38,7 @@ for (const enabled of [false, true]) {
         branch: "ralph/phase-2",
         maxIterations: 10,
         maxFixAttempts: 3,
+        maxConsecutiveFailures: 2,
         checks: [["make", "check"]],
         review: { enabled, blockingPriorities: [0, 1] },
       },
@@ -57,3 +59,23 @@ for (const enabled of [false, true]) {
     }
   });
 }
+
+test("dry-run shows preflight without eligible tasks and supports skipping", (t) => {
+  const output: string[] = [];
+  t.mock.method(console, "log", (line: string) => output.push(line));
+  const config = {
+    label: "phase-2",
+    branch: "phase-2",
+    maxIterations: 2,
+    maxFixAttempts: 1,
+    maxConsecutiveFailures: 2,
+    checks: [["make", "check"]],
+    review: { enabled: false, blockingPriorities: [] },
+  };
+  showDryRun(undefined, config);
+  assert.ok(output.includes('"make" "check"'));
+  output.length = 0;
+  showDryRun(undefined, config, undefined, true);
+  assert.ok(output.includes("Preflight skipped"));
+  assert.equal(output.includes('"make" "check"'), false);
+});

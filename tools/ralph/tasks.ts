@@ -47,7 +47,12 @@ export async function selectNextTask(
 ): Promise<Task | undefined> {
   const states = new Map<number, string>();
   for (const task of [...tasks].sort((a, b) => a.number - b.number)) {
-    if (task.labels.some((label) => label.name === "blocked")) continue;
+    if (
+      task.labels.some((label) =>
+        ["blocked", "ralph-failed"].includes(label.name),
+      )
+    )
+      continue;
     let ready = true;
     for (const number of parseDependencies(task.body)) {
       if (!states.has(number)) states.set(number, await stateOf(number));
@@ -85,39 +90,7 @@ export async function commentTask(
   });
 }
 
-export async function markBlocked(
-  run: CommandRunner,
-  number: number,
-  summary: string,
-) {
-  const result = await run([
-    "gh",
-    "label",
-    "list",
-    "--search",
-    "blocked",
-    "--limit",
-    "10000",
-    "--json",
-    "name",
-  ]);
-  // gh label list can exit successfully with no output when no labels match.
-  const labels: { name: string }[] = JSON.parse(result.stdout.trim() || "[]");
-  if (!labels.some((label) => label.name.toLowerCase() === "blocked")) {
-    await run([
-      "gh",
-      "label",
-      "create",
-      "blocked",
-      "--color",
-      "D93F0B",
-      "--description",
-      "Task cannot proceed until a blocker is resolved",
-    ]);
-  }
-  await run(["gh", "issue", "edit", String(number), "--add-label", "blocked"]);
-  await commentTask(run, number, summary);
-}
+export { markBlocked, markFailed } from "./task-labels.ts";
 
 export async function closeTask(
   run: CommandRunner,

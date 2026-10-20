@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import type { CommandRunner } from "./exec.ts";
 
 export async function hasChanges(run: CommandRunner): Promise<boolean> {
@@ -75,6 +76,23 @@ export async function parkBlockedChanges(
   phase: string,
   number: number,
 ) {
+  return parkChanges(run, phase, number, "blocked");
+}
+
+export function parkFailedChanges(
+  run: CommandRunner,
+  phase: string,
+  number: number,
+) {
+  return parkChanges(run, phase, number, "failed");
+}
+
+async function parkChanges(
+  run: CommandRunner,
+  phase: string,
+  number: number,
+  status: string,
+) {
   let stash = "";
   if (await hasChanges(run)) {
     await run([
@@ -83,7 +101,7 @@ export async function parkBlockedChanges(
       "push",
       "--include-untracked",
       "-m",
-      `ralph blocked #${number}`,
+      `ralph ${status} #${number}`,
     ]);
     stash = (await run(["git", "rev-parse", "stash@{0}"])).stdout.trim();
   }
@@ -100,4 +118,33 @@ export async function phaseHasCommits(
       await run(["git", "log", "--oneline", `origin/main..${branch}`])
     ).stdout.trim(),
   );
+}
+export async function diffHash(run: CommandRunner): Promise<string> {
+  const hash = createHash("sha256");
+  const diff = await run([
+    "git",
+    "diff",
+    "HEAD",
+    "--binary",
+    "--no-ext-diff",
+    "--no-color",
+  ]);
+  hash.update(JSON.stringify(["diff", diff.stdout]));
+  const files = (
+    await run(["git", "ls-files", "--others", "--exclude-standard", "-z"])
+  ).stdout
+    .split("\0")
+    .filter(Boolean)
+    .sort();
+  for (const file of files) {
+    const content = await run([
+      "git",
+      "hash-object",
+      "--no-filters",
+      "--",
+      file,
+    ]);
+    hash.update(JSON.stringify([file, content.stdout.trim()]));
+  }
+  return hash.digest("hex");
 }

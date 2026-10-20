@@ -18,6 +18,7 @@ test("review snapshot includes untracked files and exactly matches the staged Gi
   mkdirSync(artifacts, { recursive: true });
   let calls = 0;
   const run: CommandRunner = async (command, options) => {
+    if (command[0] === "gh") return { code: 0, stdout: "", stderr: "" };
     if (command[0] !== "codex") return git(command, options);
     calls++;
     const diff = readFileSync(join(artifacts, "review-1.diff"), "utf8");

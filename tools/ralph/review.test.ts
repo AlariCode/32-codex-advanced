@@ -24,15 +24,15 @@ test("P1 blocks even when the model summary says approve", () => {
   );
 });
 
-test("P2/P3 approve and remain available for the closing comment", () => {
+test("P2/P3 approve and closing comment refers to review above", () => {
   const result = verdict(report([2, 3]), [0, 1]);
   assert.equal(result.blocking, false);
   assert.deepEqual(result.nonBlocking, [finding(2), finding(3)]);
-  const comment = closingSummary("Implemented", result.nonBlocking);
+  const comment = closingSummary("Implemented", true);
   assert.match(comment, /Implemented/);
-  assert.match(comment, /P2 Issue \(source.ts:12\): Behavior breaks/);
-  assert.match(comment, /P3/);
-  assert.equal(closingSummary("Implemented", []), "Implemented");
+  assert.match(comment, /замечания ревью — выше/);
+  assert.doesNotMatch(comment, /P2|P3/);
+  assert.equal(closingSummary("Implemented", false), "Implemented");
 });
 
 test("unmet criterion blocks without findings", () => {

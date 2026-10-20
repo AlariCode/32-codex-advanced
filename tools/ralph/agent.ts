@@ -1,3 +1,4 @@
+import { parseUsage } from "./summary.ts";
 import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import type { CommandRunner } from "./exec.ts";
@@ -89,6 +90,7 @@ async function executeAgent(
     );
   }
   return {
+    usage: parseUsage(readFileSync(events, "utf8")),
     report: parseReport(readFileSync(report, "utf8")),
     threadId: readThreadId(events) ?? threadId,
   };

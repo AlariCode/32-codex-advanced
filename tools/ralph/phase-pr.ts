@@ -4,7 +4,7 @@ import { phaseHasCommits } from "./git.ts";
 export async function ensurePhasePR(
   run: CommandRunner,
   branch: string,
-  closed: number[],
+  body: string,
 ) {
   const result = await run([
     "gh",
@@ -19,9 +19,15 @@ export async function ensurePhasePR(
     "--json",
     "number",
   ]);
-  if (JSON.parse(result.stdout).length) return;
+  const existing = JSON.parse(result.stdout);
+  if (existing.length) {
+    await run(
+      ["gh", "pr", "comment", String(existing[0].number), "--body-file", "-"],
+      { input: body },
+    );
+    return;
+  }
   if (!(await phaseHasCommits(run, branch))) return;
-  const body = `Closed tasks in this run:\n\n${closed.map((number) => `- #${number}`).join("\n") || "None."}`;
   await run(
     [
       "gh",

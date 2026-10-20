@@ -3,7 +3,9 @@ import { join } from "node:path";
 import type { CommandRunner } from "./exec.ts";
 import type { Task } from "./tasks.ts";
 import type { Finding, ReviewConfig, ReviewReport } from "./review-report.ts";
-import { runReview, verdict } from "./review.ts";
+import { runReview, verdict, renderReviewComment } from "./review.ts";
+import { TaskFailure } from "./run-state.ts";
+import { commentTask } from "./tasks.ts";
 import { renderReviewPrompt } from "./prompts.ts";
 
 export function formatFindings(findings: Finding[]): string {
@@ -15,10 +17,8 @@ export function formatFindings(findings: Finding[]): string {
     .join("\n");
 }
 
-export function closingSummary(summary: string, findings: Finding[]): string {
-  return findings.length
-    ? `${summary}\n\nНеблокирующие замечания ревью:\n${formatFindings(findings)}`
-    : summary;
+export function closingSummary(summary: string, reviewed: boolean): string {
+  return reviewed ? `${summary}\n\nзамечания ревью — выше` : summary;
 }
 
 export function reviewFeedback(
@@ -58,12 +58,14 @@ export function createReviewStep(options: {
     let report: ReviewReport | undefined;
     for (let attempt = 0; attempt < 2; attempt++) {
       try {
-        report = await runReview(
-          run,
-          directory,
-          prompt,
-          `review-${round}${attempt ? "-retry" : ""}`,
-        );
+        report = (
+          await runReview(
+            run,
+            directory,
+            prompt,
+            `review-${round}${attempt ? "-retry" : ""}`,
+          )
+        ).report;
         break;
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
@@ -72,14 +74,26 @@ export function createReviewStep(options: {
           `issue=${task.number} review=${round} attempt=${attempt + 1} error=${JSON.stringify(message)}\n`,
         );
         if (attempt)
-          throw new Error(
+          throw new TaskFailure(
             `Review failed twice for #${task.number}: ${message}`,
           );
       }
     }
     if (!report) throw new Error("Reviewer returned no report");
-    previous = report;
     const result = verdict(report, config.blockingPriorities);
+    try {
+      await commentTask(
+        run,
+        task.number,
+        renderReviewComment(report, round, { ...result, previous }),
+      );
+    } catch (error) {
+      appendFileSync(
+        log,
+        `Could not publish review comment: ${String(error)}\n`,
+      );
+    }
+    previous = report;
     const counts = [0, 1, 2, 3]
       .map(
         (p) =>

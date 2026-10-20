@@ -8,6 +8,7 @@ export function showDryRun(
   task: Task | undefined,
   config: Config,
   max?: number,
+  skipPreflight = false,
 ) {
   console.log(
     task ? `Selected #${task.number}: ${task.title}` : "No eligible tasks",
@@ -15,6 +16,13 @@ export function showDryRun(
   console.log(
     `Phase branch: ${config.branch}; limit: ${max ?? config.maxIterations}; maxFixAttempts: ${config.maxFixAttempts}`,
   );
+  console.log(
+    skipPreflight
+      ? "Preflight skipped"
+      : "Preflight on clean phase branch → preflight.log:",
+  );
+  if (!skipPreflight)
+    config.checks.forEach((command) => console.log(formatCommand(command)));
   if (task) {
     const args = {
       schema: "<schema>",
@@ -40,7 +48,7 @@ export function showDryRun(
     ];
     if (config.review.enabled)
       console.log(
-        "After green checks: save staged diff to review-N.diff; review changes and unmet criteria use the shared fix budget. Reviewer failure: retry once, then stop.",
+        "After green checks: save staged diff to review-N.diff; review changes and unmet criteria use the shared fix budget. Reviewer failure: retry once, then ralph-failed and continue.",
       );
     commands.forEach((command) => console.log(formatCommand(command)));
     console.log(
@@ -53,7 +61,7 @@ export function showDryRun(
       ]),
     );
     console.log(
-      `At most ${config.maxFixAttempts} fixes. Missing thread ID or failed resume: one fresh fallback per fix with the task and diagnostics, logged in run.log. Exhaustion: comment and stop.`,
+      `At most ${config.maxFixAttempts} fixes. Missing thread ID or failed resume: one fresh fallback per fix with the task and diagnostics, logged in run.log. Exhaustion: stash, ralph-failed, continue.`,
     );
     [
       ["git", "switch", config.branch],
@@ -63,7 +71,7 @@ export function showDryRun(
       ["gh", "issue", "close", String(task.number)],
     ].forEach((command) => console.log(formatCommand(command)));
     console.log(
-      "Existing task branch: switch without resetting commits. Missing phase branch: create from origin/main and push. Blocked: stash and label; failed: comment and stop.",
+      "Existing task branch: switch without resetting commits. Missing phase branch: create from origin/main and push. Blocked: stash and label; failed: stash, ralph-failed, continue.",
     );
     console.log(
       "On merge conflicts: run Codex once, stage resolved paths, rerun checks, commit the pending merge and push. Failure preserves work and leaves the issue open.",
@@ -85,6 +93,6 @@ export function showDryRun(
     ]),
   );
   console.log(
-    "When exhausted and no PR exists: gh pr create --head <phase> --base main --title <title> --body-file -",
+    "Finally save summary.md; comment on an existing PR or create one: gh pr create --head <phase> --base main --title <title> --body-file -",
   );
 }

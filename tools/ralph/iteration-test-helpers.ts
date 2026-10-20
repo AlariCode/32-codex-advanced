@@ -22,6 +22,8 @@ type Scenario = {
   outputs?: string[];
   review?: ReviewConfig;
   reviewers?: ReviewerStep[];
+  unchanged?: boolean;
+  commentFailure?: boolean;
 };
 
 export function fixture(t: TestContext, scenario: Scenario = {}) {
@@ -43,6 +45,12 @@ export function fixture(t: TestContext, scenario: Scenario = {}) {
     if (command[0] === "go") stdout = "/tmp/ralph-cache\n";
     else if (command[0] === "codex") {
       ({ code, stdout, stderr } = codex(command));
+    } else if (command[0] === "gh") {
+      if (scenario.commentFailure)
+        throw new Error("GitHub comment unavailable");
+      stdout = "";
+    } else if (command[0] === "git" && command[1] === "ls-files") {
+      stdout = "";
     } else if (command[0] === "check") {
       stdout = scenario.outputs?.[checks] ?? `check-${checks + 1}\n`;
       code = scenario.checks?.[checks] === false ? 1 : 0;
@@ -50,7 +58,7 @@ export function fixture(t: TestContext, scenario: Scenario = {}) {
     } else if (command[0] === "git" && command[1] === "status")
       stdout = " M source.ts\n";
     else if (command[0] === "git" && command[1] === "diff")
-      stdout = "diff --git a/source.ts b/source.ts\n+changed behavior\n";
+      stdout = `diff --git a/source.ts b/source.ts\n+changed behavior ${scenario.unchanged ? 0 : checks}\n`;
     else if (command[0] === "git" && command[1] === "commit") {
       code = scenario.commits?.[commits++] === false ? 1 : 0;
       stderr = code ? "lefthook failed\n" : "";

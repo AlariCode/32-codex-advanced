@@ -50,7 +50,13 @@ export function createFakeCodex(
           threadId
             ? { type: "thread.started", thread_id: threadId }
             : { type: "turn.completed" },
-        ) + "\n",
+        ) +
+        "\n" +
+        JSON.stringify({
+          type: "turn.completed",
+          usage: { input_tokens: 10, cached_input_tokens: 4, output_tokens: 2 },
+        }) +
+        "\n",
       stderr: code
         ? readonly
           ? "reviewer unavailable"

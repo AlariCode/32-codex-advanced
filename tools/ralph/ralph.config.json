@@ -2,6 +2,7 @@
   "label": "phase-{phase}",
   "branch": "ralph/phase-{phase}",
   "maxIterations": 10,
+  "maxConsecutiveFailures": 2,
   "checks": [
     ["make", "check"],
     ["make", "test"]
