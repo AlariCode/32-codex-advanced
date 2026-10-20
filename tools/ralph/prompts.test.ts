@@ -12,8 +12,5 @@ test("fix template substitutes task and diagnostics without interpreting log con
   const prompt = renderFixPrompt(template, 42, log);
   assert.ok(prompt.includes("задачи #42"));
   assert.ok(prompt.includes(log));
-  assert.equal(
-    prompt,
-    template.replace("{{number}}", "42").replace("{{log}}", () => log),
-  );
+  assert.doesNotMatch(prompt, /Код-ревью|{{#|{{\//);
 });

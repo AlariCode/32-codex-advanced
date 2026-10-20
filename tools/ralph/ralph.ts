@@ -7,6 +7,7 @@ import { loadConfig, parseOptions } from "./config.ts";
 import { showDryRun } from "./dry-run.ts";
 import { runTaskAttempts } from "./iteration.ts";
 import { mergeTask } from "./merge-task.ts";
+import { closingSummary } from "./review-step.ts";
 
 async function runLoop() {
   const options = parseOptions();
@@ -46,6 +47,9 @@ async function runLoop() {
     join(root, "tools/ralph/ralph-fix.md"),
     "utf8",
   );
+  const reviewTemplate = config.review.enabled
+    ? fs.readFileSync(join(root, "tools/ralph/ralph-review.md"), "utf8")
+    : undefined;
   const closed: number[] = [];
   for (
     let iteration = 0;
@@ -61,7 +65,7 @@ async function runLoop() {
     fs.mkdirSync(artifacts, { recursive: true });
     try {
       await git.startTaskBranch(run, current.number, config.branch);
-      const report = await runTaskAttempts({
+      const { report, nonBlocking } = await runTaskAttempts({
         run,
         directory: artifacts,
         log,
@@ -70,6 +74,8 @@ async function runLoop() {
         fixTemplate,
         checks: config.checks,
         maxFixAttempts: config.maxFixAttempts,
+        review: config.review,
+        reviewTemplate,
       });
       if (report.status === "blocked") {
         const stash = await git.parkBlockedChanges(
@@ -100,7 +106,11 @@ async function runLoop() {
           log,
           config.checks,
         );
-        await tasks.closeTask(run, current.number, report.summary);
+        await tasks.closeTask(
+          run,
+          current.number,
+          closingSummary(report.summary, nonBlocking),
+        );
         closed.push(current.number);
       }
     } catch (error) {

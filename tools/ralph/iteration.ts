@@ -1,121 +1,61 @@
-import { appendFileSync, existsSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import {
-  AgentCommandError,
-  readThreadId,
-  runAgent,
-  resumeAgent,
-} from "./agent.ts";
-import { renderPrompt, renderFixPrompt } from "./prompts.ts";
+import { createExecutor } from "./executor.ts";
+import type { ExecutorOptions, Feedback } from "./executor.ts";
 import { runChecks, tailCheckLog } from "./checks.ts";
 import { commitTask } from "./git.ts";
-import type { CommandRunner } from "./exec.ts";
-import type { Task } from "./tasks.ts";
+import { createReviewStep } from "./review-step.ts";
+import type { Finding, ReviewConfig } from "./review-report.ts";
 
-type Options = {
-  run: CommandRunner;
-  directory: string;
-  log: string;
-  task: Task;
-  template: string;
-  fixTemplate: string;
+type Options = ExecutorOptions & {
   checks: string[][];
   maxFixAttempts: number;
+  review?: ReviewConfig;
+  reviewTemplate?: string;
 };
 
 export async function runTaskAttempts(options: Options) {
-  const {
-    run,
-    directory,
-    log,
-    task,
-    template,
-    fixTemplate,
-    checks,
-    maxFixAttempts,
-  } = options;
-  let attempt = 0;
-  let threadId: string | undefined;
-  let diagnostics = "";
-  const record = (outcome: string) =>
-    appendFileSync(
-      log,
-      `issue=${task.number} attempt=${attempt} thread_id=${threadId ?? "none"} check=${outcome}\n`,
-    );
-  const invoke = async (resume: boolean) => {
-    attempt++;
-    writeFileSync(join(directory, `check-${attempt}.log`), "");
-    try {
-      const result = resume
-        ? await resumeAgent(
-            run,
-            directory,
-            threadId!,
-            renderFixPrompt(fixTemplate, task.number, diagnostics),
-            attempt,
-          )
-        : await runAgent(
-            run,
-            directory,
-            renderPrompt(template, task, diagnostics),
-            attempt,
-          );
-      threadId = result.threadId;
-      return result.report;
-    } catch (error) {
-      const events = join(directory, `events-${attempt}.jsonl`);
-      if (existsSync(events)) threadId = readThreadId(events) ?? threadId;
-      record("not-run agent-error");
-      throw error;
-    }
-  };
+  const { run, directory, log, task, checks, maxFixAttempts } = options;
+  if (options.review?.enabled && !options.reviewTemplate)
+    throw new Error("Missing review template");
+  const review = options.review?.enabled
+    ? createReviewStep({
+        run,
+        directory,
+        log,
+        task,
+        config: options.review,
+        template: options.reviewTemplate!,
+      })
+    : undefined;
+  const executor = createExecutor(options);
+  let feedback: Feedback | undefined;
   for (let fix = 0; fix <= maxFixAttempts; fix++) {
-    let report;
-    if (fix === 0) report = await invoke(false);
-    else {
-      let fallback = !threadId;
-      if (fallback)
-        appendFileSync(
-          log,
-          `issue=${task.number} fix=${fix} fallback: thread_id not found\n`,
-        );
-      else {
-        try {
-          report = await invoke(true);
-        } catch (error) {
-          if (!(error instanceof AgentCommandError)) throw error;
-          appendFileSync(
-            log,
-            `issue=${task.number} fix=${fix} fallback: resume failed: ${error.message}\n`,
-          );
-          fallback = true;
-        }
-      }
-      if (fallback) {
-        threadId = undefined;
-        report = await invoke(false);
-      }
-    }
-    if (!report) throw new Error("Agent returned no report");
+    const report = await executor.execute(fix, feedback);
     if (report.status !== "done") {
-      record(`not-run ${report.status}`);
-      return report;
+      executor.record(`not-run ${report.status}`);
+      return { report, nonBlocking: [] as Finding[] };
     }
-    const checkLog = join(directory, `check-${attempt}.log`);
-    let green: boolean;
+    const checkLog = join(directory, `check-${executor.attempt}.log`);
     try {
-      green = await runChecks(run, checks, checkLog);
-      if (green) green = await commitTask(run, report.commit_message, checkLog);
+      let green = await runChecks(run, checks, checkLog);
+      const reviewed = green && review ? await review() : undefined;
+      if (reviewed?.blocking) {
+        executor.record("green review=changes");
+        feedback = { kind: "review", text: reviewed.feedback };
+      } else {
+        if (green)
+          green = await commitTask(run, report.commit_message, checkLog);
+        executor.record(green ? "green" : "red");
+        if (green) return { report, nonBlocking: reviewed?.nonBlocking ?? [] };
+        feedback = { kind: "check", text: tailCheckLog(checkLog) };
+      }
     } catch (error) {
-      record("error");
+      executor.record("error");
       throw error;
     }
-    record(green ? "green" : "red");
-    if (green) return report;
-    diagnostics = tailCheckLog(checkLog);
     if (fix === maxFixAttempts) {
       throw new Error(
-        `Fix attempts exhausted for #${task.number} (${maxFixAttempts})\n${report.summary}\n${diagnostics}`,
+        `Fix attempts exhausted for #${task.number} (${maxFixAttempts})\n${report.summary}\n${feedback.text}`,
       );
     }
   }

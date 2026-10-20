@@ -6,5 +6,9 @@
     ["make", "check"],
     ["make", "test"]
   ],
-  "maxFixAttempts": 3
+  "maxFixAttempts": 3,
+  "review": {
+    "enabled": true,
+    "blockingPriorities": [0, 1]
+  }
 }

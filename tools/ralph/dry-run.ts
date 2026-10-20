@@ -1,4 +1,5 @@
 import { codexArgs } from "./agent.ts";
+import { reviewArgs } from "./review.ts";
 import type { Config } from "./config.ts";
 import { formatCommand } from "./exec.ts";
 import type { Task } from "./tasks.ts";
@@ -29,8 +30,18 @@ export function showDryRun(
       ["git", "status", "--porcelain"],
       ...config.checks,
       ["git", "add", "-A"],
+      ...(config.review.enabled
+        ? [
+            ["git", "diff", "--cached", "--no-color"],
+            ["codex", ...reviewArgs("<review.schema.json>", "<review-N.json>")],
+          ]
+        : []),
       ["git", "commit", "-m", "<commit_message>"],
     ];
+    if (config.review.enabled)
+      console.log(
+        "After green checks: save staged diff to review-N.diff; review changes and unmet criteria use the shared fix budget. Reviewer failure: retry once, then stop.",
+      );
     commands.forEach((command) => console.log(formatCommand(command)));
     console.log(
       "On red checks or commit hook failure: resume with ralph-fix.md and the last 80 log lines, then repeat checks and commit:",

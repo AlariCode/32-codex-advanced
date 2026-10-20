@@ -1,5 +1,7 @@
 import { readFileSync } from "node:fs";
 import { parseArgs } from "node:util";
+import { parseReviewConfig } from "./review-report.ts";
+import type { ReviewConfig } from "./review-report.ts";
 
 export type Config = {
   label: string;
@@ -7,6 +9,7 @@ export type Config = {
   maxIterations: number;
   maxFixAttempts: number;
   checks: string[][];
+  review: ReviewConfig;
 };
 
 export function positiveInteger(value: unknown, name: string): number {
@@ -67,6 +70,7 @@ export function loadConfig(file: string, phase: number): Config {
     config.maxFixAttempts,
     "maxFixAttempts",
   );
+  config.review = parseReviewConfig(config.review);
   config.label = config.label.replaceAll("{phase}", String(phase));
   config.branch = config.branch.replaceAll("{phase}", String(phase));
   if (config.branch === "main") throw new Error("Phase branch cannot be main");

@@ -10,20 +10,18 @@ import {
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import type { CommandRunner } from "./exec.ts";
-import type { AgentReport } from "./report.ts";
+import { createFakeCodex } from "./iteration-agent-mock.ts";
+import type { Step, ReviewerStep } from "./iteration-agent-mock.ts";
+import type { ReviewConfig } from "./review-report.ts";
 import { runTaskAttempts } from "./iteration.ts";
 
-type Step = {
-  threadId?: string;
-  status?: AgentReport["status"];
-  code?: number;
-  malformed?: boolean;
-};
 type Scenario = {
   agents?: Step[];
   checks?: boolean[];
   commits?: boolean[];
   outputs?: string[];
+  review?: ReviewConfig;
+  reviewers?: ReviewerStep[];
 };
 
 export function fixture(t: TestContext, scenario: Scenario = {}) {
@@ -36,7 +34,7 @@ export function fixture(t: TestContext, scenario: Scenario = {}) {
   const calls: { command: string[]; prompt?: string }[] = [];
   let checks = 0;
   let commits = 0;
-  let agents = 0;
+  const codex = createFakeCodex(scenario.agents, scenario.reviewers);
   const run: CommandRunner = async (command, options = {}) => {
     calls.push({ command, prompt: options.input });
     let code = 0;
@@ -44,30 +42,15 @@ export function fixture(t: TestContext, scenario: Scenario = {}) {
     let stderr = "";
     if (command[0] === "go") stdout = "/tmp/ralph-cache\n";
     else if (command[0] === "codex") {
-      const step = scenario.agents?.[agents++] ?? { threadId: "thread-1" };
-      code = step.code ?? 0;
-      stdout =
-        JSON.stringify(
-          step.threadId
-            ? { type: "thread.started", thread_id: step.threadId }
-            : { type: "turn.completed" },
-        ) + "\n";
-      stderr = code ? "no rollout found" : "";
-      writeFileSync(
-        command[command.indexOf("-o") + 1],
-        step.malformed
-          ? "broken"
-          : JSON.stringify({
-              status: step.status ?? "done",
-              summary: `agent-${agents}`,
-              commit_message: "Task commit",
-            }),
-      );
+      ({ code, stdout, stderr } = codex(command));
     } else if (command[0] === "check") {
       stdout = scenario.outputs?.[checks] ?? `check-${checks + 1}\n`;
-      code = scenario.checks?.[checks++] === false ? 1 : 0;
+      code = scenario.checks?.[checks] === false ? 1 : 0;
+      checks++;
     } else if (command[0] === "git" && command[1] === "status")
       stdout = " M source.ts\n";
+    else if (command[0] === "git" && command[1] === "diff")
+      stdout = "diff --git a/source.ts b/source.ts\n+changed behavior\n";
     else if (command[0] === "git" && command[1] === "commit") {
       code = scenario.commits?.[commits++] === false ? 1 : 0;
       stderr = code ? "lefthook failed\n" : "";
@@ -111,8 +94,22 @@ export function fixture(t: TestContext, scenario: Scenario = {}) {
         fixTemplate,
         checks: [["check"]],
         maxFixAttempts,
+        review: scenario.review,
+        reviewTemplate: readFileSync(
+          new URL("./ralph-review.md", import.meta.url),
+          "utf8",
+        ),
       }),
-    codex: () => calls.filter(({ command }) => command[0] === "codex"),
+    codex: () =>
+      calls.filter(
+        ({ command }) =>
+          command[0] === "codex" && !command.includes("read-only"),
+      ),
+    reviewers: () =>
+      calls.filter(
+        ({ command }) =>
+          command[0] === "codex" && command.includes("read-only"),
+      ),
     count: (name: string) =>
       calls.filter(({ command }) => command[0] === name || command[1] === name)
         .length,

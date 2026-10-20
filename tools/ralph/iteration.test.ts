@@ -6,7 +6,7 @@ import { fixture } from "./iteration-test-helpers.ts";
 
 test("green initial attempt commits without resume", async (t) => {
   const f = fixture(t);
-  assert.equal((await f.launch()).status, "done");
+  assert.equal((await f.launch()).report.status, "done");
   assert.equal(f.codex().length, 1);
   assert.equal(f.count("commit"), 1);
   assert.match(f.runLog(), /attempt=1 thread_id=thread-1 check=green/);
@@ -89,7 +89,7 @@ for (const status of ["blocked", "failed"] as const) {
           : [{ threadId: "saved", status }],
         checks: [false],
       });
-      const report = await f.launch();
+      const { report } = await f.launch();
       assert.equal(report.status, status);
       assert.equal(f.count("check"), resumed ? 1 : 0);
       assert.equal(f.count("commit"), 0);

@@ -47,8 +47,39 @@ export function renderFixPrompt(
   template: string,
   number: number,
   log: string,
+  review = "",
 ): string {
-  return template.replace(/{{(number|log)}}/g, (_, key) =>
-    key === "number" ? String(number) : log,
+  const section = template.replace(
+    /{{#(checks|review)}}([\s\S]*?){{\/\1}}/g,
+    (_, kind, body) =>
+      (kind === "review" ? Boolean(review) : !review) ? body : "",
+  );
+  const values: Record<string, string> = {
+    number: String(number),
+    log,
+    review,
+  };
+  return section
+    .replace(/\n{3,}/g, "\n\n")
+    .replace(/{{(number|log|review)}}/g, (_, key) => values[key])
+    .trim();
+}
+
+export function renderReviewPrompt(
+  template: string,
+  task: Task,
+  diff: string,
+  previous?: import("./review-report.ts").ReviewReport,
+): string {
+  const values: Record<string, string> = {
+    number: String(task.number),
+    title: task.title,
+    body: task.body,
+    diff,
+    previous: previous ? JSON.stringify(previous, null, 2) : "Нет",
+  };
+  return template.replace(
+    /{{(number|title|body|diff|previous)}}/g,
+    (_, key) => values[key],
   );
 }
