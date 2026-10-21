@@ -83,10 +83,19 @@ func Article(body []byte, finalURL string) (linkprocessing.Result, error) {
 	if err != nil {
 		return result, err
 	}
+	metadata, blocked, declaredArticle, prose := availability(root)
+	result.Title = metadata
+	if result.Title == "" {
+		result.Title = u.Hostname()
+	}
+	if blocked || (!declaredArticle && prose < 200) {
+		result.Reason = "article_unavailable"
+		return result, nil
+	}
 	base := documentBase(root, u)
 	evidence := mainEvidence(root)
 	mainNodes := declaredMainNodes(root)
-	metadata := ""
+
 	omitted := false
 	var clean func(*html.Node)
 	clean = func(n *html.Node) {
@@ -95,7 +104,9 @@ func Article(body []byte, finalURL string) (linkprocessing.Result, error) {
 			if child.Type == html.ElementNode {
 				switch child.Data {
 				case "title":
-					metadata = text(child)
+					if metadata == "" {
+						metadata = text(child)
+					}
 				}
 				if active(child.Data) {
 					n.RemoveChild(child)

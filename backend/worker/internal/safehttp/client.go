@@ -253,6 +253,9 @@ func (c *Client) fetchBounded(parent context.Context, raw string, image bool, im
 			if response.StatusCode == 429 || response.StatusCode >= 500 {
 				return Page{}, transientFailure{code: "http_error", retryAt: retryAt(response.Header.Get("Retry-After"))}
 			}
+			if response.StatusCode == 401 || response.StatusCode == 403 || response.StatusCode == 402 {
+				return Page{}, failure("article_unavailable")
+			}
 			return Page{}, failure("http_error")
 		}
 
@@ -267,7 +270,7 @@ func (c *Client) fetchBounded(parent context.Context, raw string, image bool, im
 		if !image && (err != nil || (media != "text/html" && media != "application/xhtml+xml")) {
 			_ = response.Body.Close()
 			transport.CloseIdleConnections()
-			return Page{}, failure("unsupported_content")
+			return Page{}, failure("article_unavailable")
 		}
 		limit := linkprocessing.MaxHTMLBytes
 		if image {

@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"log/slog"
+	"net/url"
 	"os"
 	"time"
 
@@ -98,6 +99,11 @@ func process(parent context.Context, db *sql.DB, client Fetcher, e linkprocessin
 	defer func() { cancel(); <-heartbeatDone }()
 	page, err := client.Fetch(ctx, e.FetchURL)
 	result := pageResult(page, err)
+	if result.Title == "" {
+		if u, err := url.Parse(e.FetchURL); err == nil {
+			result.Title = u.Hostname()
+		}
+	}
 	images, _ := client.(ImageFetcher)
 	archiveImages(ctx, images, &result)
 	if parent.Err() != nil {

@@ -23,6 +23,7 @@ func NewHandler(db *sql.DB) http.Handler {
 	mux.HandleFunc("GET /api/links/{id}/document", library.document)
 	mux.HandleFunc("GET /api/links/{id}/assets/{asset_id}", library.asset)
 	mux.HandleFunc("GET /api/links/{id}", library.get)
+	mux.HandleFunc("POST /api/links/{id}/retry", library.retry)
 	return mux
 }
 

@@ -1,5 +1,5 @@
 import type { UserDTO } from "@/shared/api";
-import type { LinkCard } from "../model/library";
+import { validURL, type LinkCard } from "../model/library";
 
 export class LibraryError extends Error {
   constructor(
@@ -12,7 +12,7 @@ export class LibraryError extends Error {
 async function request(
   path: string,
   signal: AbortSignal,
-  body?: { url: string },
+  body?: { url: string } | { generation: number },
 ) {
   const response = await fetch(path, {
     method: body ? "POST" : "GET",
@@ -42,7 +42,7 @@ function isCard(value: LinkCard) {
     value &&
     typeof value.id === "string" &&
     typeof value.submitted_url === "string" &&
-    /^https?:\/\//i.test(value.submitted_url) &&
+    validURL(value.submitted_url) &&
     typeof value.created_at === "string" &&
     Number.isInteger(value.generation) &&
     value.generation > 0 &&
@@ -106,4 +106,19 @@ export async function statuses(
   )
     throw new Error("invalid_response");
   return page;
+}
+
+export async function retryLink(
+  signal: AbortSignal,
+  id: string,
+  generation: number,
+): Promise<{ link: LinkCard; server_time: string }> {
+  const result = await request(
+    `/api/links/${encodeURIComponent(id)}/retry`,
+    signal,
+    { generation },
+  );
+  if (!isCard(result.link) || typeof result.server_time !== "string")
+    throw new Error("invalid_response");
+  return result;
 }
