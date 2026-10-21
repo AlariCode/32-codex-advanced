@@ -50,6 +50,29 @@ test("duplicates, failed, unavailable, invalid documents and pending media are n
   assert.equal(s.targetMet, false);
 });
 
+test("54 fast results need a complete cohort of 60 new saves and independent accounts", () => {
+  const rows = Array.from({ length: 60 }, (_, i) => sample(i, 1000));
+  for (let i = 54; i < 60; i++) {
+    Object.assign(rows[i], {
+      httpStatus: null,
+      created: false,
+      generation: null,
+      state: "not_saved",
+      confirmedAt: null,
+      displayedAt: null,
+      elapsedMS: null,
+    });
+  }
+  assert.equal(summarize(rows).readyWithin15s, 54);
+  assert.equal(summarize(rows).targetMet, false);
+  // An acknowledged ordinary-article failure is a real measurement.
+  for (let i = 54; i < 60; i++)
+    rows[i] = { ...sample(i, 1000), state: "failed" };
+  assert.equal(summarize(rows).targetMet, true);
+  delete rows[59].userId;
+  assert.equal(summarize(rows).targetMet, false);
+});
+
 test("aggregation is independently reproducible and rejects modified corpus/accounts/times", () => {
   const rows = Array.from({ length: 60 }, (_, i) => sample(i, (i + 1) * 1000));
   const s = summarize(rows);

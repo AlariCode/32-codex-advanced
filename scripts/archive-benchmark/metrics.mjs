@@ -54,17 +54,23 @@ export function summarize(rows) {
   const percentile = (p) =>
     timings.length ? timings[Math.ceil(timings.length * p) - 1] : null;
   const fast = ready.filter((row) => row.elapsedMS <= TARGET_MS).length;
+  const confirmedNewSaves = rows.filter(
+    (row) =>
+      row.httpStatus === 201 && row.created === true && row.generation === 1,
+  ).length;
   return {
     expected: CORPUS.length * REPETITIONS,
     recorded: rows.length,
-    confirmedNewSaves: rows.filter(
-      (row) => row.httpStatus === 201 && row.created === true,
-    ).length,
+    confirmedNewSaves,
     missing: CORPUS.length * REPETITIONS - rows.length,
     ready: ready.length,
     readyWithin15s: fast,
     required: 54,
-    targetMet: rows.length === 60 && fast >= 54,
+    targetMet:
+      rows.length === 60 &&
+      confirmedNewSaves === 60 &&
+      owners.size === 60 &&
+      fast >= 54,
     // Percentiles are conditional on valid ready results, never on all attempts.
     readyP50MS: percentile(0.5),
     readyP90MS: percentile(0.9),
@@ -87,7 +93,7 @@ export function markdown(report) {
   return (
     `# Live archive benchmark\n\nDate: ${report.startedAt}. Sequential saves; fixed six-article corpus; ten independent accounts per article.\n\n` +
     `Ready within 15 seconds: **${s.readyWithin15s}/60**, required **54/60**. Target **${s.targetMet ? "MET" : "NOT MET"}**. Confirmed new saves: ${s.confirmedNewSaves}/60; valid ready: ${s.ready}/60; recorded: ${s.recorded}/60.\n\n` +
-    `Timing: server requested_at (transaction timestamp immediately before commit), confirmed by HTTP 201/created=true, to first browser DOM ready observation. All clocks are on the launcher host. Queue, network/media, processing, commit and normal UI polling are included. Document/asset validation follows observation and determines eligibility, without adding validation time to the measurement. Quality review is separate and is never inferred from counts.\n\n` +
+    `Timing: server requested_at (transaction timestamp immediately before commit), confirmed by HTTP 201/created=true, to first browser DOM ready observation. API and browser share the launcher host; the PostgreSQL VM clock is assumed synchronized. Queue, network/media, processing, commit and normal UI polling are included. Document/asset validation follows observation and determines eligibility, without adding validation time to the measurement. Quality review is separate and is never inferred from counts.\n\n` +
     `Conditional valid-ready p50/p90: ${s.readyP50MS ?? "n/a"}/${s.readyP90MS ?? "n/a"} ms. Failures and missing samples remain in the denominator 60. Partial media must have explicit omission reasons/warnings.\n\n` +
     `Environment and raw evidence: report.json, runs.jsonl, environment.json. Account credentials/cookies are not recorded. Source HTML and archived documents for manual review are local artifacts, not part of the committed report.\n\n` +
     `| Article | Recorded | Ready | ≤15s |\n| --- | ---: | ---: | ---: |\n` +

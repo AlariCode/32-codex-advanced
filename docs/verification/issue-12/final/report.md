@@ -4,7 +4,7 @@ Date: 2026-10-21T08:41:07.912Z. Sequential saves; fixed six-article corpus; ten 
 
 Ready within 15 seconds: **49/60**, required **54/60**. Target **NOT MET**. Confirmed new saves: 60/60; valid ready: 60/60; recorded: 60/60.
 
-Timing: server requested_at (transaction timestamp immediately before commit), confirmed by HTTP 201/created=true, to first browser DOM ready observation. All clocks are on the launcher host. Queue, network/media, processing, commit and normal UI polling are included. Document/asset validation follows observation and determines eligibility, without adding validation time to the measurement. Quality review is separate and is never inferred from counts.
+Timing: server requested_at (transaction timestamp immediately before commit), confirmed by HTTP 201/created=true, to first browser DOM ready observation. API and browser share the launcher host; the PostgreSQL VM clock is assumed synchronized. Queue, network/media, processing, commit and normal UI polling are included. Document/asset validation follows observation and determines eligibility, without adding validation time to the measurement. Quality review is separate and is never inferred from counts.
 
 Conditional valid-ready p50/p90: 4000.099853515625/25924.39990234375 ms. Failures and missing samples remain in the denominator 60. Partial media must have explicit omission reasons/warnings.
 
