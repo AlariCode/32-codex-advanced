@@ -45,6 +45,10 @@ const nextConfig: NextConfig = {
         source: "/api/links/:id/assets/:asset_id",
         destination: `${apiOrigin}/api/links/:id/assets/:asset_id`,
       },
+      {
+        source: "/api/links/:id/retry",
+        destination: `${apiOrigin}/api/links/:id/retry`,
+      },
       { source: "/api/links/:id", destination: `${apiOrigin}/api/links/:id` },
     ];
   },

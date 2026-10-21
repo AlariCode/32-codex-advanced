@@ -19,11 +19,11 @@ export default defineConfig({
     { name: "desktop", use: { viewport: { width: 1440, height: 900 } } },
   ],
   webServer: {
-    command: "npm run dev -- --port 3100",
+    command: "npm run build && npm run start -- --port 3100",
     // Mock tests must never reach the running development API.
     env: { API_ORIGIN: "http://127.0.0.1:18081" },
     url: "http://127.0.0.1:3100/register",
     reuseExistingServer: false,
-    timeout: 60_000,
+    timeout: 120_000,
   },
 });

@@ -37,6 +37,21 @@ definitions:
     - email
     - password
     type: object
+  httpapi.retryLinkRequest:
+    properties:
+      generation:
+        minimum: 1
+        type: integer
+    required:
+    - generation
+    type: object
+  httpapi.retryLinkResponse:
+    properties:
+      link:
+        $ref: '#/definitions/link.Card'
+      server_time:
+        type: string
+    type: object
   httpapi.saveLinkRequest:
     properties:
       url:
@@ -106,11 +121,9 @@ definitions:
     type: object
   linkprocessing.Block:
     properties:
-      asset_id:
-        type: string
       alt:
         type: string
-      omission:
+      asset_id:
         type: string
       children:
         items:
@@ -128,6 +141,8 @@ definitions:
         type: string
       level:
         type: integer
+      omission:
+        type: string
       ordered:
         type: boolean
       text:
@@ -157,7 +172,6 @@ info:
   title: Linkbook API
   version: 0.1.0
 paths:
-  "/api/links/{id}/assets/{asset_id}": {"get": {"produces": ["image/png", "image/jpeg", "image/gif"], "tags": ["links"], "summary": "Read a private archived image", "parameters": [{"type": "string", "description": "Link UUID", "name": "id", "in": "path", "required": true}, {"type": "string", "description": "Asset ID (64 lowercase hex characters)", "name": "asset_id", "in": "path", "required": true}], "responses": {"200": {"description": "Verified image bytes; Cache-Control: no-store; X-Content-Type-Options: nosniff", "schema": {"type": "file"}}, "400": {"description": "Bad Request", "schema": {"$ref": "#/definitions/httpapi.errorResponse"}}, "401": {"description": "Unauthorized", "schema": {"$ref": "#/definitions/httpapi.errorResponse"}}, "404": {"description": "Not Found", "schema": {"$ref": "#/definitions/httpapi.errorResponse"}}}}}
   /api/links:
     get:
       parameters:
@@ -276,6 +290,44 @@ paths:
       summary: Get a saved link
       tags:
       - links
+  /api/links/{id}/assets/{asset_id}:
+    get:
+      parameters:
+      - description: Link UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Asset ID (64 lowercase hex characters)
+        in: path
+        name: asset_id
+        required: true
+        type: string
+      produces:
+      - image/png
+      - image/jpeg
+      - image/gif
+      responses:
+        "200":
+          description: 'Verified image bytes; Cache-Control: no-store; X-Content-Type-Options:
+            nosniff'
+          schema:
+            type: file
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+      summary: Read a private archived image
+      tags:
+      - links
   /api/links/{id}/document:
     get:
       parameters:
@@ -312,6 +364,68 @@ paths:
           schema:
             $ref: '#/definitions/httpapi.errorResponse'
       summary: Read an archived text article
+      tags:
+      - links
+  /api/links/{id}/retry:
+    post:
+      consumes:
+      - application/json
+      description: 'Requires a session and matching Origin through the loopback proxy.
+        The observed generation is an idempotency fence: replay after a lost response
+        returns the current card without enqueueing. One active attempt; a new 120-second
+        deadline includes queue time. ID and created_at do not change.'
+      parameters:
+      - description: Link UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Observed generation
+        in: body
+        name: retry
+        required: true
+        schema:
+          $ref: '#/definitions/httpapi.retryLinkRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpapi.retryLinkResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "409":
+          description: retry_conflict
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "413":
+          description: Request Entity Too Large
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "415":
+          description: Unsupported Media Type
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+      summary: Retry an unavailable or failed article
       tags:
       - links
   /api/links/statuses:

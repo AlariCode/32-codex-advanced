@@ -83,10 +83,19 @@ func Article(body []byte, finalURL string) (linkprocessing.Result, error) {
 	if err != nil {
 		return result, err
 	}
+	metadata, blocked, declaredArticle, prose := availability(root)
+	result.Title = metadata
+	if result.Title == "" {
+		result.Title = u.Hostname()
+	}
+	if blocked || (!declaredArticle && prose < 200) {
+		result.Reason = "article_unavailable"
+		return result, nil
+	}
 	base := documentBase(root, u)
 	evidence := mainEvidence(root)
 	mainNodes := declaredMainNodes(root)
-	metadata := ""
+
 	omitted := false
 	var clean func(*html.Node)
 	clean = func(n *html.Node) {
@@ -95,7 +104,9 @@ func Article(body []byte, finalURL string) (linkprocessing.Result, error) {
 			if child.Type == html.ElementNode {
 				switch child.Data {
 				case "title":
-					metadata = text(child)
+					if metadata == "" {
+						metadata = text(child)
+					}
 				}
 				if active(child.Data) {
 					n.RemoveChild(child)
@@ -107,7 +118,9 @@ func Article(body []byte, finalURL string) (linkprocessing.Result, error) {
 		}
 	}
 	clean(root)
-	// Readeck intentionally unwraps details and can discard short data tables.
+	// Readeck unwraps details, discards some short tables, and can mistake
+	// syntax-highlighted code comments for page discussion. Preserve selected
+	// visible pre blocks verbatim along with the existing structural placeholders.
 	// Keep their position inside its selected article using text-bearing placeholders.
 	// Only placeholders surviving selection are restored; unrelated page content is never appended.
 	protected := map[string]*html.Node{}
@@ -116,7 +129,8 @@ func Article(body []byte, finalURL string) (linkprocessing.Result, error) {
 	protect = func(n *html.Node) {
 		for c := n.FirstChild; c != nil; {
 			next := c.NextSibling
-			if c.Type == html.ElementNode && (c.Data == "table" || c.Data == "details" || c.Data == "h1" || c.Data == "figure" || c.Data == "img") {
+			heading := len(c.Data) == 2 && c.Data[0] == 'h' && c.Data[1] >= '1' && c.Data[1] <= '6'
+			if c.Type == html.ElementNode && (c.Data == "table" || c.Data == "details" || heading || c.Data == "figure" || c.Data == "img" || (c.Data == "pre" && !hiddenForSelection(c))) {
 				marker := "LINKBOOKARCHIVE" + rand.Text() + "END"
 				placeholder := &html.Node{Type: html.ElementNode, Data: "p", DataAtom: atom.P}
 				if c.Data == "img" {
@@ -206,6 +220,26 @@ func Article(body []byte, finalURL string) (linkprocessing.Result, error) {
 	result.Document = &doc
 	return result, nil
 }
+
+// Hidden playground prefixes/suffixes are implementation scaffolding, not
+// visible tutorial code. Leave them to Readeck's normal visibility filtering.
+func hiddenForSelection(n *html.Node) bool {
+	for ; n != nil; n = n.Parent {
+		for _, a := range n.Attr {
+			if a.Key == "hidden" || (a.Key == "aria-hidden" && strings.EqualFold(a.Val, "true")) {
+				return true
+			}
+			if a.Key == "style" {
+				style := strings.Join(strings.Fields(strings.ToLower(a.Val)), "")
+				if strings.Contains(style, "display:none") || strings.Contains(style, "visibility:hidden") {
+					return true
+				}
+			}
+		}
+	}
+	return false
+}
+
 func voidTag(tag string) bool {
 	switch tag {
 	case "area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr":

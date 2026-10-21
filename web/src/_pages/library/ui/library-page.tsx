@@ -16,6 +16,7 @@ import {
   LibraryError,
   listLinks,
   saveLink,
+  retryLink,
   statuses,
 } from "../api/library";
 import {
@@ -30,6 +31,8 @@ function processingReason(reason?: string | null) {
   return (
     (
       {
+        article_unavailable:
+          "На странице нет доступного текста статьи: это может быть главная, видео, PDF или страница входа/оплаты. Откройте оригинал или повторите позже.",
         destination_blocked: "Этот адрес недоступен для безопасной загрузки.",
         network_error: "Не удалось связаться с сайтом.",
         http_error: "Сайт не отдал страницу.",
@@ -132,7 +135,9 @@ export function LibraryPage() {
     const server = Date.parse(serverTime);
     if (Number.isFinite(server)) {
       const local = performance.now();
-      serverClock.current = { server, local };
+      const estimated =
+        serverClock.current.server + local - serverClock.current.local;
+      serverClock.current = { server: Math.max(server, estimated), local };
       setMonotonicNow(local);
     }
   }, []);
@@ -146,7 +151,10 @@ export function LibraryPage() {
   const [opening, setOpening] = useState<string | null>(null);
   const scope = useRef(new AbortController());
   const busy = useRef(new Set<string>());
-  const active = useRef(new Set<string>());
+  const active = useRef(new Map<string, number>());
+  const retryGeneration = useRef(new Map<string, number>());
+  const [retrying, setRetrying] = useState<Record<string, boolean>>({});
+  const [retryErrors, setRetryErrors] = useState<Record<string, string>>({});
   const moreBusy = useRef(false);
   const openBusy = useRef(false);
   const focusCard = useRef<string | null>(null);
@@ -166,6 +174,9 @@ export function LibraryPage() {
     focusCard.current = null;
     busy.current.clear();
     active.current.clear();
+    retryGeneration.current.clear();
+    setRetrying({});
+    setRetryErrors({});
     moreBusy.current = false;
     openBusy.current = false;
     setUser(null);
@@ -197,6 +208,9 @@ export function LibraryPage() {
       scope.current = controller;
       busy.current.clear();
       active.current.clear();
+      retryGeneration.current.clear();
+      setRetrying({});
+      setRetryErrors({});
       moreBusy.current = false;
       openBusy.current = false;
       setStatus("checking");
@@ -219,7 +233,12 @@ export function LibraryPage() {
         setCursor(page.next_cursor);
         page.links
           .filter((card) => card.state === "processing")
-          .forEach((card) => active.current.add(card.id));
+          .forEach((card) =>
+            active.current.set(
+              card.id,
+              Math.max(active.current.get(card.id) ?? 0, card.generation),
+            ),
+          );
         setStatus("ready");
         void discover(controller);
       } catch (error) {
@@ -239,7 +258,12 @@ export function LibraryPage() {
           const page = await statuses(controller.signal, undefined, cursor);
           if (controller.signal.aborted) return;
           syncClock(page.server_time);
-          page.links.forEach((card) => active.current.add(card.id));
+          page.links.forEach((card) =>
+            active.current.set(
+              card.id,
+              Math.max(active.current.get(card.id) ?? 0, card.generation),
+            ),
+          );
           setCards((current) => mergeCards(current, page.links));
           cursor = page.next_cursor;
         } while (cursor && !controller.signal.aborted);
@@ -258,7 +282,7 @@ export function LibraryPage() {
       polling = true;
       const controller = scope.current;
       try {
-        const ids = [...active.current];
+        const ids = [...active.current.keys()];
         for (let i = 0; i < ids.length; i += 100) {
           const batch = ids.slice(i, i + 100);
           const page = await statuses(controller.signal, batch);
@@ -267,7 +291,16 @@ export function LibraryPage() {
           setError("");
           const returned = new Set(page.links.map((card) => card.id));
           page.links.forEach((card) => {
-            if (card.state !== "processing") active.current.delete(card.id);
+            if (card.state === "processing")
+              active.current.set(
+                card.id,
+                Math.max(active.current.get(card.id) ?? 0, card.generation),
+              );
+            if (
+              card.state !== "processing" &&
+              card.generation >= (active.current.get(card.id) ?? 0)
+            )
+              active.current.delete(card.id);
           });
           const completed = page.links.filter(
             (card) => card.state !== "processing",
@@ -339,7 +372,7 @@ export function LibraryPage() {
       syncClock(result.server_time);
       focusCard.current = result.link.id;
       if (result.link.state === "processing")
-        active.current.add(result.link.id);
+        active.current.set(result.link.id, result.link.generation);
       setCards((current) => mergeCards(current, [result.link]));
       setDrafts((current) => current.filter((item) => item.id !== id));
       setMessage(result.created ? "Ссылка сохранена" : "Ссылка уже сохранена");
@@ -362,6 +395,42 @@ export function LibraryPage() {
       if (scope.current === controller) busy.current.delete(id);
     }
   }
+  async function retry(card: LinkCard) {
+    if (busy.current.has(card.id)) return;
+    busy.current.add(card.id);
+    const generation = Math.max(
+      retryGeneration.current.get(card.id) ?? card.generation,
+      card.generation,
+    );
+    retryGeneration.current.set(card.id, generation);
+    setRetrying((current) => ({ ...current, [card.id]: true }));
+    setRetryErrors((current) => ({ ...current, [card.id]: "" }));
+    const controller = scope.current;
+    try {
+      const result = await retryLink(controller.signal, card.id, generation);
+      if (controller.signal.aborted) return;
+      retryGeneration.current.delete(card.id);
+      syncClock(result.server_time);
+      if (result.link.state === "processing")
+        active.current.set(
+          card.id,
+          Math.max(active.current.get(card.id) ?? 0, result.link.generation),
+        );
+      setCards((current) => mergeCards(current, [result.link]));
+    } catch (error) {
+      if (controller.signal.aborted || unauthorized(error)) return;
+      setRetryErrors((current) => ({
+        ...current,
+        [card.id]:
+          "Не удалось подтвердить повторную обработку. Нажмите «Повторить» ещё раз — дополнительная попытка не будет создана.",
+      }));
+    } finally {
+      if (scope.current === controller) {
+        busy.current.delete(card.id);
+        setRetrying((current) => ({ ...current, [card.id]: false }));
+      }
+    }
+  }
   function submit(event: FormEvent) {
     event.preventDefault();
     void send(crypto.randomUUID(), url);
@@ -379,7 +448,12 @@ export function LibraryPage() {
         syncClock(page.server_time);
         page.links
           .filter((card) => card.state === "processing")
-          .forEach((card) => active.current.add(card.id));
+          .forEach((card) =>
+            active.current.set(
+              card.id,
+              Math.max(active.current.get(card.id) ?? 0, card.generation),
+            ),
+          );
         setCards((current) => mergeCards(current, page.links));
         setCursor(page.next_cursor);
       }
@@ -403,6 +477,14 @@ export function LibraryPage() {
       const card = await getLink(controller.signal, id);
       if (!controller.signal.aborted) {
         focusCard.current = id;
+        if (card.state === "processing") {
+          active.current.set(
+            id,
+            Math.max(active.current.get(id) ?? 0, card.generation),
+          );
+        } else if (card.generation >= (active.current.get(id) ?? 0)) {
+          active.current.delete(id);
+        }
         setCards((current) => mergeCards(current, [card]));
       }
     } catch (error) {
@@ -509,8 +591,29 @@ export function LibraryPage() {
             </p>
             {card.title && <h2>{card.title}</h2>}
             <p className={styles.address}>{card.submitted_url}</p>
-            {card.state === "failed" && <p>{processingReason(card.reason)}</p>}
+            {(card.state === "failed" || card.state === "unavailable") && (
+              <p>
+                {processingReason(
+                  card.reason ??
+                    (card.state === "unavailable"
+                      ? "article_unavailable"
+                      : null),
+                )}
+              </p>
+            )}
+            {retryErrors[card.id] &&
+              retryGeneration.current.get(card.id) === card.generation && (
+                <p role="alert">{retryErrors[card.id]}</p>
+              )}
             <div className={styles.actions}>
+              {(card.state === "failed" || card.state === "unavailable") && (
+                <button
+                  disabled={!!retrying[card.id]}
+                  onClick={() => void retry(card)}
+                >
+                  {retrying[card.id] ? "Отправляем повтор…" : "Повторить"}
+                </button>
+              )}
               {card.state === "ready" && card.can_read !== false && (
                 <Link href={`/links/${card.id}`}>Читать статью</Link>
               )}

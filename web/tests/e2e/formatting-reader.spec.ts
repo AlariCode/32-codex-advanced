@@ -114,7 +114,7 @@ for (const [name, block] of Object.entries({
       }),
     );
     await page.goto(`/links/${id}`);
-    await expect(page.getByRole("alert")).toHaveText(
+    await expect(page.getByRole("main").getByRole("alert")).toHaveText(
       "Эта версия статьи не поддерживается.",
     );
     await expect(page.locator("article")).toHaveCount(0);

@@ -1,0 +1,9 @@
+{
+  "id": "go-pipelines",
+  "url": "https://go.dev/blog/pipelines",
+  "fetchedAt": "2026-10-21T08:29:02.434Z",
+  "status": 200,
+  "finalURL": "https://go.dev/blog/pipelines",
+  "sha256": "0cc4973f0649d8c13111a4fa45da100469bcf859a00d6375f1521cf2b95529fb",
+  "bytes": 60150
+}

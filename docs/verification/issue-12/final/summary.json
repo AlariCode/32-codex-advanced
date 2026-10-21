@@ -1,0 +1,50 @@
+{
+  "expected": 60,
+  "recorded": 60,
+  "confirmedNewSaves": 60,
+  "missing": 0,
+  "ready": 60,
+  "readyWithin15s": 49,
+  "required": 54,
+  "targetMet": false,
+  "readyP50MS": 4000.099853515625,
+  "readyP90MS": 25924.39990234375,
+  "articles": [
+    {
+      "article": "go-strings",
+      "recorded": 10,
+      "ready": 10,
+      "readyWithin15s": 10
+    },
+    {
+      "article": "go-pipelines",
+      "recorded": 10,
+      "ready": 10,
+      "readyWithin15s": 10
+    },
+    {
+      "article": "mdn",
+      "recorded": 10,
+      "ready": 10,
+      "readyWithin15s": 10
+    },
+    {
+      "article": "cloudflare",
+      "recorded": 10,
+      "ready": 10,
+      "readyWithin15s": 10
+    },
+    {
+      "article": "habr-gc",
+      "recorded": 10,
+      "ready": 10,
+      "readyWithin15s": 9
+    },
+    {
+      "article": "habr-avito",
+      "recorded": 10,
+      "ready": 10,
+      "readyWithin15s": 0
+    }
+  ]
+}
