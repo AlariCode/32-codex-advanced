@@ -150,6 +150,7 @@ export function LibraryPage() {
   const [loadingMore, setLoadingMore] = useState(false);
   const [opening, setOpening] = useState<string | null>(null);
   const scope = useRef(new AbortController());
+  const authenticatedUser = useRef<string | null>(null);
   const busy = useRef(new Set<string>());
   const active = useRef(new Map<string, number>());
   const retryGeneration = useRef(new Map<string, number>());
@@ -171,6 +172,7 @@ export function LibraryPage() {
 
   const invalidate = useCallback(() => {
     scope.current.abort();
+    authenticatedUser.current = null;
     focusCard.current = null;
     busy.current.clear();
     active.current.clear();
@@ -201,8 +203,13 @@ export function LibraryPage() {
     [invalidate],
   );
   useEffect(() => {
+    let loading = false;
+    let revalidating = false;
     async function load() {
+      if (loading) return;
+      loading = true;
       scope.current.abort();
+      authenticatedUser.current = null;
       focusCard.current = null;
       const controller = new AbortController();
       scope.current = controller;
@@ -227,6 +234,7 @@ export function LibraryPage() {
         const identity = await currentUser(controller.signal);
         const page = await listLinks(controller.signal);
         if (controller.signal.aborted) return;
+        authenticatedUser.current = identity.id;
         setUser(identity);
         syncClock(page.server_time);
         setCards(page.links);
@@ -248,6 +256,42 @@ export function LibraryPage() {
             ? "anonymous"
             : "error",
         );
+      } finally {
+        loading = false;
+      }
+    }
+    async function revalidate() {
+      if (loading || revalidating) return;
+      if (!authenticatedUser.current) {
+        await load();
+        return;
+      }
+      revalidating = true;
+      const controller = scope.current;
+      try {
+        const identity = await currentUser(controller.signal);
+        if (controller.signal.aborted) return;
+        if (identity.id !== authenticatedUser.current) {
+          // A different account must never inherit the previous owner's UI.
+          await load();
+          return;
+        }
+        const page = await listLinks(controller.signal);
+        if (controller.signal.aborted) return;
+        setUser(identity);
+        setError("");
+        syncClock(page.server_time);
+        setCards((current) => mergeCards(current, page.links));
+        setCursor((current) => current || page.next_cursor);
+        // Preserve loaded pagination, drafts, input and in-flight mutations.
+        await discover(controller);
+      } catch (error) {
+        if (!controller.signal.aborted && !unauthorized(error))
+          setError(
+            "Не удалось обновить библиотеку. Попробуем при восстановлении связи.",
+          );
+      } finally {
+        revalidating = false;
       }
     }
     let polling = false;
@@ -333,7 +377,7 @@ export function LibraryPage() {
     };
     void load();
     const restore = () => {
-      if (document.visibilityState === "visible") void load();
+      if (document.visibilityState === "visible") void revalidate();
     };
     window.addEventListener("pageshow", restore);
     window.addEventListener("focus", restore);
@@ -498,23 +542,29 @@ export function LibraryPage() {
     }
   }
 
+  if (status === "checking")
+    return (
+      <main aria-busy="true">
+        <h1>Linkbook</h1>
+        <p className="note" role="status">
+          Проверяем вход…
+        </p>
+      </main>
+    );
+
+  if (status === "error")
+    return (
+      <main>
+        <h1>Linkbook</h1>
+        <p role="alert">Не удалось загрузить библиотеку.</p>
+        <Button onClick={() => reload.current()}>Повторить</Button>
+      </main>
+    );
+
   if (status !== "ready" || !user)
     return (
       <Welcome>
-        {status === "checking" && (
-          <p className="note" role="status">
-            Проверяем вход…
-          </p>
-        )}
-        {status === "anonymous" && (
-          <p className="note">Войдите, чтобы открыть личную библиотеку.</p>
-        )}
-        {status === "error" && (
-          <div>
-            <p role="alert">Не удалось загрузить библиотеку.</p>
-            <Button onClick={() => reload.current()}>Повторить</Button>
-          </div>
-        )}
+        <p className="note">Войдите, чтобы открыть личную библиотеку.</p>
       </Welcome>
     );
 
