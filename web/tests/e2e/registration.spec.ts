@@ -3,6 +3,9 @@ import { expect, test } from "@playwright/test";
 test("registration link has a generous target and supports keyboard navigation", async ({
   page,
 }) => {
+  await page.route("**/api/users/me", (route) =>
+    route.fulfill({ status: 401, json: { code: "unauthorized" } }),
+  );
   await page.goto("/");
   const link = page.getByRole("link", { name: "Создать аккаунт" });
   const box = await link.boundingBox();

@@ -47,17 +47,24 @@ export function ReaderPage({ id }: { id: string }) {
   const [checking, setChecking] = useState(true);
   useEffect(() => {
     let controller = new AbortController();
-    async function load() {
+    let loaded = false;
+    let loading = false;
+    async function load(background = false) {
+      if (loading) return;
+      loading = true;
       controller.abort();
       controller = new AbortController();
       const request = controller;
-      setChecking(true);
-      setArticle(null);
+      if (!background || !loaded) {
+        setChecking(true);
+        setArticle(null);
+      }
       setError("");
       try {
         const data = await readArticle(id, request.signal);
         if (!request.signal.aborted) {
           setArticle(data);
+          loaded = true;
           setChecking(false);
         }
       } catch (error) {
@@ -65,11 +72,17 @@ export function ReaderPage({ id }: { id: string }) {
         setChecking(false);
         const code =
           error instanceof ReaderError ? error.code : "internal_error";
+        if (code !== "internal_error") {
+          loaded = false;
+          setArticle(null);
+        }
         setError(code);
+      } finally {
+        loading = false;
       }
     }
     const restore = () => {
-      if (document.visibilityState === "visible") void load();
+      if (document.visibilityState === "visible") void load(true);
     };
     void load();
     window.addEventListener("focus", restore);
@@ -103,7 +116,7 @@ export function ReaderPage({ id }: { id: string }) {
       {checking && <p role="status">Открываем статью…</p>}
       {error && (
         <>
-          <h1>Статья недоступна</h1>
+          {!article && <h1>Статья недоступна</h1>}
           <p role="alert">{message}</p>
           {error === "unauthorized" && <Link href="/login">Войти</Link>}
         </>

@@ -79,6 +79,12 @@ func Article(body []byte, finalURL string) (linkprocessing.Result, error) {
 	if !inspect(root, 0) {
 		return result, ErrResources
 	}
+	resolveStreamedHTML(root)
+	// Segment insertion can increase depth even though it creates no new nodes.
+	nodes = 0
+	if !inspect(root, 0) {
+		return result, ErrResources
+	}
 	u, err := url.Parse(finalURL)
 	if err != nil {
 		return result, err
