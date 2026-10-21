@@ -143,7 +143,12 @@ func TestDecompressedBodyHeadersRedirectAndBudgetLimits(t *testing.T) {
 		}
 	}))
 	defer s.Close()
-	for path, code := range map[string]string{"/gzip": "html_too_large", "/headers": "network_error", "/loop": "redirect_limit", "/slow": "network_error"} {
+	c, _, _ := routedClient(t, s, []net.IPAddr{{IP: net.IP{93, 184, 216, 34}}})
+	page, err := c.Fetch(t.Context(), "http://article.example/gzip")
+	if err != nil || len(page.HTML) != 3*1024*1024 || !page.Truncated {
+		t.Fatalf("bounded decompressed prefix: len=%d truncated=%v err=%v", len(page.HTML), page.Truncated, err)
+	}
+	for path, code := range map[string]string{"/headers": "network_error", "/loop": "redirect_limit", "/slow": "network_error"} {
 		c, _, _ := routedClient(t, s, []net.IPAddr{{IP: net.IP{93, 184, 216, 34}}})
 		ctx, cancel := context.WithTimeout(t.Context(), 200*time.Millisecond)
 		_, err := c.Fetch(ctx, "http://article.example"+path+"?secret=do-not-leak")

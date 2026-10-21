@@ -120,10 +120,29 @@ export function ReaderPage({ id }: { id: string }) {
           >
             Открыть оригинал ↗
           </a>
-          {article.warnings?.length > 0 && (
+          {article.warnings?.includes("images_omitted") && (
             <p className={styles.warning} role="note">
               Часть изображений или оформления не сохранена. Пропущенные
               изображения отмечены в тексте.
+            </p>
+          )}
+          {article.warnings?.includes("html_truncated") && (
+            <p className={styles.warning} role="note">
+              Сохранена часть статьи: HTML страницы превысил предел 3 MiB после
+              распаковки. Текст после этого предела не сохранён.
+            </p>
+          )}
+          {article.warnings?.includes("text_incomplete") && (
+            <p className={styles.warning} role="note">
+              Часть основного текста не удалось сохранить при извлечении статьи.
+              Доступный текст сохранён; полную версию можно проверить в
+              оригинале.
+            </p>
+          )}
+          {article.warnings?.includes("text_only_archive") && (
+            <p className={styles.warning} role="note">
+              Часть оформления основного содержимого не поддерживается и не
+              сохранена.
             </p>
           )}
           <div className={styles.body}>

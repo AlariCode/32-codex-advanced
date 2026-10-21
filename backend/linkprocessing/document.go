@@ -14,18 +14,19 @@ const SchemaVersion = 2
 const MaxHTMLBytes = 3 * 1024 * 1024
 
 type Block struct {
-	Source   string   `json:"-"` // Worker-only input, never serialized.
-	AssetID  string   `json:"asset_id,omitempty"`
-	Alt      string   `json:"alt,omitempty"`
-	Omission string   `json:"omission,omitempty"`
-	Children []Block  `json:"children,omitempty"`
-	Href     string   `json:"href,omitempty"`
-	Language string   `json:"language,omitempty"`
-	Kind     string   `json:"kind"`
-	Text     string   `json:"text,omitempty"`
-	Level    int      `json:"level,omitempty"`
-	Ordered  bool     `json:"ordered,omitempty"`
-	Items    []string `json:"items,omitempty"`
+	Candidates []string `json:"-"` // Bounded worker-only alternatives for one image position.
+	Source     string   `json:"-"` // Worker-only input, never serialized.
+	AssetID    string   `json:"asset_id,omitempty"`
+	Alt        string   `json:"alt,omitempty"`
+	Omission   string   `json:"omission,omitempty"`
+	Children   []Block  `json:"children,omitempty"`
+	Href       string   `json:"href,omitempty"`
+	Language   string   `json:"language,omitempty"`
+	Kind       string   `json:"kind"`
+	Text       string   `json:"text,omitempty"`
+	Level      int      `json:"level,omitempty"`
+	Ordered    bool     `json:"ordered,omitempty"`
+	Items      []string `json:"items,omitempty"`
 }
 type Document struct {
 	SchemaVersion int     `json:"schema_version"`
@@ -52,7 +53,7 @@ func ValidateDocument(d Document) error {
 	}
 	size := 0
 	for _, b := range d.Blocks {
-		if b.AssetID != "" || b.Alt != "" || b.Omission != "" || b.Source != "" || len(b.Children) != 0 || b.Href != "" || !utf8.ValidString(b.Text) {
+		if b.AssetID != "" || b.Alt != "" || b.Omission != "" || (b.Source != "" || len(b.Candidates) != 0) || len(b.Children) != 0 || b.Href != "" || !utf8.ValidString(b.Text) {
 			return ErrDocument
 		}
 		if b.Language != "" && (b.Kind != "code" || !codeLanguage.MatchString(b.Language)) {
@@ -116,7 +117,7 @@ func validateTree(d Document) error {
 	visit = func(b Block, parent string, depth int) bool {
 		count++
 		size += len(b.Text) + len(b.Href) + len(b.Alt) + len(b.AssetID) + len(b.Omission)
-		if !utf8.ValidString(b.Alt) || b.Kind != "image" && (b.AssetID != "" || b.Alt != "" || b.Omission != "" || b.Source != "") {
+		if !utf8.ValidString(b.Alt) || b.Kind != "image" && (b.AssetID != "" || b.Alt != "" || b.Omission != "" || (b.Source != "" || len(b.Candidates) != 0)) {
 			return false
 		}
 		if depth > 64 || count > 10000 || size > MaxHTMLBytes || !utf8.ValidString(b.Text) || len(b.Items) > 0 {

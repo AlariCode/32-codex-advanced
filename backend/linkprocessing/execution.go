@@ -63,7 +63,7 @@ func Publish(ctx context.Context, db *sql.DB, e Execution, r Result) (bool, erro
 		}
 	} else {
 		switch r.Reason {
-		case "destination_blocked", "network_error", "http_error", "html_too_large", "unsupported_content", "redirect_limit", "processing_error":
+		case "article_unavailable", "destination_blocked", "network_error", "http_error", "html_too_large", "unsupported_content", "redirect_limit", "processing_error":
 		default:
 			return false, errors.New("invalid processing reason")
 		}
@@ -93,6 +93,9 @@ func Publish(ctx context.Context, db *sql.DB, e Execution, r Result) (bool, erro
 	}
 	warn, _ := json.Marshal(warnings)
 	state, jobState := "failed", "failed"
+	if r.Document == nil && r.Reason == "article_unavailable" {
+		state, jobState = "unavailable", "completed"
+	}
 	if r.Document != nil {
 		state, jobState = "ready", "completed"
 		_, err = tx.ExecContext(ctx, `INSERT INTO snapshots(link_id,generation,schema_version,document) VALUES($1,$2,$3,$4)`, e.LinkID, e.Generation, r.Document.SchemaVersion, raw)
