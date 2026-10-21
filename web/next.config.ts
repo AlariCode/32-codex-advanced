@@ -15,7 +15,7 @@ const nextConfig: NextConfig = {
           {
             key: "Content-Security-Policy",
             value:
-              "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'",
+              "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self'; font-src 'self'; connect-src 'self'; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'",
           },
         ],
       },
@@ -40,6 +40,14 @@ const nextConfig: NextConfig = {
       {
         source: "/api/links/:id/document",
         destination: `${apiOrigin}/api/links/:id/document`,
+      },
+      {
+        source: "/api/links/:id/assets/:asset_id",
+        destination: `${apiOrigin}/api/links/:id/assets/:asset_id`,
+      },
+      {
+        source: "/api/links/:id/retry",
+        destination: `${apiOrigin}/api/links/:id/retry`,
       },
       { source: "/api/links/:id", destination: `${apiOrigin}/api/links/:id` },
     ];

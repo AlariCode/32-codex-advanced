@@ -19,8 +19,9 @@ import (
 )
 
 type Page struct {
-	HTML     []byte
-	FinalURL string
+	HTML      []byte
+	Truncated bool
+	FinalURL  string
 }
 type failure string
 
@@ -155,7 +156,7 @@ func (c *Client) Fetch(ctx context.Context, raw string) (Page, error) {
 	var page Page
 	var err error
 	for attempt := 0; attempt < 5; attempt++ {
-		page, err = c.fetchOnce(ctx, raw)
+		page, err = c.fetchOnce(ctx, raw, false)
 		if err == nil {
 			return page, nil
 		}
@@ -188,7 +189,10 @@ func retryAt(value string) time.Time {
 	date, _ := http.ParseTime(value)
 	return date
 }
-func (c *Client) fetchOnce(parent context.Context, raw string) (Page, error) {
+func (c *Client) fetchOnce(parent context.Context, raw string, image bool) (Page, error) {
+	return c.fetchBounded(parent, raw, image, linkprocessing.MaxImageBytes)
+}
+func (c *Client) fetchBounded(parent context.Context, raw string, image bool, imageBudget int) (Page, error) {
 	ctx, cancel := context.WithTimeout(parent, 25*time.Second)
 	defer cancel()
 	if len(raw) > 65536 || strings.ContainsAny(raw, "\\\r\n\t ") {
@@ -199,6 +203,9 @@ func (c *Client) fetchOnce(parent context.Context, raw string) (Page, error) {
 		return Page{}, failure("destination_blocked")
 	}
 	for redirects := 0; redirects <= 5; redirects++ {
+		if ctx.Err() != nil {
+			return Page{}, failure("network_error")
+		}
 		address, err := c.destination(ctx, current)
 		if err != nil {
 			return Page{}, err
@@ -214,6 +221,9 @@ func (c *Client) fetchOnce(parent context.Context, raw string) (Page, error) {
 		}
 		request.Header.Set("User-Agent", "Linkbook/1.0")
 		request.Header.Set("Accept", "text/html, application/xhtml+xml")
+		if image {
+			request.Header.Set("Accept", "image/png, image/jpeg, image/gif")
+		}
 		response, err := transport.RoundTrip(request)
 		if err != nil {
 			transport.CloseIdleConnections()
@@ -243,6 +253,9 @@ func (c *Client) fetchOnce(parent context.Context, raw string) (Page, error) {
 			if response.StatusCode == 429 || response.StatusCode >= 500 {
 				return Page{}, transientFailure{code: "http_error", retryAt: retryAt(response.Header.Get("Retry-After"))}
 			}
+			if response.StatusCode == 401 || response.StatusCode == 403 || response.StatusCode == 402 {
+				return Page{}, failure("article_unavailable")
+			}
 			return Page{}, failure("http_error")
 		}
 
@@ -254,21 +267,54 @@ func (c *Client) fetchOnce(parent context.Context, raw string) (Page, error) {
 			return Page{}, failure("unsupported_content")
 		}
 		media, _, err := mime.ParseMediaType(response.Header.Get("Content-Type"))
-		if err != nil || (media != "text/html" && media != "application/xhtml+xml") {
+		if !image && (err != nil || (media != "text/html" && media != "application/xhtml+xml")) {
 			_ = response.Body.Close()
 			transport.CloseIdleConnections()
-			return Page{}, failure("unsupported_content")
+			return Page{}, failure("article_unavailable")
 		}
-		body, err := io.ReadAll(io.LimitReader(response.Body, linkprocessing.MaxHTMLBytes+1))
+		limit := linkprocessing.MaxHTMLBytes
+		if image {
+			limit = linkprocessing.MaxImageBytes
+			if imageBudget < limit {
+				limit = imageBudget
+			}
+		}
+		body, err := io.ReadAll(io.LimitReader(response.Body, int64(limit+1)))
 		_ = response.Body.Close()
 		transport.CloseIdleConnections()
 		if err != nil {
+			if image {
+				return Page{HTML: body[:min(len(body), limit)]}, transientFailure{code: "network_error"}
+			}
 			return Page{}, transientFailure{code: "network_error"}
 		}
-		if len(body) > linkprocessing.MaxHTMLBytes {
-			return Page{}, failure("html_too_large")
+		if len(body) > limit {
+			if image {
+				code := "image_too_large"
+				if imageBudget < linkprocessing.MaxImageBytes {
+					code = "image_total_limit"
+				}
+				return Page{HTML: body[:limit]}, failure(code)
+			}
+			return Page{HTML: body[:limit], FinalURL: current.String(), Truncated: true}, nil
 		}
 		return Page{HTML: body, FinalURL: current.String()}, nil
 	}
 	return Page{}, failure("redirect_limit")
+}
+
+// FetchImage uses exactly the HTML destination, DNS, pinned dial and redirect policy.
+func (c *Client) FetchImage(ctx context.Context, raw string) ([]byte, error) {
+	page, err := c.fetchOnce(ctx, raw, true)
+	return page.HTML, err
+}
+
+// FetchImageBudget caps decompressed input by the remaining article budget.
+// Failed and invalid downloads consume that budget too.
+func (c *Client) FetchImageBudget(ctx context.Context, raw string, remaining int) ([]byte, error) {
+	if remaining <= 0 {
+		return nil, failure("image_total_limit")
+	}
+	page, err := c.fetchBounded(ctx, raw, true, remaining)
+	return page.HTML, err
 }

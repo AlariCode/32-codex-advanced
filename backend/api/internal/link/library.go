@@ -53,6 +53,12 @@ func scanCard(row scanner) (Card, error) {
 	var c Card
 	err := row.Scan(&c.ID, &c.SubmittedURL, &c.Title, &c.State, &c.Generation, &c.Reason, &c.Warnings, &c.CreatedAt, &c.RequestedAt, &c.DeadlineAt)
 	c.CanRead = c.State == "ready"
+	if err == nil && c.State != "processing" && (c.Title == nil || strings.TrimSpace(*c.Title) == "") {
+		if u, parseErr := url.Parse(c.SubmittedURL); parseErr == nil {
+			title := u.Hostname()
+			c.Title = &title
+		}
+	}
 	return c, err
 }
 

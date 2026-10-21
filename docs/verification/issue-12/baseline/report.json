@@ -1,0 +1,4206 @@
+{
+  "startedAt": "2026-10-21T08:27:53.905Z",
+  "environment": {
+    "startedAt": "2026-10-21T08:27:53.905Z",
+    "measuredFrom": "server requested_at to first visible DOM ready/card observation",
+    "clocks": "API and browser on same host",
+    "platform": "darwin",
+    "release": "27.0.0",
+    "arch": "arm64",
+    "cpus": 8,
+    "cpuModel": "Apple M1 Pro",
+    "physicalMemoryBytes": 17179869184,
+    "freeMemoryBytes": 167313408,
+    "loadStart": [57.19677734375, 70.38720703125, 67.80859375],
+    "node": "v24.21.0",
+    "go": "go version go1.27.2 darwin/arm64",
+    "chromium": "153.0.8010.12",
+    "next": "16.3.8",
+    "readeck": "v2.1.3 (backend/worker/go.mod)",
+    "gitCommit": "2ac6039ddb16a32d480a2b624a2ae78975347338",
+    "dirtyFiles": "M Makefile\n M package.json\n M web/next-env.d.ts\n?? scripts/archive-benchmark/",
+    "driverSHA256": "cb6bdaa940a26d2ad9e7da400a7992669d0d13f341532849078918091c694c44",
+    "corpusSHA256": "3da1470ee8f4dcf394c8189332d70a092d22581a9f4f32128b8c2fb8ba82d593",
+    "workerConcurrency": 1,
+    "saveConcurrency": 1,
+    "independentAccounts": true,
+    "workerGOMAXPROCS": 1,
+    "workerGOMEMLIMIT": "384MiB",
+    "resourceIsolation": "host processes; no CPU quota, no container worker firewall; normal safehttp.New with SSRF checks; test PostgreSQL in Docker",
+    "apiGOMAXPROCS": 2,
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "pollingMS": 2000,
+    "productionNextBuild": true,
+    "database": {
+      "host": "127.0.0.1",
+      "port": "15433",
+      "database": "linkbook_test",
+      "schema": "e2e_benchmark_41e6a9af51ea40ac8fa5c09a9d20c15d"
+    },
+    "postgres": "postgres (PostgreSQL) 18.6 (Debian 18.6-1.pgdg13+2)",
+    "network": {
+      "throttling": false,
+      "browserProxy": "none configured",
+      "workerProxy": "safehttp production configuration",
+      "publicInternet": true,
+      "httpProxyEnvironmentPresent": false,
+      "connectionType": "not instrumented",
+      "CDNCache": "uncontrolled; unchanged URLs; no cache busting"
+    },
+    "corpus": [
+      {
+        "id": "go-strings",
+        "url": "https://go.dev/blog/strings"
+      },
+      {
+        "id": "go-pipelines",
+        "url": "https://go.dev/blog/pipelines"
+      },
+      {
+        "id": "mdn",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Introduction"
+      },
+      {
+        "id": "cloudflare",
+        "url": "https://blog.cloudflare.com/pingora-open-source/"
+      },
+      {
+        "id": "habr-gc",
+        "url": "https://habr.com/ru/articles/742402/"
+      },
+      {
+        "id": "habr-avito",
+        "url": "https://habr.com/ru/companies/avito/articles/753244/"
+      }
+    ],
+    "repetitions": 10
+  },
+  "summary": {
+    "expected": 60,
+    "recorded": 60,
+    "confirmedNewSaves": 60,
+    "missing": 0,
+    "ready": 59,
+    "readyWithin15s": 48,
+    "required": 54,
+    "targetMet": false,
+    "readyP50MS": 2094.800048828125,
+    "readyP90MS": 25964.10009765625,
+    "articles": [
+      {
+        "article": "go-strings",
+        "recorded": 10,
+        "ready": 10,
+        "readyWithin15s": 10
+      },
+      {
+        "article": "go-pipelines",
+        "recorded": 10,
+        "ready": 10,
+        "readyWithin15s": 10
+      },
+      {
+        "article": "mdn",
+        "recorded": 10,
+        "ready": 10,
+        "readyWithin15s": 10
+      },
+      {
+        "article": "cloudflare",
+        "recorded": 10,
+        "ready": 10,
+        "readyWithin15s": 10
+      },
+      {
+        "article": "habr-gc",
+        "recorded": 10,
+        "ready": 10,
+        "readyWithin15s": 8
+      },
+      {
+        "article": "habr-avito",
+        "recorded": 10,
+        "ready": 9,
+        "readyWithin15s": 0
+      }
+    ]
+  },
+  "rows": [
+    {
+      "article": "go-strings",
+      "url": "https://go.dev/blog/strings",
+      "repetition": 1,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:28:11.252974+03:00",
+      "displayedAt": 1792571293045.5999,
+      "elapsedMS": 1793.599853515625,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [56.8603515625, 70.09814453125, 67.7216796875],
+      "startedAt": "2026-10-21T08:28:10.505Z",
+      "userId": "b0c8e109-f210-4574-8874-8c249bef336b",
+      "ackReceivedAt": 1792571291269.7998,
+      "ackServerTime": "2026-10-21T08:28:11.26357Z",
+      "cardId": "742c988a-04cc-4a61-9055-bbe3ad74ed48",
+      "deadlineAt": "2026-10-21T11:30:11.252974+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [],
+      "warnings": ["text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 0,
+      "documentSHA256": "8a1665bb9f9df6d89be49303a8c3731e49ae0fffe02c347ea8f3ce3cb7aafed3",
+      "textCharacters": 13861,
+      "loadAfter": [56.8603515625, 70.09814453125, 67.7216796875],
+      "endedAt": "2026-10-21T08:28:14.140Z"
+    },
+    {
+      "article": "go-strings",
+      "url": "https://go.dev/blog/strings",
+      "repetition": 2,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:28:14.475256+03:00",
+      "displayedAt": 1792571296400.7002,
+      "elapsedMS": 1925.7001953125,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [56.8603515625, 70.09814453125, 67.7216796875],
+      "startedAt": "2026-10-21T08:28:14.177Z",
+      "userId": "41d6ed0e-86bd-4427-a17f-18c087214821",
+      "ackReceivedAt": 1792571294495,
+      "ackServerTime": "2026-10-21T08:28:14.483325Z",
+      "cardId": "c51a7218-aea6-48fd-bd86-beeb18629a6c",
+      "deadlineAt": "2026-10-21T11:30:14.475256+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [],
+      "warnings": ["text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 0,
+      "documentSHA256": "8a1665bb9f9df6d89be49303a8c3731e49ae0fffe02c347ea8f3ce3cb7aafed3",
+      "textCharacters": 13861,
+      "loadAfter": [55.75, 69.64794921875, 67.57666015625],
+      "endedAt": "2026-10-21T08:28:16.575Z"
+    },
+    {
+      "article": "go-strings",
+      "url": "https://go.dev/blog/strings",
+      "repetition": 3,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:28:16.974863+03:00",
+      "displayedAt": 1792571298908.9001,
+      "elapsedMS": 1934.900146484375,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [55.75, 69.64794921875, 67.57666015625],
+      "startedAt": "2026-10-21T08:28:16.580Z",
+      "userId": "d538a729-1e9c-477c-837c-4f7a6b0bcb80",
+      "ackReceivedAt": 1792571296994.2,
+      "ackServerTime": "2026-10-21T08:28:16.983006Z",
+      "cardId": "c1162191-f953-41c4-a912-32804075f749",
+      "deadlineAt": "2026-10-21T11:30:16.974863+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [],
+      "warnings": ["text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 0,
+      "documentSHA256": "8a1665bb9f9df6d89be49303a8c3731e49ae0fffe02c347ea8f3ce3cb7aafed3",
+      "textCharacters": 13861,
+      "loadAfter": [55.75, 69.64794921875, 67.57666015625],
+      "endedAt": "2026-10-21T08:28:19.059Z"
+    },
+    {
+      "article": "go-strings",
+      "url": "https://go.dev/blog/strings",
+      "repetition": 4,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:28:19.312635+03:00",
+      "displayedAt": 1792571301254.0999,
+      "elapsedMS": 1942.099853515625,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [55.75, 69.64794921875, 67.57666015625],
+      "startedAt": "2026-10-21T08:28:19.064Z",
+      "userId": "b0034312-5c49-4942-bd63-73eddb5c89b8",
+      "ackReceivedAt": 1792571299327.5,
+      "ackServerTime": "2026-10-21T08:28:19.317315Z",
+      "cardId": "e2572702-564b-4470-81a0-e3b5ba5057ac",
+      "deadlineAt": "2026-10-21T11:30:19.312635+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [],
+      "warnings": ["text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 0,
+      "documentSHA256": "8a1665bb9f9df6d89be49303a8c3731e49ae0fffe02c347ea8f3ce3cb7aafed3",
+      "textCharacters": 13861,
+      "loadAfter": [54.80908203125, 69.2216796875, 67.4384765625],
+      "endedAt": "2026-10-21T08:28:21.448Z"
+    },
+    {
+      "article": "go-strings",
+      "url": "https://go.dev/blog/strings",
+      "repetition": 5,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:28:21.756599+03:00",
+      "displayedAt": 1792571303681.7,
+      "elapsedMS": 1925.699951171875,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [54.80908203125, 69.2216796875, 67.4384765625],
+      "startedAt": "2026-10-21T08:28:21.453Z",
+      "userId": "e6f5d2c0-6315-46c0-a796-4dbd65e88204",
+      "ackReceivedAt": 1792571301774.7,
+      "ackServerTime": "2026-10-21T08:28:21.7609Z",
+      "cardId": "c2f804f1-f5d8-4926-92b1-30493ba57d46",
+      "deadlineAt": "2026-10-21T11:30:21.756599+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [],
+      "warnings": ["text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 0,
+      "documentSHA256": "8a1665bb9f9df6d89be49303a8c3731e49ae0fffe02c347ea8f3ce3cb7aafed3",
+      "textCharacters": 13861,
+      "loadAfter": [54.80908203125, 69.2216796875, 67.4384765625],
+      "endedAt": "2026-10-21T08:28:23.838Z"
+    },
+    {
+      "article": "go-strings",
+      "url": "https://go.dev/blog/strings",
+      "repetition": 6,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:28:24.150958+03:00",
+      "displayedAt": 1792571306063.3,
+      "elapsedMS": 1913.300048828125,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [54.80908203125, 69.2216796875, 67.4384765625],
+      "startedAt": "2026-10-21T08:28:23.843Z",
+      "userId": "26d45478-300b-44c7-91bf-069240863d96",
+      "ackReceivedAt": 1792571304166.8,
+      "ackServerTime": "2026-10-21T08:28:24.161186Z",
+      "cardId": "6efb4e13-91b5-4e2f-9d18-89f68ded7b21",
+      "deadlineAt": "2026-10-21T11:30:24.150958+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [],
+      "warnings": ["text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 0,
+      "documentSHA256": "8a1665bb9f9df6d89be49303a8c3731e49ae0fffe02c347ea8f3ce3cb7aafed3",
+      "textCharacters": 13861,
+      "loadAfter": [53.22265625, 68.6533203125, 67.248046875],
+      "endedAt": "2026-10-21T08:28:26.212Z"
+    },
+    {
+      "article": "go-strings",
+      "url": "https://go.dev/blog/strings",
+      "repetition": 7,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:28:26.486168+03:00",
+      "displayedAt": 1792571308413.7,
+      "elapsedMS": 1927.699951171875,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [53.22265625, 68.6533203125, 67.248046875],
+      "startedAt": "2026-10-21T08:28:26.217Z",
+      "userId": "7ee9c0fb-cd2e-4142-a8c1-268ad6256e00",
+      "ackReceivedAt": 1792571306509.2,
+      "ackServerTime": "2026-10-21T08:28:26.490859Z",
+      "cardId": "7cdef374-f9ee-42c0-b802-3d05d89717ea",
+      "deadlineAt": "2026-10-21T11:30:26.486168+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [],
+      "warnings": ["text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 0,
+      "documentSHA256": "8a1665bb9f9df6d89be49303a8c3731e49ae0fffe02c347ea8f3ce3cb7aafed3",
+      "textCharacters": 13861,
+      "loadAfter": [53.22265625, 68.6533203125, 67.248046875],
+      "endedAt": "2026-10-21T08:28:28.586Z"
+    },
+    {
+      "article": "go-strings",
+      "url": "https://go.dev/blog/strings",
+      "repetition": 8,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:28:28.867695+03:00",
+      "displayedAt": 1792571310785.2,
+      "elapsedMS": 1918.199951171875,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [53.22265625, 68.6533203125, 67.248046875],
+      "startedAt": "2026-10-21T08:28:28.592Z",
+      "userId": "ca4f4ad7-54dc-4a37-a5b7-e9c2b34854b9",
+      "ackReceivedAt": 1792571308885.8,
+      "ackServerTime": "2026-10-21T08:28:28.881785Z",
+      "cardId": "2e071c19-5e41-4acc-9a51-610918377b81",
+      "deadlineAt": "2026-10-21T11:30:28.867695+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [],
+      "warnings": ["text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 0,
+      "documentSHA256": "8a1665bb9f9df6d89be49303a8c3731e49ae0fffe02c347ea8f3ce3cb7aafed3",
+      "textCharacters": 13861,
+      "loadAfter": [51.76318359375, 68.09423828125, 67.05908203125],
+      "endedAt": "2026-10-21T08:28:30.960Z"
+    },
+    {
+      "article": "go-strings",
+      "url": "https://go.dev/blog/strings",
+      "repetition": 9,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:28:31.314706+03:00",
+      "displayedAt": 1792571313223.2,
+      "elapsedMS": 1909.199951171875,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [51.76318359375, 68.09423828125, 67.05908203125],
+      "startedAt": "2026-10-21T08:28:30.965Z",
+      "userId": "8fa74c5e-d0d2-4119-958d-2081a1c84481",
+      "ackReceivedAt": 1792571311331.3,
+      "ackServerTime": "2026-10-21T08:28:31.32077Z",
+      "cardId": "7211a5d7-d093-4568-b4f2-2a668bc8fc55",
+      "deadlineAt": "2026-10-21T11:30:31.314706+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [],
+      "warnings": ["text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 0,
+      "documentSHA256": "8a1665bb9f9df6d89be49303a8c3731e49ae0fffe02c347ea8f3ce3cb7aafed3",
+      "textCharacters": 13861,
+      "loadAfter": [51.76318359375, 68.09423828125, 67.05908203125],
+      "endedAt": "2026-10-21T08:28:33.371Z"
+    },
+    {
+      "article": "go-strings",
+      "url": "https://go.dev/blog/strings",
+      "repetition": 10,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:28:33.648889+03:00",
+      "displayedAt": 1792571315581.2,
+      "elapsedMS": 1933.199951171875,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [51.76318359375, 68.09423828125, 67.05908203125],
+      "startedAt": "2026-10-21T08:28:33.377Z",
+      "userId": "f770e931-141b-40e1-9690-5ede4577eaef",
+      "ackReceivedAt": 1792571313677.3,
+      "ackServerTime": "2026-10-21T08:28:33.654528Z",
+      "cardId": "bc522518-4171-46b0-a3ed-6c61e73c1d2e",
+      "deadlineAt": "2026-10-21T11:30:33.648889+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [],
+      "warnings": ["text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 0,
+      "documentSHA256": "8a1665bb9f9df6d89be49303a8c3731e49ae0fffe02c347ea8f3ce3cb7aafed3",
+      "textCharacters": 13861,
+      "loadAfter": [50.82080078125, 67.62744140625, 66.900390625],
+      "endedAt": "2026-10-21T08:28:35.746Z"
+    },
+    {
+      "article": "go-pipelines",
+      "url": "https://go.dev/blog/pipelines",
+      "repetition": 1,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:28:36.551155+03:00",
+      "displayedAt": 1792571318475.8,
+      "elapsedMS": 1924.800048828125,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [50.82080078125, 67.62744140625, 66.900390625],
+      "startedAt": "2026-10-21T08:28:36.263Z",
+      "userId": "f24a7f48-2db3-4961-9e14-36f4d8e5695e",
+      "ackReceivedAt": 1792571316567.3,
+      "ackServerTime": "2026-10-21T08:28:36.555994Z",
+      "cardId": "ed5754c6-fc82-4966-9daa-577b154f0a7a",
+      "deadlineAt": "2026-10-21T11:30:36.551155+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [],
+      "warnings": ["text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 0,
+      "documentSHA256": "4f3fba6a823fbba316d0d64b38a966a50d6d3c6f5d93339c3408c69e9ae8b40c",
+      "textCharacters": 19055,
+      "loadAfter": [50.82080078125, 67.62744140625, 66.900390625],
+      "endedAt": "2026-10-21T08:28:39.446Z"
+    },
+    {
+      "article": "go-pipelines",
+      "url": "https://go.dev/blog/pipelines",
+      "repetition": 2,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:28:39.735715+03:00",
+      "displayedAt": 1792571321664.5,
+      "elapsedMS": 1929.5,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [50.82080078125, 67.62744140625, 66.900390625],
+      "startedAt": "2026-10-21T08:28:39.451Z",
+      "userId": "ea7ffc8c-9ae0-49b9-9580-a552b1bf6cae",
+      "ackReceivedAt": 1792571319750.2,
+      "ackServerTime": "2026-10-21T08:28:39.740793Z",
+      "cardId": "033f5bd5-9c41-4c9c-b1bb-4b1b4765a594",
+      "deadlineAt": "2026-10-21T11:30:39.735715+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [],
+      "warnings": ["text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 0,
+      "documentSHA256": "4f3fba6a823fbba316d0d64b38a966a50d6d3c6f5d93339c3408c69e9ae8b40c",
+      "textCharacters": 19055,
+      "loadAfter": [49.3935546875, 67.05224609375, 66.70166015625],
+      "endedAt": "2026-10-21T08:28:41.812Z"
+    },
+    {
+      "article": "go-pipelines",
+      "url": "https://go.dev/blog/pipelines",
+      "repetition": 3,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:28:42.114853+03:00",
+      "displayedAt": 1792571324055.5,
+      "elapsedMS": 1941.5,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [49.3935546875, 67.05224609375, 66.70166015625],
+      "startedAt": "2026-10-21T08:28:41.817Z",
+      "userId": "c4cfdd9d-621c-49be-aa12-2ac83f6b2e97",
+      "ackReceivedAt": 1792571322131.3,
+      "ackServerTime": "2026-10-21T08:28:42.120436Z",
+      "cardId": "343bd74f-8588-4b5e-9481-293d1ac9f1e3",
+      "deadlineAt": "2026-10-21T11:30:42.114853+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [],
+      "warnings": ["text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 0,
+      "documentSHA256": "4f3fba6a823fbba316d0d64b38a966a50d6d3c6f5d93339c3408c69e9ae8b40c",
+      "textCharacters": 19055,
+      "loadAfter": [49.3935546875, 67.05224609375, 66.70166015625],
+      "endedAt": "2026-10-21T08:28:44.433Z"
+    },
+    {
+      "article": "go-pipelines",
+      "url": "https://go.dev/blog/pipelines",
+      "repetition": 4,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:28:44.933633+03:00",
+      "displayedAt": 1792571327027.8,
+      "elapsedMS": 2094.800048828125,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [49.3935546875, 67.05224609375, 66.70166015625],
+      "startedAt": "2026-10-21T08:28:44.445Z",
+      "userId": "0b641ac1-cce5-43f6-b54f-9afa742fdf82",
+      "ackReceivedAt": 1792571324950.7,
+      "ackServerTime": "2026-10-21T08:28:44.94497Z",
+      "cardId": "521a8dd6-5349-498d-9880-d3f7b2dbc64e",
+      "deadlineAt": "2026-10-21T11:30:44.933633+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [],
+      "warnings": ["text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 0,
+      "documentSHA256": "4f3fba6a823fbba316d0d64b38a966a50d6d3c6f5d93339c3408c69e9ae8b40c",
+      "textCharacters": 19055,
+      "loadAfter": [49.04150390625, 66.68603515625, 66.57421875],
+      "endedAt": "2026-10-21T08:28:47.467Z"
+    },
+    {
+      "article": "go-pipelines",
+      "url": "https://go.dev/blog/pipelines",
+      "repetition": 5,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:28:47.894354+03:00",
+      "displayedAt": 1792571329733.9,
+      "elapsedMS": 1839.89990234375,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [49.04150390625, 66.68603515625, 66.57421875],
+      "startedAt": "2026-10-21T08:28:47.476Z",
+      "userId": "afacdc4f-43bd-4047-be5d-0c7fec8e6fea",
+      "ackReceivedAt": 1792571327957.2,
+      "ackServerTime": "2026-10-21T08:28:47.950815Z",
+      "cardId": "966f465e-2ce9-4f1a-8a2a-47cc4f142434",
+      "deadlineAt": "2026-10-21T11:30:47.894354+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [],
+      "warnings": ["text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 0,
+      "documentSHA256": "4f3fba6a823fbba316d0d64b38a966a50d6d3c6f5d93339c3408c69e9ae8b40c",
+      "textCharacters": 19055,
+      "loadAfter": [49.04150390625, 66.68603515625, 66.57421875],
+      "endedAt": "2026-10-21T08:28:50.034Z"
+    },
+    {
+      "article": "go-pipelines",
+      "url": "https://go.dev/blog/pipelines",
+      "repetition": 6,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:28:50.422191+03:00",
+      "displayedAt": 1792571332330.3,
+      "elapsedMS": 1908.300048828125,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [49.04150390625, 66.68603515625, 66.57421875],
+      "startedAt": "2026-10-21T08:28:50.040Z",
+      "userId": "533e16d0-186f-483c-b151-1de79f319f4e",
+      "ackReceivedAt": 1792571330474.4,
+      "ackServerTime": "2026-10-21T08:28:50.467078Z",
+      "cardId": "7300cba8-ee39-4197-8445-5c9550034693",
+      "deadlineAt": "2026-10-21T11:30:50.422191+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [],
+      "warnings": ["text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 0,
+      "documentSHA256": "4f3fba6a823fbba316d0d64b38a966a50d6d3c6f5d93339c3408c69e9ae8b40c",
+      "textCharacters": 19055,
+      "loadAfter": [48.9580078125, 66.37548828125, 66.46533203125],
+      "endedAt": "2026-10-21T08:28:52.517Z"
+    },
+    {
+      "article": "go-pipelines",
+      "url": "https://go.dev/blog/pipelines",
+      "repetition": 7,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:28:52.928107+03:00",
+      "displayedAt": 1792571334863.4,
+      "elapsedMS": 1935.39990234375,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [48.9580078125, 66.37548828125, 66.46533203125],
+      "startedAt": "2026-10-21T08:28:52.525Z",
+      "userId": "3563cae6-5fae-4b48-a70a-80ec5bdda142",
+      "ackReceivedAt": 1792571332973.5999,
+      "ackServerTime": "2026-10-21T08:28:52.961611Z",
+      "cardId": "9f5ef191-499f-4520-929f-039e7385e075",
+      "deadlineAt": "2026-10-21T11:30:52.928107+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [],
+      "warnings": ["text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 0,
+      "documentSHA256": "4f3fba6a823fbba316d0d64b38a966a50d6d3c6f5d93339c3408c69e9ae8b40c",
+      "textCharacters": 19055,
+      "loadAfter": [48.9580078125, 66.37548828125, 66.46533203125],
+      "endedAt": "2026-10-21T08:28:55.042Z"
+    },
+    {
+      "article": "go-pipelines",
+      "url": "https://go.dev/blog/pipelines",
+      "repetition": 8,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:28:55.300238+03:00",
+      "displayedAt": 1792571337257.5,
+      "elapsedMS": 1957.5,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [48.9580078125, 66.37548828125, 66.46533203125],
+      "startedAt": "2026-10-21T08:28:55.048Z",
+      "userId": "0f16e866-2627-4e50-826d-7ba5a7dca972",
+      "ackReceivedAt": 1792571335350.7998,
+      "ackServerTime": "2026-10-21T08:28:55.332038Z",
+      "cardId": "8a664255-0c7f-4031-9440-df49e91f5b89",
+      "deadlineAt": "2026-10-21T11:30:55.300238+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [],
+      "warnings": ["text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 0,
+      "documentSHA256": "4f3fba6a823fbba316d0d64b38a966a50d6d3c6f5d93339c3408c69e9ae8b40c",
+      "textCharacters": 19055,
+      "loadAfter": [48.240234375, 65.9375, 66.31005859375],
+      "endedAt": "2026-10-21T08:28:57.410Z"
+    },
+    {
+      "article": "go-pipelines",
+      "url": "https://go.dev/blog/pipelines",
+      "repetition": 9,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:28:57.654404+03:00",
+      "displayedAt": 1792571339617.3,
+      "elapsedMS": 1963.300048828125,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [48.240234375, 65.9375, 66.31005859375],
+      "startedAt": "2026-10-21T08:28:57.416Z",
+      "userId": "6b9b210f-2c3c-4f9f-b560-7502dcd3827e",
+      "ackReceivedAt": 1792571337701.5,
+      "ackServerTime": "2026-10-21T08:28:57.68667Z",
+      "cardId": "2e35cde0-c6e6-45be-a6e3-16f08e101612",
+      "deadlineAt": "2026-10-21T11:30:57.654404+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [],
+      "warnings": ["text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 0,
+      "documentSHA256": "4f3fba6a823fbba316d0d64b38a966a50d6d3c6f5d93339c3408c69e9ae8b40c",
+      "textCharacters": 19055,
+      "loadAfter": [48.240234375, 65.9375, 66.31005859375],
+      "endedAt": "2026-10-21T08:28:59.769Z"
+    },
+    {
+      "article": "go-pipelines",
+      "url": "https://go.dev/blog/pipelines",
+      "repetition": 10,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:29:00.439218+03:00",
+      "displayedAt": 1792571342269.4001,
+      "elapsedMS": 1830.400146484375,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [48.240234375, 65.9375, 66.31005859375],
+      "startedAt": "2026-10-21T08:28:59.775Z",
+      "userId": "c4284a18-ea7c-4d70-96e7-f9a036c6643a",
+      "ackReceivedAt": 1792571340511.7,
+      "ackServerTime": "2026-10-21T08:29:00.504556Z",
+      "cardId": "9a1701db-dd98-4339-b710-8d603508d32d",
+      "deadlineAt": "2026-10-21T11:31:00.439218+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [],
+      "warnings": ["text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 0,
+      "documentSHA256": "4f3fba6a823fbba316d0d64b38a966a50d6d3c6f5d93339c3408c69e9ae8b40c",
+      "textCharacters": 19055,
+      "loadAfter": [51.103515625, 66.2373046875, 66.41357421875],
+      "endedAt": "2026-10-21T08:29:02.428Z"
+    },
+    {
+      "article": "mdn",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Introduction",
+      "repetition": 1,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:29:03.411534+03:00",
+      "displayedAt": 1792571345300.5,
+      "elapsedMS": 1889.5,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [51.103515625, 66.2373046875, 66.41357421875],
+      "startedAt": "2026-10-21T08:29:03.037Z",
+      "userId": "969a5bfb-13a9-4fc1-9e6e-7c09db99c3bf",
+      "ackReceivedAt": 1792571343453.9001,
+      "ackServerTime": "2026-10-21T08:29:03.44774Z",
+      "cardId": "2c9b945f-dc52-4905-a3df-9753b6806ae1",
+      "deadlineAt": "2026-10-21T11:31:03.411534+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [
+        {
+          "assetId": "66724e874920b595267141bb98f6aca048086ec490ba1d24a6869a561393cce7",
+          "status": 200,
+          "bytes": 389483,
+          "type": "image/png"
+        }
+      ],
+      "warnings": ["text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 1,
+      "documentSHA256": "f215d773c5a634c754546cfde336b0fb1d6f18548656e1ff5178bb3c8e05a830",
+      "textCharacters": 10412,
+      "loadAfter": [51.49560546875, 66.06689453125, 66.3525390625],
+      "endedAt": "2026-10-21T08:29:05.808Z"
+    },
+    {
+      "article": "mdn",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Introduction",
+      "repetition": 2,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:29:06.069974+03:00",
+      "displayedAt": 1792571348025,
+      "elapsedMS": 1956,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [51.49560546875, 66.06689453125, 66.3525390625],
+      "startedAt": "2026-10-21T08:29:05.818Z",
+      "userId": "6e350e83-2381-408c-b0ed-340b2f08fd2d",
+      "ackReceivedAt": 1792571346120.5,
+      "ackServerTime": "2026-10-21T08:29:06.101946Z",
+      "cardId": "47522eaf-2c3e-4c19-902b-03fb6635f0a7",
+      "deadlineAt": "2026-10-21T11:31:06.069974+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [
+        {
+          "assetId": "66724e874920b595267141bb98f6aca048086ec490ba1d24a6869a561393cce7",
+          "status": 200,
+          "bytes": 389483,
+          "type": "image/png"
+        }
+      ],
+      "warnings": ["text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 1,
+      "documentSHA256": "f215d773c5a634c754546cfde336b0fb1d6f18548656e1ff5178bb3c8e05a830",
+      "textCharacters": 10412,
+      "loadAfter": [51.49560546875, 66.06689453125, 66.3525390625],
+      "endedAt": "2026-10-21T08:29:08.178Z"
+    },
+    {
+      "article": "mdn",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Introduction",
+      "repetition": 3,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:29:08.494112+03:00",
+      "displayedAt": 1792571350397.9001,
+      "elapsedMS": 1903.900146484375,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [51.49560546875, 66.06689453125, 66.3525390625],
+      "startedAt": "2026-10-21T08:29:08.183Z",
+      "userId": "caa4dfbf-d10b-4d0b-9ed0-665366f6a85b",
+      "ackReceivedAt": 1792571348601.1,
+      "ackServerTime": "2026-10-21T08:29:08.570512Z",
+      "cardId": "e04cef71-60d4-49bc-881f-a9af06adffdf",
+      "deadlineAt": "2026-10-21T11:31:08.494112+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [
+        {
+          "assetId": "66724e874920b595267141bb98f6aca048086ec490ba1d24a6869a561393cce7",
+          "status": 200,
+          "bytes": 389483,
+          "type": "image/png"
+        }
+      ],
+      "warnings": ["text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 1,
+      "documentSHA256": "f215d773c5a634c754546cfde336b0fb1d6f18548656e1ff5178bb3c8e05a830",
+      "textCharacters": 10412,
+      "loadAfter": [50.65478515625, 65.650390625, 66.20361328125],
+      "endedAt": "2026-10-21T08:29:10.540Z"
+    },
+    {
+      "article": "mdn",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Introduction",
+      "repetition": 4,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:29:11.118525+03:00",
+      "displayedAt": 1792571352906.5,
+      "elapsedMS": 1788.5,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [50.65478515625, 65.650390625, 66.20361328125],
+      "startedAt": "2026-10-21T08:29:10.545Z",
+      "userId": "400c19c6-6cbd-44ef-b541-17fac56158c0",
+      "ackReceivedAt": 1792571351166.9001,
+      "ackServerTime": "2026-10-21T08:29:11.151957Z",
+      "cardId": "6be5a034-f465-4975-9aa2-491a43a53118",
+      "deadlineAt": "2026-10-21T11:31:11.118525+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [
+        {
+          "assetId": "66724e874920b595267141bb98f6aca048086ec490ba1d24a6869a561393cce7",
+          "status": 200,
+          "bytes": 389483,
+          "type": "image/png"
+        }
+      ],
+      "warnings": ["text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 1,
+      "documentSHA256": "f215d773c5a634c754546cfde336b0fb1d6f18548656e1ff5178bb3c8e05a830",
+      "textCharacters": 10412,
+      "loadAfter": [50.65478515625, 65.650390625, 66.20361328125],
+      "endedAt": "2026-10-21T08:29:13.074Z"
+    },
+    {
+      "article": "mdn",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Introduction",
+      "repetition": 5,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:29:13.340188+03:00",
+      "displayedAt": 1792571355300,
+      "elapsedMS": 1960,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [50.65478515625, 65.650390625, 66.20361328125],
+      "startedAt": "2026-10-21T08:29:13.080Z",
+      "userId": "db35f21d-cebf-4aa9-95df-6439d57b8afd",
+      "ackReceivedAt": 1792571353390.4001,
+      "ackServerTime": "2026-10-21T08:29:13.372258Z",
+      "cardId": "a5bdc301-6fcf-4e7d-b70d-d322c93e5f71",
+      "deadlineAt": "2026-10-21T11:31:13.340188+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [
+        {
+          "assetId": "66724e874920b595267141bb98f6aca048086ec490ba1d24a6869a561393cce7",
+          "status": 200,
+          "bytes": 389483,
+          "type": "image/png"
+        }
+      ],
+      "warnings": ["text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 1,
+      "documentSHA256": "f215d773c5a634c754546cfde336b0fb1d6f18548656e1ff5178bb3c8e05a830",
+      "textCharacters": 10412,
+      "loadAfter": [50.12158203125, 65.29052734375, 66.0732421875],
+      "endedAt": "2026-10-21T08:29:15.470Z"
+    },
+    {
+      "article": "mdn",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Introduction",
+      "repetition": 6,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:29:15.729358+03:00",
+      "displayedAt": 1792571357678.8,
+      "elapsedMS": 1949.800048828125,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [50.12158203125, 65.29052734375, 66.0732421875],
+      "startedAt": "2026-10-21T08:29:15.474Z",
+      "userId": "deb96239-691d-42d7-ae18-54d3db42a586",
+      "ackReceivedAt": 1792571355779.3,
+      "ackServerTime": "2026-10-21T08:29:15.761448Z",
+      "cardId": "02150a69-67b4-4fb6-899e-474637490ad1",
+      "deadlineAt": "2026-10-21T11:31:15.729358+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [
+        {
+          "assetId": "66724e874920b595267141bb98f6aca048086ec490ba1d24a6869a561393cce7",
+          "status": 200,
+          "bytes": 389483,
+          "type": "image/png"
+        }
+      ],
+      "warnings": ["text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 1,
+      "documentSHA256": "f215d773c5a634c754546cfde336b0fb1d6f18548656e1ff5178bb3c8e05a830",
+      "textCharacters": 10412,
+      "loadAfter": [50.12158203125, 65.29052734375, 66.0732421875],
+      "endedAt": "2026-10-21T08:29:17.837Z"
+    },
+    {
+      "article": "mdn",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Introduction",
+      "repetition": 7,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:29:18.122709+03:00",
+      "displayedAt": 1792571360050.8,
+      "elapsedMS": 1928.800048828125,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [50.12158203125, 65.29052734375, 66.0732421875],
+      "startedAt": "2026-10-21T08:29:17.842Z",
+      "userId": "1057aac9-6614-41da-ad06-e1fba917f898",
+      "ackReceivedAt": 1792571358154.6,
+      "ackServerTime": "2026-10-21T08:29:18.125528Z",
+      "cardId": "09116b28-bc2f-4b70-b5c0-1c74bd07dbd9",
+      "deadlineAt": "2026-10-21T11:31:18.122709+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [
+        {
+          "assetId": "66724e874920b595267141bb98f6aca048086ec490ba1d24a6869a561393cce7",
+          "status": 200,
+          "bytes": 389483,
+          "type": "image/png"
+        }
+      ],
+      "warnings": ["text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 1,
+      "documentSHA256": "f215d773c5a634c754546cfde336b0fb1d6f18548656e1ff5178bb3c8e05a830",
+      "textCharacters": 10412,
+      "loadAfter": [50.12158203125, 65.29052734375, 66.0732421875],
+      "endedAt": "2026-10-21T08:29:20.225Z"
+    },
+    {
+      "article": "mdn",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Introduction",
+      "repetition": 8,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:29:20.519865+03:00",
+      "displayedAt": 1792571362447.3,
+      "elapsedMS": 1928.300048828125,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [50.12158203125, 65.29052734375, 66.0732421875],
+      "startedAt": "2026-10-21T08:29:20.238Z",
+      "userId": "f11f4762-11d8-4804-a379-070fb9b3bbe8",
+      "ackReceivedAt": 1792571360542,
+      "ackServerTime": "2026-10-21T08:29:20.522964Z",
+      "cardId": "5f5e3e61-fb64-4d50-80c5-b805d18c1430",
+      "deadlineAt": "2026-10-21T11:31:20.519865+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [
+        {
+          "assetId": "66724e874920b595267141bb98f6aca048086ec490ba1d24a6869a561393cce7",
+          "status": 200,
+          "bytes": 389483,
+          "type": "image/png"
+        }
+      ],
+      "warnings": ["text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 1,
+      "documentSHA256": "f215d773c5a634c754546cfde336b0fb1d6f18548656e1ff5178bb3c8e05a830",
+      "textCharacters": 10412,
+      "loadAfter": [50.11181640625, 65.03662109375, 65.97900390625],
+      "endedAt": "2026-10-21T08:29:22.606Z"
+    },
+    {
+      "article": "mdn",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Introduction",
+      "repetition": 9,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:29:22.904998+03:00",
+      "displayedAt": 1792571364817,
+      "elapsedMS": 1913,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [50.11181640625, 65.03662109375, 65.97900390625],
+      "startedAt": "2026-10-21T08:29:22.610Z",
+      "userId": "44cb85cd-05b2-4377-81b7-6d6d259ae59c",
+      "ackReceivedAt": 1792571362926,
+      "ackServerTime": "2026-10-21T08:29:22.909611Z",
+      "cardId": "6b0b3617-696f-482d-b9b1-16c283967e6d",
+      "deadlineAt": "2026-10-21T11:31:22.904998+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [
+        {
+          "assetId": "66724e874920b595267141bb98f6aca048086ec490ba1d24a6869a561393cce7",
+          "status": 200,
+          "bytes": 389483,
+          "type": "image/png"
+        }
+      ],
+      "warnings": ["text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 1,
+      "documentSHA256": "f215d773c5a634c754546cfde336b0fb1d6f18548656e1ff5178bb3c8e05a830",
+      "textCharacters": 10412,
+      "loadAfter": [50.11181640625, 65.03662109375, 65.97900390625],
+      "endedAt": "2026-10-21T08:29:25.015Z"
+    },
+    {
+      "article": "mdn",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Introduction",
+      "repetition": 10,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:29:25.304132+03:00",
+      "displayedAt": 1792571367228.9001,
+      "elapsedMS": 1924.900146484375,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [50.11181640625, 65.03662109375, 65.97900390625],
+      "startedAt": "2026-10-21T08:29:25.023Z",
+      "userId": "a92e8e38-ae98-44b1-a5e6-e16a3accacab",
+      "ackReceivedAt": 1792571365326.6,
+      "ackServerTime": "2026-10-21T08:29:25.307392Z",
+      "cardId": "03a72c30-bd0e-4462-a962-79ba2fbac4b3",
+      "deadlineAt": "2026-10-21T11:31:25.304132+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [
+        {
+          "assetId": "66724e874920b595267141bb98f6aca048086ec490ba1d24a6869a561393cce7",
+          "status": 200,
+          "bytes": 389483,
+          "type": "image/png"
+        }
+      ],
+      "warnings": ["text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 1,
+      "documentSHA256": "f215d773c5a634c754546cfde336b0fb1d6f18548656e1ff5178bb3c8e05a830",
+      "textCharacters": 10412,
+      "loadAfter": [49.3818359375, 64.63720703125, 65.83251953125],
+      "endedAt": "2026-10-21T08:29:27.384Z"
+    },
+    {
+      "article": "cloudflare",
+      "url": "https://blog.cloudflare.com/pingora-open-source/",
+      "repetition": 1,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:29:28.070941+03:00",
+      "displayedAt": 1792571378004.6,
+      "elapsedMS": 9934.60009765625,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [49.3818359375, 64.63720703125, 65.83251953125],
+      "startedAt": "2026-10-21T08:29:27.769Z",
+      "userId": "fee16146-9ee9-4e87-8e78-90f2393ce4da",
+      "ackReceivedAt": 1792571368094.2,
+      "ackServerTime": "2026-10-21T08:29:28.074335Z",
+      "cardId": "f88f9712-f247-48d8-9210-bac3b9279efb",
+      "deadlineAt": "2026-10-21T11:31:28.070941+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [],
+      "warnings": ["images_omitted", "text_incomplete"],
+      "omittedImages": 4,
+      "imagePositions": 4,
+      "documentSHA256": "e2091048989d80364b13b020d582a4c5dc74aafb6e931e7a6040eb0673aa2b3c",
+      "textCharacters": 9573,
+      "loadAfter": [48.79443359375, 64.0068359375, 65.5947265625],
+      "endedAt": "2026-10-21T08:29:38.457Z"
+    },
+    {
+      "article": "cloudflare",
+      "url": "https://blog.cloudflare.com/pingora-open-source/",
+      "repetition": 2,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:29:38.7859+03:00",
+      "displayedAt": 1792571386698.9001,
+      "elapsedMS": 7913.900146484375,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [48.79443359375, 64.0068359375, 65.5947265625],
+      "startedAt": "2026-10-21T08:29:38.479Z",
+      "userId": "cadd6d6f-cb54-46e8-8281-6f4306516bfc",
+      "ackReceivedAt": 1792571378801.1,
+      "ackServerTime": "2026-10-21T08:29:38.79603Z",
+      "cardId": "06d512aa-2578-4a42-ac09-a599c886700d",
+      "deadlineAt": "2026-10-21T11:31:38.7859+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [],
+      "warnings": ["images_omitted", "text_incomplete"],
+      "omittedImages": 4,
+      "imagePositions": 4,
+      "documentSHA256": "e2091048989d80364b13b020d582a4c5dc74aafb6e931e7a6040eb0673aa2b3c",
+      "textCharacters": 9573,
+      "loadAfter": [50.28271484375, 63.82470703125, 65.51123046875],
+      "endedAt": "2026-10-21T08:29:46.857Z"
+    },
+    {
+      "article": "cloudflare",
+      "url": "https://blog.cloudflare.com/pingora-open-source/",
+      "repetition": 3,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:29:47.155628+03:00",
+      "displayedAt": 1792571395086,
+      "elapsedMS": 7931,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [50.28271484375, 63.82470703125, 65.51123046875],
+      "startedAt": "2026-10-21T08:29:46.864Z",
+      "userId": "13acb4e9-329c-43d9-ab88-ceaff9f19187",
+      "ackReceivedAt": 1792571387178.1,
+      "ackServerTime": "2026-10-21T08:29:47.159345Z",
+      "cardId": "7425241c-d4b2-4065-b7e3-6dd69b1f7094",
+      "deadlineAt": "2026-10-21T11:31:47.155628+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [],
+      "warnings": ["images_omitted", "text_incomplete"],
+      "omittedImages": 4,
+      "imagePositions": 4,
+      "documentSHA256": "e2091048989d80364b13b020d582a4c5dc74aafb6e931e7a6040eb0673aa2b3c",
+      "textCharacters": 9573,
+      "loadAfter": [51.62109375, 63.876953125, 65.51953125],
+      "endedAt": "2026-10-21T08:29:55.281Z"
+    },
+    {
+      "article": "cloudflare",
+      "url": "https://blog.cloudflare.com/pingora-open-source/",
+      "repetition": 4,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:29:55.612129+03:00",
+      "displayedAt": 1792571403541.9,
+      "elapsedMS": 7929.89990234375,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [51.62109375, 63.876953125, 65.51953125],
+      "startedAt": "2026-10-21T08:29:55.290Z",
+      "userId": "ba6f03df-43bf-4bc6-a4aa-1c40103e670f",
+      "ackReceivedAt": 1792571395624.5,
+      "ackServerTime": "2026-10-21T08:29:55.616146Z",
+      "cardId": "5d9177f2-a1ab-4fe3-882b-2a0523d92518",
+      "deadlineAt": "2026-10-21T11:31:55.612129+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [],
+      "warnings": ["images_omitted", "text_incomplete"],
+      "omittedImages": 4,
+      "imagePositions": 4,
+      "documentSHA256": "e2091048989d80364b13b020d582a4c5dc74aafb6e931e7a6040eb0673aa2b3c",
+      "textCharacters": 9573,
+      "loadAfter": [53.12353515625, 63.7978515625, 65.4716796875],
+      "endedAt": "2026-10-21T08:30:03.703Z"
+    },
+    {
+      "article": "cloudflare",
+      "url": "https://blog.cloudflare.com/pingora-open-source/",
+      "repetition": 5,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:30:04.368802+03:00",
+      "displayedAt": 1792571413995.3,
+      "elapsedMS": 9627.300048828125,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [53.12353515625, 63.7978515625, 65.4716796875],
+      "startedAt": "2026-10-21T08:30:03.709Z",
+      "userId": "c340c278-ada2-4199-be20-e52951c1593a",
+      "ackReceivedAt": 1792571404385.5,
+      "ackServerTime": "2026-10-21T08:30:04.37658Z",
+      "cardId": "ff9680e7-6b23-4cc3-912f-825b9e2969d2",
+      "deadlineAt": "2026-10-21T11:32:04.368802+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [],
+      "warnings": ["images_omitted", "text_incomplete"],
+      "omittedImages": 4,
+      "imagePositions": 4,
+      "documentSHA256": "e2091048989d80364b13b020d582a4c5dc74aafb6e931e7a6040eb0673aa2b3c",
+      "textCharacters": 9573,
+      "loadAfter": [53.203125, 63.458984375, 65.33154296875],
+      "endedAt": "2026-10-21T08:30:14.166Z"
+    },
+    {
+      "article": "cloudflare",
+      "url": "https://blog.cloudflare.com/pingora-open-source/",
+      "repetition": 6,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:30:14.470256+03:00",
+      "displayedAt": 1792571422400.5999,
+      "elapsedMS": 7930.599853515625,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [53.203125, 63.458984375, 65.33154296875],
+      "startedAt": "2026-10-21T08:30:14.172Z",
+      "userId": "8f6f83aa-c174-458b-861f-2d4a8d531ee0",
+      "ackReceivedAt": 1792571414480.7,
+      "ackServerTime": "2026-10-21T08:30:14.476368Z",
+      "cardId": "b2df82ff-6bc9-482e-92fc-2b24d5ace669",
+      "deadlineAt": "2026-10-21T11:32:14.470256+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [],
+      "warnings": ["images_omitted", "text_incomplete"],
+      "omittedImages": 4,
+      "imagePositions": 4,
+      "documentSHA256": "e2091048989d80364b13b020d582a4c5dc74aafb6e931e7a6040eb0673aa2b3c",
+      "textCharacters": 9573,
+      "loadAfter": [54.64794921875, 63.427734375, 65.29833984375],
+      "endedAt": "2026-10-21T08:30:22.596Z"
+    },
+    {
+      "article": "cloudflare",
+      "url": "https://blog.cloudflare.com/pingora-open-source/",
+      "repetition": 7,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:30:22.901304+03:00",
+      "displayedAt": 1792571430828.4001,
+      "elapsedMS": 7927.400146484375,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [54.64794921875, 63.427734375, 65.29833984375],
+      "startedAt": "2026-10-21T08:30:22.607Z",
+      "userId": "084c94a9-33ab-4d5d-bbbd-6ee39cc1b6df",
+      "ackReceivedAt": 1792571422922.8,
+      "ackServerTime": "2026-10-21T08:30:22.905614Z",
+      "cardId": "5041d80d-75f1-4cff-9c0f-a876ccfe97ad",
+      "deadlineAt": "2026-10-21T11:32:22.901304+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [],
+      "warnings": ["images_omitted", "text_incomplete"],
+      "omittedImages": 4,
+      "imagePositions": 4,
+      "documentSHA256": "e2091048989d80364b13b020d582a4c5dc74aafb6e931e7a6040eb0673aa2b3c",
+      "textCharacters": 9573,
+      "loadAfter": [54.3974609375, 63.07080078125, 65.14892578125],
+      "endedAt": "2026-10-21T08:30:31.124Z"
+    },
+    {
+      "article": "cloudflare",
+      "url": "https://blog.cloudflare.com/pingora-open-source/",
+      "repetition": 8,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:30:31.63978+03:00",
+      "displayedAt": 1792571439541,
+      "elapsedMS": 7902,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [54.3974609375, 63.07080078125, 65.14892578125],
+      "startedAt": "2026-10-21T08:30:31.147Z",
+      "userId": "76e9f9e7-a2e7-4e72-a29e-fc2c2118f83f",
+      "ackReceivedAt": 1792571431651.4,
+      "ackServerTime": "2026-10-21T08:30:31.644769Z",
+      "cardId": "c57fa262-4f77-4702-ac4a-b593c91c88df",
+      "deadlineAt": "2026-10-21T11:32:31.63978+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [],
+      "warnings": ["images_omitted", "text_incomplete"],
+      "omittedImages": 4,
+      "imagePositions": 4,
+      "documentSHA256": "e2091048989d80364b13b020d582a4c5dc74aafb6e931e7a6040eb0673aa2b3c",
+      "textCharacters": 9573,
+      "loadAfter": [53.8046875, 62.8037109375, 65.04248046875],
+      "endedAt": "2026-10-21T08:30:39.706Z"
+    },
+    {
+      "article": "cloudflare",
+      "url": "https://blog.cloudflare.com/pingora-open-source/",
+      "repetition": 9,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:30:40.018209+03:00",
+      "displayedAt": 1792571447946.2002,
+      "elapsedMS": 7928.2001953125,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [53.8046875, 62.8037109375, 65.04248046875],
+      "startedAt": "2026-10-21T08:30:39.712Z",
+      "userId": "176ed0cc-1a35-48bb-a213-b51ee18e721b",
+      "ackReceivedAt": 1792571440032.9001,
+      "ackServerTime": "2026-10-21T08:30:40.022039Z",
+      "cardId": "3cc583de-d5a3-4cea-850c-b297e5abbcb5",
+      "deadlineAt": "2026-10-21T11:32:40.018209+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [],
+      "warnings": ["images_omitted", "text_incomplete"],
+      "omittedImages": 4,
+      "imagePositions": 4,
+      "documentSHA256": "e2091048989d80364b13b020d582a4c5dc74aafb6e931e7a6040eb0673aa2b3c",
+      "textCharacters": 9573,
+      "loadAfter": [53.1396484375, 62.36474609375, 64.8603515625],
+      "endedAt": "2026-10-21T08:30:48.102Z"
+    },
+    {
+      "article": "cloudflare",
+      "url": "https://blog.cloudflare.com/pingora-open-source/",
+      "repetition": 10,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:30:48.433658+03:00",
+      "displayedAt": 1792571456355.8,
+      "elapsedMS": 7922.800048828125,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [53.1396484375, 62.36474609375, 64.8603515625],
+      "startedAt": "2026-10-21T08:30:48.108Z",
+      "userId": "404d8ed0-f772-4d7c-96f2-97f9e96dcfb7",
+      "ackReceivedAt": 1792571448452.5999,
+      "ackServerTime": "2026-10-21T08:30:48.440022Z",
+      "cardId": "7bc1a0e6-dcde-42b2-b662-6b085eceefcc",
+      "deadlineAt": "2026-10-21T11:32:48.433658+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [],
+      "warnings": ["images_omitted", "text_incomplete"],
+      "omittedImages": 4,
+      "imagePositions": 4,
+      "documentSHA256": "e2091048989d80364b13b020d582a4c5dc74aafb6e931e7a6040eb0673aa2b3c",
+      "textCharacters": 9573,
+      "loadAfter": [50.8662109375, 61.57763671875, 64.5517578125],
+      "endedAt": "2026-10-21T08:30:56.514Z"
+    },
+    {
+      "article": "habr-gc",
+      "url": "https://habr.com/ru/articles/742402/",
+      "repetition": 1,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:30:57.173069+03:00",
+      "displayedAt": 1792571489092.3,
+      "elapsedMS": 31919.300048828125,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [50.8662109375, 61.57763671875, 64.5517578125],
+      "startedAt": "2026-10-21T08:30:56.813Z",
+      "userId": "92ed944e-3a1f-4ef1-973a-1280f0039374",
+      "ackReceivedAt": 1792571457189.7,
+      "ackServerTime": "2026-10-21T08:30:57.176042Z",
+      "cardId": "d0e09f05-90f3-47ca-b7cc-986bd7d5b80f",
+      "deadlineAt": "2026-10-21T11:32:57.173069+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [
+        {
+          "assetId": "6be8d39c6dad780884fff6ad0931cecbe44a80860f905004f3e67ac8ca38b618",
+          "status": 200,
+          "bytes": 291592,
+          "type": "image/png"
+        },
+        {
+          "assetId": "1b6ae95554684f0b4aa642e6d71745f3e3a324df82ee44c7a9e33c7c5f55f343",
+          "status": 200,
+          "bytes": 28437,
+          "type": "image/jpeg"
+        },
+        {
+          "assetId": "68d9449aedc2dd31977f496dadd4e833905173f6366356fec15f3834f7c1312c",
+          "status": 200,
+          "bytes": 25125,
+          "type": "image/jpeg"
+        },
+        {
+          "assetId": "59ed5a6ad37fb59261f251f1f3590856b9ee221e279a9c88d5473628be8ea33b",
+          "status": 200,
+          "bytes": 203927,
+          "type": "image/png"
+        },
+        {
+          "assetId": "84bcc7932a80f046c62d09390cb478e2341bc87d742a3c3e7a5aee5f8252dc55",
+          "status": 200,
+          "bytes": 594928,
+          "type": "image/png"
+        },
+        {
+          "assetId": "89bbe0ffb98f6270fc1aefbf69d69779549a0de69ea3736b2ddf3be195add175",
+          "status": 200,
+          "bytes": 245951,
+          "type": "image/png"
+        },
+        {
+          "assetId": "f4de4a9ef4f5d742b604707f24a4f1cdffcf725e59b33414c91dcf7ca2af1df0",
+          "status": 200,
+          "bytes": 299662,
+          "type": "image/png"
+        },
+        {
+          "assetId": "8f86678ef8e716cc8432d3491f59296119743a12a8e933b9d420000202429580",
+          "status": 200,
+          "bytes": 265347,
+          "type": "image/png"
+        },
+        {
+          "assetId": "cff75067bfa9b40765e2ad06cc6194830c702111e591ce2fa9e77fff934c5fc7",
+          "status": 200,
+          "bytes": 212559,
+          "type": "image/png"
+        },
+        {
+          "assetId": "7c4ccd14f3e12c95a5515fb747dd4599c75a44d4ca5f92eab1c83e16714d42f4",
+          "status": 200,
+          "bytes": 181999,
+          "type": "image/png"
+        },
+        {
+          "assetId": "315841036c1084edf17fac2a29027b89324178803c91bf2b71063031e3797f37",
+          "status": 200,
+          "bytes": 201395,
+          "type": "image/png"
+        },
+        {
+          "assetId": "ca90cf3d6c480c5b459cc67ad95acbbf9435c664716008b1183be1046e092658",
+          "status": 200,
+          "bytes": 427058,
+          "type": "image/png"
+        },
+        {
+          "assetId": "b1cb33be53559e95d21210f8239abfd92e777cfd18ad0911be021f50ae28ea3c",
+          "status": 200,
+          "bytes": 293023,
+          "type": "image/png"
+        }
+      ],
+      "warnings": ["images_omitted", "text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 13,
+      "documentSHA256": "db959cfa0cba2f06c7bc64fec030a3157010af5f2d2da082fdaae50d5ecaa133",
+      "textCharacters": 18535,
+      "loadAfter": [50.35009765625, 60.12548828125, 63.89306640625],
+      "endedAt": "2026-10-21T08:31:30.434Z"
+    },
+    {
+      "article": "habr-gc",
+      "url": "https://habr.com/ru/articles/742402/",
+      "repetition": 2,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:31:30.740004+03:00",
+      "displayedAt": 1792571500672.9001,
+      "elapsedMS": 9932.900146484375,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [50.35009765625, 60.12548828125, 63.89306640625],
+      "startedAt": "2026-10-21T08:31:30.449Z",
+      "userId": "1799b0f6-62cd-40d3-8998-1953ae9fdb2f",
+      "ackReceivedAt": 1792571490764.7,
+      "ackServerTime": "2026-10-21T08:31:30.745534Z",
+      "cardId": "6f004051-06a6-432e-85b2-3888a9767d7f",
+      "deadlineAt": "2026-10-21T11:33:30.740004+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [
+        {
+          "assetId": "6be8d39c6dad780884fff6ad0931cecbe44a80860f905004f3e67ac8ca38b618",
+          "status": 200,
+          "bytes": 291592,
+          "type": "image/png"
+        },
+        {
+          "assetId": "1b6ae95554684f0b4aa642e6d71745f3e3a324df82ee44c7a9e33c7c5f55f343",
+          "status": 200,
+          "bytes": 28437,
+          "type": "image/jpeg"
+        },
+        {
+          "assetId": "68d9449aedc2dd31977f496dadd4e833905173f6366356fec15f3834f7c1312c",
+          "status": 200,
+          "bytes": 25125,
+          "type": "image/jpeg"
+        },
+        {
+          "assetId": "59ed5a6ad37fb59261f251f1f3590856b9ee221e279a9c88d5473628be8ea33b",
+          "status": 200,
+          "bytes": 203927,
+          "type": "image/png"
+        },
+        {
+          "assetId": "84bcc7932a80f046c62d09390cb478e2341bc87d742a3c3e7a5aee5f8252dc55",
+          "status": 200,
+          "bytes": 594928,
+          "type": "image/png"
+        },
+        {
+          "assetId": "89bbe0ffb98f6270fc1aefbf69d69779549a0de69ea3736b2ddf3be195add175",
+          "status": 200,
+          "bytes": 245951,
+          "type": "image/png"
+        },
+        {
+          "assetId": "f4de4a9ef4f5d742b604707f24a4f1cdffcf725e59b33414c91dcf7ca2af1df0",
+          "status": 200,
+          "bytes": 299662,
+          "type": "image/png"
+        },
+        {
+          "assetId": "8f86678ef8e716cc8432d3491f59296119743a12a8e933b9d420000202429580",
+          "status": 200,
+          "bytes": 265347,
+          "type": "image/png"
+        },
+        {
+          "assetId": "cff75067bfa9b40765e2ad06cc6194830c702111e591ce2fa9e77fff934c5fc7",
+          "status": 200,
+          "bytes": 212559,
+          "type": "image/png"
+        },
+        {
+          "assetId": "7c4ccd14f3e12c95a5515fb747dd4599c75a44d4ca5f92eab1c83e16714d42f4",
+          "status": 200,
+          "bytes": 181999,
+          "type": "image/png"
+        },
+        {
+          "assetId": "315841036c1084edf17fac2a29027b89324178803c91bf2b71063031e3797f37",
+          "status": 200,
+          "bytes": 201395,
+          "type": "image/png"
+        },
+        {
+          "assetId": "ca90cf3d6c480c5b459cc67ad95acbbf9435c664716008b1183be1046e092658",
+          "status": 200,
+          "bytes": 427058,
+          "type": "image/png"
+        },
+        {
+          "assetId": "b1cb33be53559e95d21210f8239abfd92e777cfd18ad0911be021f50ae28ea3c",
+          "status": 200,
+          "bytes": 293023,
+          "type": "image/png"
+        }
+      ],
+      "warnings": ["images_omitted", "text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 13,
+      "documentSHA256": "db959cfa0cba2f06c7bc64fec030a3157010af5f2d2da082fdaae50d5ecaa133",
+      "textCharacters": 18535,
+      "loadAfter": [47.99609375, 59.2978515625, 63.55517578125],
+      "endedAt": "2026-10-21T08:31:41.282Z"
+    },
+    {
+      "article": "habr-gc",
+      "url": "https://habr.com/ru/articles/742402/",
+      "repetition": 3,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:31:41.61073+03:00",
+      "displayedAt": 1792571513537.5,
+      "elapsedMS": 11927.5,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [47.99609375, 59.2978515625, 63.55517578125],
+      "startedAt": "2026-10-21T08:31:41.289Z",
+      "userId": "58224841-f776-4db9-933e-520d7eab98e5",
+      "ackReceivedAt": 1792571501629.1,
+      "ackServerTime": "2026-10-21T08:31:41.615958Z",
+      "cardId": "cf734ff6-2d22-452e-a842-ed2227dc412e",
+      "deadlineAt": "2026-10-21T11:33:41.61073+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [
+        {
+          "assetId": "6be8d39c6dad780884fff6ad0931cecbe44a80860f905004f3e67ac8ca38b618",
+          "status": 200,
+          "bytes": 291592,
+          "type": "image/png"
+        },
+        {
+          "assetId": "1b6ae95554684f0b4aa642e6d71745f3e3a324df82ee44c7a9e33c7c5f55f343",
+          "status": 200,
+          "bytes": 28437,
+          "type": "image/jpeg"
+        },
+        {
+          "assetId": "68d9449aedc2dd31977f496dadd4e833905173f6366356fec15f3834f7c1312c",
+          "status": 200,
+          "bytes": 25125,
+          "type": "image/jpeg"
+        },
+        {
+          "assetId": "59ed5a6ad37fb59261f251f1f3590856b9ee221e279a9c88d5473628be8ea33b",
+          "status": 200,
+          "bytes": 203927,
+          "type": "image/png"
+        },
+        {
+          "assetId": "84bcc7932a80f046c62d09390cb478e2341bc87d742a3c3e7a5aee5f8252dc55",
+          "status": 200,
+          "bytes": 594928,
+          "type": "image/png"
+        },
+        {
+          "assetId": "89bbe0ffb98f6270fc1aefbf69d69779549a0de69ea3736b2ddf3be195add175",
+          "status": 200,
+          "bytes": 245951,
+          "type": "image/png"
+        },
+        {
+          "assetId": "f4de4a9ef4f5d742b604707f24a4f1cdffcf725e59b33414c91dcf7ca2af1df0",
+          "status": 200,
+          "bytes": 299662,
+          "type": "image/png"
+        },
+        {
+          "assetId": "8f86678ef8e716cc8432d3491f59296119743a12a8e933b9d420000202429580",
+          "status": 200,
+          "bytes": 265347,
+          "type": "image/png"
+        },
+        {
+          "assetId": "cff75067bfa9b40765e2ad06cc6194830c702111e591ce2fa9e77fff934c5fc7",
+          "status": 200,
+          "bytes": 212559,
+          "type": "image/png"
+        },
+        {
+          "assetId": "7c4ccd14f3e12c95a5515fb747dd4599c75a44d4ca5f92eab1c83e16714d42f4",
+          "status": 200,
+          "bytes": 181999,
+          "type": "image/png"
+        },
+        {
+          "assetId": "315841036c1084edf17fac2a29027b89324178803c91bf2b71063031e3797f37",
+          "status": 200,
+          "bytes": 201395,
+          "type": "image/png"
+        },
+        {
+          "assetId": "ca90cf3d6c480c5b459cc67ad95acbbf9435c664716008b1183be1046e092658",
+          "status": 200,
+          "bytes": 427058,
+          "type": "image/png"
+        },
+        {
+          "assetId": "b1cb33be53559e95d21210f8239abfd92e777cfd18ad0911be021f50ae28ea3c",
+          "status": 200,
+          "bytes": 293023,
+          "type": "image/png"
+        }
+      ],
+      "warnings": ["images_omitted", "text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 13,
+      "documentSHA256": "db959cfa0cba2f06c7bc64fec030a3157010af5f2d2da082fdaae50d5ecaa133",
+      "textCharacters": 18535,
+      "loadAfter": [47.18603515625, 58.74560546875, 63.30908203125],
+      "endedAt": "2026-10-21T08:31:54.263Z"
+    },
+    {
+      "article": "habr-gc",
+      "url": "https://habr.com/ru/articles/742402/",
+      "repetition": 4,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:31:54.583279+03:00",
+      "displayedAt": 1792571526573.9,
+      "elapsedMS": 11990.89990234375,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [47.18603515625, 58.74560546875, 63.30908203125],
+      "startedAt": "2026-10-21T08:31:54.271Z",
+      "userId": "d20eabef-0b5a-4afe-8b47-ff5415ad1453",
+      "ackReceivedAt": 1792571514600.5,
+      "ackServerTime": "2026-10-21T08:31:54.58731Z",
+      "cardId": "f3782b20-60e4-4984-bf7a-ec087514cb4f",
+      "deadlineAt": "2026-10-21T11:33:54.583279+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [
+        {
+          "assetId": "6be8d39c6dad780884fff6ad0931cecbe44a80860f905004f3e67ac8ca38b618",
+          "status": 200,
+          "bytes": 291592,
+          "type": "image/png"
+        },
+        {
+          "assetId": "1b6ae95554684f0b4aa642e6d71745f3e3a324df82ee44c7a9e33c7c5f55f343",
+          "status": 200,
+          "bytes": 28437,
+          "type": "image/jpeg"
+        },
+        {
+          "assetId": "68d9449aedc2dd31977f496dadd4e833905173f6366356fec15f3834f7c1312c",
+          "status": 200,
+          "bytes": 25125,
+          "type": "image/jpeg"
+        },
+        {
+          "assetId": "59ed5a6ad37fb59261f251f1f3590856b9ee221e279a9c88d5473628be8ea33b",
+          "status": 200,
+          "bytes": 203927,
+          "type": "image/png"
+        },
+        {
+          "assetId": "84bcc7932a80f046c62d09390cb478e2341bc87d742a3c3e7a5aee5f8252dc55",
+          "status": 200,
+          "bytes": 594928,
+          "type": "image/png"
+        },
+        {
+          "assetId": "89bbe0ffb98f6270fc1aefbf69d69779549a0de69ea3736b2ddf3be195add175",
+          "status": 200,
+          "bytes": 245951,
+          "type": "image/png"
+        },
+        {
+          "assetId": "f4de4a9ef4f5d742b604707f24a4f1cdffcf725e59b33414c91dcf7ca2af1df0",
+          "status": 200,
+          "bytes": 299662,
+          "type": "image/png"
+        },
+        {
+          "assetId": "8f86678ef8e716cc8432d3491f59296119743a12a8e933b9d420000202429580",
+          "status": 200,
+          "bytes": 265347,
+          "type": "image/png"
+        },
+        {
+          "assetId": "cff75067bfa9b40765e2ad06cc6194830c702111e591ce2fa9e77fff934c5fc7",
+          "status": 200,
+          "bytes": 212559,
+          "type": "image/png"
+        },
+        {
+          "assetId": "7c4ccd14f3e12c95a5515fb747dd4599c75a44d4ca5f92eab1c83e16714d42f4",
+          "status": 200,
+          "bytes": 181999,
+          "type": "image/png"
+        },
+        {
+          "assetId": "315841036c1084edf17fac2a29027b89324178803c91bf2b71063031e3797f37",
+          "status": 200,
+          "bytes": 201395,
+          "type": "image/png"
+        },
+        {
+          "assetId": "ca90cf3d6c480c5b459cc67ad95acbbf9435c664716008b1183be1046e092658",
+          "status": 200,
+          "bytes": 427058,
+          "type": "image/png"
+        },
+        {
+          "assetId": "b1cb33be53559e95d21210f8239abfd92e777cfd18ad0911be021f50ae28ea3c",
+          "status": 200,
+          "bytes": 293023,
+          "type": "image/png"
+        }
+      ],
+      "warnings": ["images_omitted", "text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 13,
+      "documentSHA256": "db959cfa0cba2f06c7bc64fec030a3157010af5f2d2da082fdaae50d5ecaa133",
+      "textCharacters": 18535,
+      "loadAfter": [46.66943359375, 58.0830078125, 62.994140625],
+      "endedAt": "2026-10-21T08:32:08.133Z"
+    },
+    {
+      "article": "habr-gc",
+      "url": "https://habr.com/ru/articles/742402/",
+      "repetition": 5,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:32:09.08509+03:00",
+      "displayedAt": 1792571540728.2,
+      "elapsedMS": 11643.199951171875,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [46.66943359375, 58.0830078125, 62.994140625],
+      "startedAt": "2026-10-21T08:32:08.189Z",
+      "userId": "023e459a-9ba2-4305-ae40-574d52833679",
+      "ackReceivedAt": 1792571529142,
+      "ackServerTime": "2026-10-21T08:32:09.119103Z",
+      "cardId": "6e0be62c-8c02-4e89-8204-572f47638676",
+      "deadlineAt": "2026-10-21T11:34:09.08509+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [
+        {
+          "assetId": "6be8d39c6dad780884fff6ad0931cecbe44a80860f905004f3e67ac8ca38b618",
+          "status": 200,
+          "bytes": 291592,
+          "type": "image/png"
+        },
+        {
+          "assetId": "1b6ae95554684f0b4aa642e6d71745f3e3a324df82ee44c7a9e33c7c5f55f343",
+          "status": 200,
+          "bytes": 28437,
+          "type": "image/jpeg"
+        },
+        {
+          "assetId": "68d9449aedc2dd31977f496dadd4e833905173f6366356fec15f3834f7c1312c",
+          "status": 200,
+          "bytes": 25125,
+          "type": "image/jpeg"
+        },
+        {
+          "assetId": "59ed5a6ad37fb59261f251f1f3590856b9ee221e279a9c88d5473628be8ea33b",
+          "status": 200,
+          "bytes": 203927,
+          "type": "image/png"
+        },
+        {
+          "assetId": "84bcc7932a80f046c62d09390cb478e2341bc87d742a3c3e7a5aee5f8252dc55",
+          "status": 200,
+          "bytes": 594928,
+          "type": "image/png"
+        },
+        {
+          "assetId": "89bbe0ffb98f6270fc1aefbf69d69779549a0de69ea3736b2ddf3be195add175",
+          "status": 200,
+          "bytes": 245951,
+          "type": "image/png"
+        },
+        {
+          "assetId": "f4de4a9ef4f5d742b604707f24a4f1cdffcf725e59b33414c91dcf7ca2af1df0",
+          "status": 200,
+          "bytes": 299662,
+          "type": "image/png"
+        },
+        {
+          "assetId": "8f86678ef8e716cc8432d3491f59296119743a12a8e933b9d420000202429580",
+          "status": 200,
+          "bytes": 265347,
+          "type": "image/png"
+        },
+        {
+          "assetId": "cff75067bfa9b40765e2ad06cc6194830c702111e591ce2fa9e77fff934c5fc7",
+          "status": 200,
+          "bytes": 212559,
+          "type": "image/png"
+        },
+        {
+          "assetId": "7c4ccd14f3e12c95a5515fb747dd4599c75a44d4ca5f92eab1c83e16714d42f4",
+          "status": 200,
+          "bytes": 181999,
+          "type": "image/png"
+        },
+        {
+          "assetId": "315841036c1084edf17fac2a29027b89324178803c91bf2b71063031e3797f37",
+          "status": 200,
+          "bytes": 201395,
+          "type": "image/png"
+        },
+        {
+          "assetId": "ca90cf3d6c480c5b459cc67ad95acbbf9435c664716008b1183be1046e092658",
+          "status": 200,
+          "bytes": 427058,
+          "type": "image/png"
+        },
+        {
+          "assetId": "b1cb33be53559e95d21210f8239abfd92e777cfd18ad0911be021f50ae28ea3c",
+          "status": 200,
+          "bytes": 293023,
+          "type": "image/png"
+        }
+      ],
+      "warnings": ["images_omitted", "text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 13,
+      "documentSHA256": "db959cfa0cba2f06c7bc64fec030a3157010af5f2d2da082fdaae50d5ecaa133",
+      "textCharacters": 18535,
+      "loadAfter": [48.1162109375, 57.83544921875, 62.81884765625],
+      "endedAt": "2026-10-21T08:32:21.477Z"
+    },
+    {
+      "article": "habr-gc",
+      "url": "https://habr.com/ru/articles/742402/",
+      "repetition": 6,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:32:21.812762+03:00",
+      "displayedAt": 1792571553769.3,
+      "elapsedMS": 11957.300048828125,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [48.1162109375, 57.83544921875, 62.81884765625],
+      "startedAt": "2026-10-21T08:32:21.485Z",
+      "userId": "cfe94c49-201d-4d34-b49d-7d1b038340aa",
+      "ackReceivedAt": 1792571541842.5,
+      "ackServerTime": "2026-10-21T08:32:21.822181Z",
+      "cardId": "e74e4781-56f7-41fe-9854-90c6a38a60ca",
+      "deadlineAt": "2026-10-21T11:34:21.812762+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [
+        {
+          "assetId": "6be8d39c6dad780884fff6ad0931cecbe44a80860f905004f3e67ac8ca38b618",
+          "status": 200,
+          "bytes": 291592,
+          "type": "image/png"
+        },
+        {
+          "assetId": "1b6ae95554684f0b4aa642e6d71745f3e3a324df82ee44c7a9e33c7c5f55f343",
+          "status": 200,
+          "bytes": 28437,
+          "type": "image/jpeg"
+        },
+        {
+          "assetId": "68d9449aedc2dd31977f496dadd4e833905173f6366356fec15f3834f7c1312c",
+          "status": 200,
+          "bytes": 25125,
+          "type": "image/jpeg"
+        },
+        {
+          "assetId": "59ed5a6ad37fb59261f251f1f3590856b9ee221e279a9c88d5473628be8ea33b",
+          "status": 200,
+          "bytes": 203927,
+          "type": "image/png"
+        },
+        {
+          "assetId": "84bcc7932a80f046c62d09390cb478e2341bc87d742a3c3e7a5aee5f8252dc55",
+          "status": 200,
+          "bytes": 594928,
+          "type": "image/png"
+        },
+        {
+          "assetId": "89bbe0ffb98f6270fc1aefbf69d69779549a0de69ea3736b2ddf3be195add175",
+          "status": 200,
+          "bytes": 245951,
+          "type": "image/png"
+        },
+        {
+          "assetId": "f4de4a9ef4f5d742b604707f24a4f1cdffcf725e59b33414c91dcf7ca2af1df0",
+          "status": 200,
+          "bytes": 299662,
+          "type": "image/png"
+        },
+        {
+          "assetId": "8f86678ef8e716cc8432d3491f59296119743a12a8e933b9d420000202429580",
+          "status": 200,
+          "bytes": 265347,
+          "type": "image/png"
+        },
+        {
+          "assetId": "cff75067bfa9b40765e2ad06cc6194830c702111e591ce2fa9e77fff934c5fc7",
+          "status": 200,
+          "bytes": 212559,
+          "type": "image/png"
+        },
+        {
+          "assetId": "7c4ccd14f3e12c95a5515fb747dd4599c75a44d4ca5f92eab1c83e16714d42f4",
+          "status": 200,
+          "bytes": 181999,
+          "type": "image/png"
+        },
+        {
+          "assetId": "315841036c1084edf17fac2a29027b89324178803c91bf2b71063031e3797f37",
+          "status": 200,
+          "bytes": 201395,
+          "type": "image/png"
+        },
+        {
+          "assetId": "ca90cf3d6c480c5b459cc67ad95acbbf9435c664716008b1183be1046e092658",
+          "status": 200,
+          "bytes": 427058,
+          "type": "image/png"
+        },
+        {
+          "assetId": "b1cb33be53559e95d21210f8239abfd92e777cfd18ad0911be021f50ae28ea3c",
+          "status": 200,
+          "bytes": 293023,
+          "type": "image/png"
+        }
+      ],
+      "warnings": ["images_omitted", "text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 13,
+      "documentSHA256": "db959cfa0cba2f06c7bc64fec030a3157010af5f2d2da082fdaae50d5ecaa133",
+      "textCharacters": 18535,
+      "loadAfter": [49.423828125, 57.77880859375, 62.7392578125],
+      "endedAt": "2026-10-21T08:32:34.972Z"
+    },
+    {
+      "article": "habr-gc",
+      "url": "https://habr.com/ru/articles/742402/",
+      "repetition": 7,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:32:35.404029+03:00",
+      "displayedAt": 1792571567296.1,
+      "elapsedMS": 11892.10009765625,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [49.423828125, 57.77880859375, 62.7392578125],
+      "startedAt": "2026-10-21T08:32:34.996Z",
+      "userId": "baba56b9-ef27-44d5-b354-66224783911a",
+      "ackReceivedAt": 1792571555436.1,
+      "ackServerTime": "2026-10-21T08:32:35.43117Z",
+      "cardId": "890ad218-5aaf-44c8-87b5-942b13f2f2ca",
+      "deadlineAt": "2026-10-21T11:34:35.404029+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [
+        {
+          "assetId": "6be8d39c6dad780884fff6ad0931cecbe44a80860f905004f3e67ac8ca38b618",
+          "status": 200,
+          "bytes": 291592,
+          "type": "image/png"
+        },
+        {
+          "assetId": "1b6ae95554684f0b4aa642e6d71745f3e3a324df82ee44c7a9e33c7c5f55f343",
+          "status": 200,
+          "bytes": 28437,
+          "type": "image/jpeg"
+        },
+        {
+          "assetId": "68d9449aedc2dd31977f496dadd4e833905173f6366356fec15f3834f7c1312c",
+          "status": 200,
+          "bytes": 25125,
+          "type": "image/jpeg"
+        },
+        {
+          "assetId": "59ed5a6ad37fb59261f251f1f3590856b9ee221e279a9c88d5473628be8ea33b",
+          "status": 200,
+          "bytes": 203927,
+          "type": "image/png"
+        },
+        {
+          "assetId": "84bcc7932a80f046c62d09390cb478e2341bc87d742a3c3e7a5aee5f8252dc55",
+          "status": 200,
+          "bytes": 594928,
+          "type": "image/png"
+        },
+        {
+          "assetId": "89bbe0ffb98f6270fc1aefbf69d69779549a0de69ea3736b2ddf3be195add175",
+          "status": 200,
+          "bytes": 245951,
+          "type": "image/png"
+        },
+        {
+          "assetId": "f4de4a9ef4f5d742b604707f24a4f1cdffcf725e59b33414c91dcf7ca2af1df0",
+          "status": 200,
+          "bytes": 299662,
+          "type": "image/png"
+        },
+        {
+          "assetId": "8f86678ef8e716cc8432d3491f59296119743a12a8e933b9d420000202429580",
+          "status": 200,
+          "bytes": 265347,
+          "type": "image/png"
+        },
+        {
+          "assetId": "cff75067bfa9b40765e2ad06cc6194830c702111e591ce2fa9e77fff934c5fc7",
+          "status": 200,
+          "bytes": 212559,
+          "type": "image/png"
+        },
+        {
+          "assetId": "7c4ccd14f3e12c95a5515fb747dd4599c75a44d4ca5f92eab1c83e16714d42f4",
+          "status": 200,
+          "bytes": 181999,
+          "type": "image/png"
+        },
+        {
+          "assetId": "315841036c1084edf17fac2a29027b89324178803c91bf2b71063031e3797f37",
+          "status": 200,
+          "bytes": 201395,
+          "type": "image/png"
+        },
+        {
+          "assetId": "ca90cf3d6c480c5b459cc67ad95acbbf9435c664716008b1183be1046e092658",
+          "status": 200,
+          "bytes": 427058,
+          "type": "image/png"
+        },
+        {
+          "assetId": "b1cb33be53559e95d21210f8239abfd92e777cfd18ad0911be021f50ae28ea3c",
+          "status": 200,
+          "bytes": 293023,
+          "type": "image/png"
+        }
+      ],
+      "warnings": ["images_omitted", "text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 13,
+      "documentSHA256": "db959cfa0cba2f06c7bc64fec030a3157010af5f2d2da082fdaae50d5ecaa133",
+      "textCharacters": 18535,
+      "loadAfter": [47.1455078125, 56.859375, 62.32373046875],
+      "endedAt": "2026-10-21T08:32:48.001Z"
+    },
+    {
+      "article": "habr-gc",
+      "url": "https://habr.com/ru/articles/742402/",
+      "repetition": 8,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:32:48.39863+03:00",
+      "displayedAt": 1792571586332.0999,
+      "elapsedMS": 17934.099853515625,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [47.1455078125, 56.859375, 62.32373046875],
+      "startedAt": "2026-10-21T08:32:48.028Z",
+      "userId": "130f1cb3-d1d1-4b06-ba5a-90726c42b238",
+      "ackReceivedAt": 1792571568432.4,
+      "ackServerTime": "2026-10-21T08:32:48.40828Z",
+      "cardId": "f44281bb-1829-446c-9923-ea4498031a82",
+      "deadlineAt": "2026-10-21T11:34:48.39863+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [
+        {
+          "assetId": "6be8d39c6dad780884fff6ad0931cecbe44a80860f905004f3e67ac8ca38b618",
+          "status": 200,
+          "bytes": 291592,
+          "type": "image/png"
+        },
+        {
+          "assetId": "1b6ae95554684f0b4aa642e6d71745f3e3a324df82ee44c7a9e33c7c5f55f343",
+          "status": 200,
+          "bytes": 28437,
+          "type": "image/jpeg"
+        },
+        {
+          "assetId": "68d9449aedc2dd31977f496dadd4e833905173f6366356fec15f3834f7c1312c",
+          "status": 200,
+          "bytes": 25125,
+          "type": "image/jpeg"
+        },
+        {
+          "assetId": "59ed5a6ad37fb59261f251f1f3590856b9ee221e279a9c88d5473628be8ea33b",
+          "status": 200,
+          "bytes": 203927,
+          "type": "image/png"
+        },
+        {
+          "assetId": "84bcc7932a80f046c62d09390cb478e2341bc87d742a3c3e7a5aee5f8252dc55",
+          "status": 200,
+          "bytes": 594928,
+          "type": "image/png"
+        },
+        {
+          "assetId": "89bbe0ffb98f6270fc1aefbf69d69779549a0de69ea3736b2ddf3be195add175",
+          "status": 200,
+          "bytes": 245951,
+          "type": "image/png"
+        },
+        {
+          "assetId": "f4de4a9ef4f5d742b604707f24a4f1cdffcf725e59b33414c91dcf7ca2af1df0",
+          "status": 200,
+          "bytes": 299662,
+          "type": "image/png"
+        },
+        {
+          "assetId": "8f86678ef8e716cc8432d3491f59296119743a12a8e933b9d420000202429580",
+          "status": 200,
+          "bytes": 265347,
+          "type": "image/png"
+        },
+        {
+          "assetId": "cff75067bfa9b40765e2ad06cc6194830c702111e591ce2fa9e77fff934c5fc7",
+          "status": 200,
+          "bytes": 212559,
+          "type": "image/png"
+        },
+        {
+          "assetId": "7c4ccd14f3e12c95a5515fb747dd4599c75a44d4ca5f92eab1c83e16714d42f4",
+          "status": 200,
+          "bytes": 181999,
+          "type": "image/png"
+        },
+        {
+          "assetId": "315841036c1084edf17fac2a29027b89324178803c91bf2b71063031e3797f37",
+          "status": 200,
+          "bytes": 201395,
+          "type": "image/png"
+        },
+        {
+          "assetId": "ca90cf3d6c480c5b459cc67ad95acbbf9435c664716008b1183be1046e092658",
+          "status": 200,
+          "bytes": 427058,
+          "type": "image/png"
+        },
+        {
+          "assetId": "b1cb33be53559e95d21210f8239abfd92e777cfd18ad0911be021f50ae28ea3c",
+          "status": 200,
+          "bytes": 293023,
+          "type": "image/png"
+        }
+      ],
+      "warnings": ["images_omitted", "text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 13,
+      "documentSHA256": "db959cfa0cba2f06c7bc64fec030a3157010af5f2d2da082fdaae50d5ecaa133",
+      "textCharacters": 18535,
+      "loadAfter": [45.6796875, 55.90869140625, 61.85595703125],
+      "endedAt": "2026-10-21T08:33:07.142Z"
+    },
+    {
+      "article": "habr-gc",
+      "url": "https://habr.com/ru/articles/742402/",
+      "repetition": 9,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:33:07.635732+03:00",
+      "displayedAt": 1792571599468.3,
+      "elapsedMS": 11833.300048828125,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [45.6796875, 55.90869140625, 61.85595703125],
+      "startedAt": "2026-10-21T08:33:07.162Z",
+      "userId": "f4841d6f-c995-4fb7-86ad-b4f44edc761c",
+      "ackReceivedAt": 1792571587659.9,
+      "ackServerTime": "2026-10-21T08:33:07.646793Z",
+      "cardId": "f00b4a7d-d12c-4be8-adb6-870d1d64b774",
+      "deadlineAt": "2026-10-21T11:35:07.635732+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [
+        {
+          "assetId": "6be8d39c6dad780884fff6ad0931cecbe44a80860f905004f3e67ac8ca38b618",
+          "status": 200,
+          "bytes": 291592,
+          "type": "image/png"
+        },
+        {
+          "assetId": "1b6ae95554684f0b4aa642e6d71745f3e3a324df82ee44c7a9e33c7c5f55f343",
+          "status": 200,
+          "bytes": 28437,
+          "type": "image/jpeg"
+        },
+        {
+          "assetId": "68d9449aedc2dd31977f496dadd4e833905173f6366356fec15f3834f7c1312c",
+          "status": 200,
+          "bytes": 25125,
+          "type": "image/jpeg"
+        },
+        {
+          "assetId": "59ed5a6ad37fb59261f251f1f3590856b9ee221e279a9c88d5473628be8ea33b",
+          "status": 200,
+          "bytes": 203927,
+          "type": "image/png"
+        },
+        {
+          "assetId": "84bcc7932a80f046c62d09390cb478e2341bc87d742a3c3e7a5aee5f8252dc55",
+          "status": 200,
+          "bytes": 594928,
+          "type": "image/png"
+        },
+        {
+          "assetId": "89bbe0ffb98f6270fc1aefbf69d69779549a0de69ea3736b2ddf3be195add175",
+          "status": 200,
+          "bytes": 245951,
+          "type": "image/png"
+        },
+        {
+          "assetId": "f4de4a9ef4f5d742b604707f24a4f1cdffcf725e59b33414c91dcf7ca2af1df0",
+          "status": 200,
+          "bytes": 299662,
+          "type": "image/png"
+        },
+        {
+          "assetId": "8f86678ef8e716cc8432d3491f59296119743a12a8e933b9d420000202429580",
+          "status": 200,
+          "bytes": 265347,
+          "type": "image/png"
+        },
+        {
+          "assetId": "cff75067bfa9b40765e2ad06cc6194830c702111e591ce2fa9e77fff934c5fc7",
+          "status": 200,
+          "bytes": 212559,
+          "type": "image/png"
+        },
+        {
+          "assetId": "7c4ccd14f3e12c95a5515fb747dd4599c75a44d4ca5f92eab1c83e16714d42f4",
+          "status": 200,
+          "bytes": 181999,
+          "type": "image/png"
+        },
+        {
+          "assetId": "315841036c1084edf17fac2a29027b89324178803c91bf2b71063031e3797f37",
+          "status": 200,
+          "bytes": 201395,
+          "type": "image/png"
+        },
+        {
+          "assetId": "ca90cf3d6c480c5b459cc67ad95acbbf9435c664716008b1183be1046e092658",
+          "status": 200,
+          "bytes": 427058,
+          "type": "image/png"
+        },
+        {
+          "assetId": "b1cb33be53559e95d21210f8239abfd92e777cfd18ad0911be021f50ae28ea3c",
+          "status": 200,
+          "bytes": 293023,
+          "type": "image/png"
+        }
+      ],
+      "warnings": ["images_omitted", "text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 13,
+      "documentSHA256": "db959cfa0cba2f06c7bc64fec030a3157010af5f2d2da082fdaae50d5ecaa133",
+      "textCharacters": 18535,
+      "loadAfter": [43.76513671875, 55.1689453125, 61.52392578125],
+      "endedAt": "2026-10-21T08:33:20.207Z"
+    },
+    {
+      "article": "habr-gc",
+      "url": "https://habr.com/ru/articles/742402/",
+      "repetition": 10,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:33:20.924595+03:00",
+      "displayedAt": 1792571610738.9,
+      "elapsedMS": 9814.89990234375,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [43.76513671875, 55.1689453125, 61.52392578125],
+      "startedAt": "2026-10-21T08:33:20.222Z",
+      "userId": "6962b18b-6445-4a4c-8423-e2dfd28483bd",
+      "ackReceivedAt": 1792571600942.5,
+      "ackServerTime": "2026-10-21T08:33:20.938332Z",
+      "cardId": "ceb107c1-742f-45a9-a306-3cbef8da1e28",
+      "deadlineAt": "2026-10-21T11:35:20.924595+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [
+        {
+          "assetId": "6be8d39c6dad780884fff6ad0931cecbe44a80860f905004f3e67ac8ca38b618",
+          "status": 200,
+          "bytes": 291592,
+          "type": "image/png"
+        },
+        {
+          "assetId": "1b6ae95554684f0b4aa642e6d71745f3e3a324df82ee44c7a9e33c7c5f55f343",
+          "status": 200,
+          "bytes": 28437,
+          "type": "image/jpeg"
+        },
+        {
+          "assetId": "68d9449aedc2dd31977f496dadd4e833905173f6366356fec15f3834f7c1312c",
+          "status": 200,
+          "bytes": 25125,
+          "type": "image/jpeg"
+        },
+        {
+          "assetId": "59ed5a6ad37fb59261f251f1f3590856b9ee221e279a9c88d5473628be8ea33b",
+          "status": 200,
+          "bytes": 203927,
+          "type": "image/png"
+        },
+        {
+          "assetId": "84bcc7932a80f046c62d09390cb478e2341bc87d742a3c3e7a5aee5f8252dc55",
+          "status": 200,
+          "bytes": 594928,
+          "type": "image/png"
+        },
+        {
+          "assetId": "89bbe0ffb98f6270fc1aefbf69d69779549a0de69ea3736b2ddf3be195add175",
+          "status": 200,
+          "bytes": 245951,
+          "type": "image/png"
+        },
+        {
+          "assetId": "f4de4a9ef4f5d742b604707f24a4f1cdffcf725e59b33414c91dcf7ca2af1df0",
+          "status": 200,
+          "bytes": 299662,
+          "type": "image/png"
+        },
+        {
+          "assetId": "8f86678ef8e716cc8432d3491f59296119743a12a8e933b9d420000202429580",
+          "status": 200,
+          "bytes": 265347,
+          "type": "image/png"
+        },
+        {
+          "assetId": "cff75067bfa9b40765e2ad06cc6194830c702111e591ce2fa9e77fff934c5fc7",
+          "status": 200,
+          "bytes": 212559,
+          "type": "image/png"
+        },
+        {
+          "assetId": "7c4ccd14f3e12c95a5515fb747dd4599c75a44d4ca5f92eab1c83e16714d42f4",
+          "status": 200,
+          "bytes": 181999,
+          "type": "image/png"
+        },
+        {
+          "assetId": "315841036c1084edf17fac2a29027b89324178803c91bf2b71063031e3797f37",
+          "status": 200,
+          "bytes": 201395,
+          "type": "image/png"
+        },
+        {
+          "assetId": "ca90cf3d6c480c5b459cc67ad95acbbf9435c664716008b1183be1046e092658",
+          "status": 200,
+          "bytes": 427058,
+          "type": "image/png"
+        },
+        {
+          "assetId": "b1cb33be53559e95d21210f8239abfd92e777cfd18ad0911be021f50ae28ea3c",
+          "status": 200,
+          "bytes": 293023,
+          "type": "image/png"
+        }
+      ],
+      "warnings": ["images_omitted", "text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 13,
+      "documentSHA256": "db959cfa0cba2f06c7bc64fec030a3157010af5f2d2da082fdaae50d5ecaa133",
+      "textCharacters": 18535,
+      "loadAfter": [43.41015625, 54.55078125, 61.19287109375],
+      "endedAt": "2026-10-21T08:33:31.317Z"
+    },
+    {
+      "article": "habr-avito",
+      "url": "https://habr.com/ru/companies/avito/articles/753244/",
+      "repetition": 1,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:33:32.305812+03:00",
+      "displayedAt": 1792571638214.7,
+      "elapsedMS": 25909.699951171875,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [43.41015625, 54.55078125, 61.19287109375],
+      "startedAt": "2026-10-21T08:33:31.938Z",
+      "userId": "4f02f027-f274-4a92-9eb0-06f27e5e4598",
+      "ackReceivedAt": 1792571612320.5,
+      "ackServerTime": "2026-10-21T08:33:32.315925Z",
+      "cardId": "3a50528a-1710-4424-b11b-3fa00737de0d",
+      "deadlineAt": "2026-10-21T11:35:32.305812+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [
+        {
+          "assetId": "5b7684b96175f75079bbc6042d3d38065c8d50af5fc303ae18cffc9179a36b1f",
+          "status": 200,
+          "bytes": 897321,
+          "type": "image/png"
+        },
+        {
+          "assetId": "91934dc8b07387543d2a43dd2dffeda45754b279c272666f4ae94ecbaaf7517f",
+          "status": 200,
+          "bytes": 462588,
+          "type": "image/png"
+        },
+        {
+          "assetId": "3ab860a271e0bd2a30f447c8ced4e57ae2afcf5d0044aeb445e5c0a48e1281c2",
+          "status": 200,
+          "bytes": 542980,
+          "type": "image/png"
+        },
+        {
+          "assetId": "e81a73687008c82ea761b3da06e3c40331aa2a86d167b7bbad1f703727c3f584",
+          "status": 200,
+          "bytes": 528665,
+          "type": "image/png"
+        },
+        {
+          "assetId": "a6dba7cf38a472acbf22f9febf3a0ea47cb4902ddbaeac8fe1813918ead09ec4",
+          "status": 200,
+          "bytes": 543233,
+          "type": "image/png"
+        },
+        {
+          "assetId": "60a70bf4c59b85840050707088b3d79d192c18e52613476ade7863cae528974a",
+          "status": 200,
+          "bytes": 515218,
+          "type": "image/png"
+        },
+        {
+          "assetId": "5453a8edbed1d8b67eef9532a474ab3690839852c11309dbfcce98093fc6d38b",
+          "status": 200,
+          "bytes": 446030,
+          "type": "image/png"
+        },
+        {
+          "assetId": "0b4b69784f8431f7d19ac8d4a8c449d8667ae34d6823ef34a22ac1fcb007827f",
+          "status": 200,
+          "bytes": 317534,
+          "type": "image/png"
+        },
+        {
+          "assetId": "3dc611f1847ec4c0c1b5b1091279328aa7f5c5aaf962e2e2eb8093c7f52f61d4",
+          "status": 200,
+          "bytes": 308547,
+          "type": "image/png"
+        },
+        {
+          "assetId": "70cf1205e8c5800d4d40a84f439e34323d4bdc6b61ee42441a7ab8991f0ffd9b",
+          "status": 200,
+          "bytes": 287113,
+          "type": "image/png"
+        },
+        {
+          "assetId": "68a507a5bd173a77b9255ba3291bf9416fd4d843f2cab0f53d7fc0bdae228fd2",
+          "status": 200,
+          "bytes": 274447,
+          "type": "image/png"
+        },
+        {
+          "assetId": "eb0d44bd6c5079e0fbad47811fa20cdfcc576bc11329d2b308a9a72308ae4da6",
+          "status": 200,
+          "bytes": 270959,
+          "type": "image/png"
+        },
+        {
+          "assetId": "049ddf95b1924d51e23be549261ab6e5cdc52ea609ef0c358732dbf4e17a727c",
+          "status": 200,
+          "bytes": 265654,
+          "type": "image/png"
+        },
+        {
+          "assetId": "3732a39b9499612f64f7edad6083759a9ff67939467bbac735271b14f4aced56",
+          "status": 200,
+          "bytes": 298406,
+          "type": "image/png"
+        },
+        {
+          "assetId": "1ebfaad40366788f77444b2e97dbcbfa88b9f1eb9adaaa577393caa1a486a915",
+          "status": 200,
+          "bytes": 322495,
+          "type": "image/png"
+        },
+        {
+          "assetId": "7e5aa26e41221b0657d896e11cb316276e091c5ee842bdc3c6963047488716a4",
+          "status": 200,
+          "bytes": 297519,
+          "type": "image/png"
+        },
+        {
+          "assetId": "2f7ba2e7b5287c155789eb979cbd74ecda5618911b2824d4e29ae9f2d8f6ccbd",
+          "status": 200,
+          "bytes": 298053,
+          "type": "image/png"
+        },
+        {
+          "assetId": "75210744947f2218a6dc4eaf4d911876e2b5d54cd6aac6311c56e0dd762cc66c",
+          "status": 200,
+          "bytes": 361258,
+          "type": "image/png"
+        },
+        {
+          "assetId": "2db1689042e02c7ac71709cb47a7deb6b4bc414456a0ae87c74ce60adc9bad4d",
+          "status": 200,
+          "bytes": 288092,
+          "type": "image/png"
+        },
+        {
+          "assetId": "f299b7a175eb2e65e1e65b040f2bd103e5ae8436bdaf55cb3d8b77c59222fdab",
+          "status": 200,
+          "bytes": 290497,
+          "type": "image/png"
+        },
+        {
+          "assetId": "63ae16a6e6a2b89ed62cfc9700d9afddeaae103838ac41ff18115bfc17062ae4",
+          "status": 200,
+          "bytes": 288881,
+          "type": "image/png"
+        },
+        {
+          "assetId": "d08a908b8e6a8ea5507f34e389942a90e85e82fabd9f2ac6d3c6e0e414e4a8b4",
+          "status": 200,
+          "bytes": 823887,
+          "type": "image/png"
+        },
+        {
+          "assetId": "d936e09573cbe4425f4275505a0f9eb0479bc2f86a642d60e65963d7614c0398",
+          "status": 200,
+          "bytes": 905308,
+          "type": "image/png"
+        },
+        {
+          "assetId": "7dcd0a95bfafed4fcee32dcceacb2d073d3aa615dd9f31eb0a9a2d98d2d90519",
+          "status": 200,
+          "bytes": 149292,
+          "type": "image/png"
+        },
+        {
+          "assetId": "0d81716b30da1e6eadc8a67eae620ff466aa59f77eee041da27b526ba07fbb6f",
+          "status": 200,
+          "bytes": 1465310,
+          "type": "image/png"
+        }
+      ],
+      "warnings": ["images_omitted", "text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 25,
+      "documentSHA256": "951297dd84db8a0f135c1300f8ea845ba058b0e6db22b98d4f1b1a51b1d8cacb",
+      "textCharacters": 11732,
+      "loadAfter": [43.4033203125, 53.40234375, 60.54052734375],
+      "endedAt": "2026-10-21T08:34:00.530Z"
+    },
+    {
+      "article": "habr-avito",
+      "url": "https://habr.com/ru/companies/avito/articles/753244/",
+      "repetition": 2,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:34:01.194278+03:00",
+      "displayedAt": 1792571668982,
+      "elapsedMS": 27788,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [43.4033203125, 53.40234375, 60.54052734375],
+      "startedAt": "2026-10-21T08:34:00.553Z",
+      "userId": "49ba7cf0-8902-4759-8144-e09c6b7c251b",
+      "ackReceivedAt": 1792571641209.9,
+      "ackServerTime": "2026-10-21T08:34:01.204241Z",
+      "cardId": "72935bc0-90c0-4f64-b3ad-f276bf3199d2",
+      "deadlineAt": "2026-10-21T11:36:01.194278+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [
+        {
+          "assetId": "5b7684b96175f75079bbc6042d3d38065c8d50af5fc303ae18cffc9179a36b1f",
+          "status": 200,
+          "bytes": 897321,
+          "type": "image/png"
+        },
+        {
+          "assetId": "91934dc8b07387543d2a43dd2dffeda45754b279c272666f4ae94ecbaaf7517f",
+          "status": 200,
+          "bytes": 462588,
+          "type": "image/png"
+        },
+        {
+          "assetId": "3ab860a271e0bd2a30f447c8ced4e57ae2afcf5d0044aeb445e5c0a48e1281c2",
+          "status": 200,
+          "bytes": 542980,
+          "type": "image/png"
+        },
+        {
+          "assetId": "e81a73687008c82ea761b3da06e3c40331aa2a86d167b7bbad1f703727c3f584",
+          "status": 200,
+          "bytes": 528665,
+          "type": "image/png"
+        },
+        {
+          "assetId": "a6dba7cf38a472acbf22f9febf3a0ea47cb4902ddbaeac8fe1813918ead09ec4",
+          "status": 200,
+          "bytes": 543233,
+          "type": "image/png"
+        },
+        {
+          "assetId": "60a70bf4c59b85840050707088b3d79d192c18e52613476ade7863cae528974a",
+          "status": 200,
+          "bytes": 515218,
+          "type": "image/png"
+        },
+        {
+          "assetId": "5453a8edbed1d8b67eef9532a474ab3690839852c11309dbfcce98093fc6d38b",
+          "status": 200,
+          "bytes": 446030,
+          "type": "image/png"
+        },
+        {
+          "assetId": "0b4b69784f8431f7d19ac8d4a8c449d8667ae34d6823ef34a22ac1fcb007827f",
+          "status": 200,
+          "bytes": 317534,
+          "type": "image/png"
+        },
+        {
+          "assetId": "3dc611f1847ec4c0c1b5b1091279328aa7f5c5aaf962e2e2eb8093c7f52f61d4",
+          "status": 200,
+          "bytes": 308547,
+          "type": "image/png"
+        },
+        {
+          "assetId": "70cf1205e8c5800d4d40a84f439e34323d4bdc6b61ee42441a7ab8991f0ffd9b",
+          "status": 200,
+          "bytes": 287113,
+          "type": "image/png"
+        },
+        {
+          "assetId": "68a507a5bd173a77b9255ba3291bf9416fd4d843f2cab0f53d7fc0bdae228fd2",
+          "status": 200,
+          "bytes": 274447,
+          "type": "image/png"
+        },
+        {
+          "assetId": "eb0d44bd6c5079e0fbad47811fa20cdfcc576bc11329d2b308a9a72308ae4da6",
+          "status": 200,
+          "bytes": 270959,
+          "type": "image/png"
+        },
+        {
+          "assetId": "049ddf95b1924d51e23be549261ab6e5cdc52ea609ef0c358732dbf4e17a727c",
+          "status": 200,
+          "bytes": 265654,
+          "type": "image/png"
+        },
+        {
+          "assetId": "3732a39b9499612f64f7edad6083759a9ff67939467bbac735271b14f4aced56",
+          "status": 200,
+          "bytes": 298406,
+          "type": "image/png"
+        },
+        {
+          "assetId": "1ebfaad40366788f77444b2e97dbcbfa88b9f1eb9adaaa577393caa1a486a915",
+          "status": 200,
+          "bytes": 322495,
+          "type": "image/png"
+        },
+        {
+          "assetId": "7e5aa26e41221b0657d896e11cb316276e091c5ee842bdc3c6963047488716a4",
+          "status": 200,
+          "bytes": 297519,
+          "type": "image/png"
+        },
+        {
+          "assetId": "2f7ba2e7b5287c155789eb979cbd74ecda5618911b2824d4e29ae9f2d8f6ccbd",
+          "status": 200,
+          "bytes": 298053,
+          "type": "image/png"
+        },
+        {
+          "assetId": "75210744947f2218a6dc4eaf4d911876e2b5d54cd6aac6311c56e0dd762cc66c",
+          "status": 200,
+          "bytes": 361258,
+          "type": "image/png"
+        },
+        {
+          "assetId": "2db1689042e02c7ac71709cb47a7deb6b4bc414456a0ae87c74ce60adc9bad4d",
+          "status": 200,
+          "bytes": 288092,
+          "type": "image/png"
+        },
+        {
+          "assetId": "f299b7a175eb2e65e1e65b040f2bd103e5ae8436bdaf55cb3d8b77c59222fdab",
+          "status": 200,
+          "bytes": 290497,
+          "type": "image/png"
+        },
+        {
+          "assetId": "63ae16a6e6a2b89ed62cfc9700d9afddeaae103838ac41ff18115bfc17062ae4",
+          "status": 200,
+          "bytes": 288881,
+          "type": "image/png"
+        },
+        {
+          "assetId": "d08a908b8e6a8ea5507f34e389942a90e85e82fabd9f2ac6d3c6e0e414e4a8b4",
+          "status": 200,
+          "bytes": 823887,
+          "type": "image/png"
+        },
+        {
+          "assetId": "d936e09573cbe4425f4275505a0f9eb0479bc2f86a642d60e65963d7614c0398",
+          "status": 200,
+          "bytes": 905308,
+          "type": "image/png"
+        },
+        {
+          "assetId": "7dcd0a95bfafed4fcee32dcceacb2d073d3aa615dd9f31eb0a9a2d98d2d90519",
+          "status": 200,
+          "bytes": 149292,
+          "type": "image/png"
+        },
+        {
+          "assetId": "0d81716b30da1e6eadc8a67eae620ff466aa59f77eee041da27b526ba07fbb6f",
+          "status": 200,
+          "bytes": 1465310,
+          "type": "image/png"
+        }
+      ],
+      "warnings": ["images_omitted", "text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 25,
+      "documentSHA256": "951297dd84db8a0f135c1300f8ea845ba058b0e6db22b98d4f1b1a51b1d8cacb",
+      "textCharacters": 11732,
+      "loadAfter": [40.24169921875, 51.83251953125, 59.765625],
+      "endedAt": "2026-10-21T08:34:30.056Z"
+    },
+    {
+      "article": "habr-avito",
+      "url": "https://habr.com/ru/companies/avito/articles/753244/",
+      "repetition": 3,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:34:30.408607+03:00",
+      "displayedAt": 1792571694314.5,
+      "elapsedMS": 23906.5,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [40.24169921875, 51.83251953125, 59.765625],
+      "startedAt": "2026-10-21T08:34:30.065Z",
+      "userId": "858f2dc6-fe88-4e7f-84af-9101366b9f90",
+      "ackReceivedAt": 1792571670425.8,
+      "ackServerTime": "2026-10-21T08:34:30.419762Z",
+      "cardId": "c94a5502-41db-4a85-8394-ec3da568337c",
+      "deadlineAt": "2026-10-21T11:36:30.408607+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [
+        {
+          "assetId": "5b7684b96175f75079bbc6042d3d38065c8d50af5fc303ae18cffc9179a36b1f",
+          "status": 200,
+          "bytes": 897321,
+          "type": "image/png"
+        },
+        {
+          "assetId": "91934dc8b07387543d2a43dd2dffeda45754b279c272666f4ae94ecbaaf7517f",
+          "status": 200,
+          "bytes": 462588,
+          "type": "image/png"
+        },
+        {
+          "assetId": "3ab860a271e0bd2a30f447c8ced4e57ae2afcf5d0044aeb445e5c0a48e1281c2",
+          "status": 200,
+          "bytes": 542980,
+          "type": "image/png"
+        },
+        {
+          "assetId": "e81a73687008c82ea761b3da06e3c40331aa2a86d167b7bbad1f703727c3f584",
+          "status": 200,
+          "bytes": 528665,
+          "type": "image/png"
+        },
+        {
+          "assetId": "a6dba7cf38a472acbf22f9febf3a0ea47cb4902ddbaeac8fe1813918ead09ec4",
+          "status": 200,
+          "bytes": 543233,
+          "type": "image/png"
+        },
+        {
+          "assetId": "60a70bf4c59b85840050707088b3d79d192c18e52613476ade7863cae528974a",
+          "status": 200,
+          "bytes": 515218,
+          "type": "image/png"
+        },
+        {
+          "assetId": "5453a8edbed1d8b67eef9532a474ab3690839852c11309dbfcce98093fc6d38b",
+          "status": 200,
+          "bytes": 446030,
+          "type": "image/png"
+        },
+        {
+          "assetId": "0b4b69784f8431f7d19ac8d4a8c449d8667ae34d6823ef34a22ac1fcb007827f",
+          "status": 200,
+          "bytes": 317534,
+          "type": "image/png"
+        },
+        {
+          "assetId": "3dc611f1847ec4c0c1b5b1091279328aa7f5c5aaf962e2e2eb8093c7f52f61d4",
+          "status": 200,
+          "bytes": 308547,
+          "type": "image/png"
+        },
+        {
+          "assetId": "70cf1205e8c5800d4d40a84f439e34323d4bdc6b61ee42441a7ab8991f0ffd9b",
+          "status": 200,
+          "bytes": 287113,
+          "type": "image/png"
+        },
+        {
+          "assetId": "68a507a5bd173a77b9255ba3291bf9416fd4d843f2cab0f53d7fc0bdae228fd2",
+          "status": 200,
+          "bytes": 274447,
+          "type": "image/png"
+        },
+        {
+          "assetId": "eb0d44bd6c5079e0fbad47811fa20cdfcc576bc11329d2b308a9a72308ae4da6",
+          "status": 200,
+          "bytes": 270959,
+          "type": "image/png"
+        },
+        {
+          "assetId": "049ddf95b1924d51e23be549261ab6e5cdc52ea609ef0c358732dbf4e17a727c",
+          "status": 200,
+          "bytes": 265654,
+          "type": "image/png"
+        },
+        {
+          "assetId": "3732a39b9499612f64f7edad6083759a9ff67939467bbac735271b14f4aced56",
+          "status": 200,
+          "bytes": 298406,
+          "type": "image/png"
+        },
+        {
+          "assetId": "1ebfaad40366788f77444b2e97dbcbfa88b9f1eb9adaaa577393caa1a486a915",
+          "status": 200,
+          "bytes": 322495,
+          "type": "image/png"
+        },
+        {
+          "assetId": "7e5aa26e41221b0657d896e11cb316276e091c5ee842bdc3c6963047488716a4",
+          "status": 200,
+          "bytes": 297519,
+          "type": "image/png"
+        },
+        {
+          "assetId": "2f7ba2e7b5287c155789eb979cbd74ecda5618911b2824d4e29ae9f2d8f6ccbd",
+          "status": 200,
+          "bytes": 298053,
+          "type": "image/png"
+        },
+        {
+          "assetId": "75210744947f2218a6dc4eaf4d911876e2b5d54cd6aac6311c56e0dd762cc66c",
+          "status": 200,
+          "bytes": 361258,
+          "type": "image/png"
+        },
+        {
+          "assetId": "2db1689042e02c7ac71709cb47a7deb6b4bc414456a0ae87c74ce60adc9bad4d",
+          "status": 200,
+          "bytes": 288092,
+          "type": "image/png"
+        },
+        {
+          "assetId": "f299b7a175eb2e65e1e65b040f2bd103e5ae8436bdaf55cb3d8b77c59222fdab",
+          "status": 200,
+          "bytes": 290497,
+          "type": "image/png"
+        },
+        {
+          "assetId": "63ae16a6e6a2b89ed62cfc9700d9afddeaae103838ac41ff18115bfc17062ae4",
+          "status": 200,
+          "bytes": 288881,
+          "type": "image/png"
+        },
+        {
+          "assetId": "d08a908b8e6a8ea5507f34e389942a90e85e82fabd9f2ac6d3c6e0e414e4a8b4",
+          "status": 200,
+          "bytes": 823887,
+          "type": "image/png"
+        },
+        {
+          "assetId": "d936e09573cbe4425f4275505a0f9eb0479bc2f86a642d60e65963d7614c0398",
+          "status": 200,
+          "bytes": 905308,
+          "type": "image/png"
+        },
+        {
+          "assetId": "7dcd0a95bfafed4fcee32dcceacb2d073d3aa615dd9f31eb0a9a2d98d2d90519",
+          "status": 200,
+          "bytes": 149292,
+          "type": "image/png"
+        },
+        {
+          "assetId": "0d81716b30da1e6eadc8a67eae620ff466aa59f77eee041da27b526ba07fbb6f",
+          "status": 200,
+          "bytes": 1465310,
+          "type": "image/png"
+        }
+      ],
+      "warnings": ["images_omitted", "text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 25,
+      "documentSHA256": "951297dd84db8a0f135c1300f8ea845ba058b0e6db22b98d4f1b1a51b1d8cacb",
+      "textCharacters": 11732,
+      "loadAfter": [50.39892578125, 53.05810546875, 59.92626953125],
+      "endedAt": "2026-10-21T08:34:56.309Z"
+    },
+    {
+      "article": "habr-avito",
+      "url": "https://habr.com/ru/companies/avito/articles/753244/",
+      "repetition": 4,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:34:57.215947+03:00",
+      "displayedAt": 1792571723179.1,
+      "elapsedMS": 25964.10009765625,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [50.39892578125, 53.05810546875, 59.92626953125],
+      "startedAt": "2026-10-21T08:34:56.321Z",
+      "userId": "ddb943ae-77c3-4f46-b9a0-058c69a0b24b",
+      "ackReceivedAt": 1792571697233.3,
+      "ackServerTime": "2026-10-21T08:34:57.228119Z",
+      "cardId": "94a9988f-f1bd-42e2-bb31-26efb486ea50",
+      "deadlineAt": "2026-10-21T11:36:57.215947+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [
+        {
+          "assetId": "5b7684b96175f75079bbc6042d3d38065c8d50af5fc303ae18cffc9179a36b1f",
+          "status": 200,
+          "bytes": 897321,
+          "type": "image/png"
+        },
+        {
+          "assetId": "91934dc8b07387543d2a43dd2dffeda45754b279c272666f4ae94ecbaaf7517f",
+          "status": 200,
+          "bytes": 462588,
+          "type": "image/png"
+        },
+        {
+          "assetId": "3ab860a271e0bd2a30f447c8ced4e57ae2afcf5d0044aeb445e5c0a48e1281c2",
+          "status": 200,
+          "bytes": 542980,
+          "type": "image/png"
+        },
+        {
+          "assetId": "e81a73687008c82ea761b3da06e3c40331aa2a86d167b7bbad1f703727c3f584",
+          "status": 200,
+          "bytes": 528665,
+          "type": "image/png"
+        },
+        {
+          "assetId": "a6dba7cf38a472acbf22f9febf3a0ea47cb4902ddbaeac8fe1813918ead09ec4",
+          "status": 200,
+          "bytes": 543233,
+          "type": "image/png"
+        },
+        {
+          "assetId": "60a70bf4c59b85840050707088b3d79d192c18e52613476ade7863cae528974a",
+          "status": 200,
+          "bytes": 515218,
+          "type": "image/png"
+        },
+        {
+          "assetId": "5453a8edbed1d8b67eef9532a474ab3690839852c11309dbfcce98093fc6d38b",
+          "status": 200,
+          "bytes": 446030,
+          "type": "image/png"
+        },
+        {
+          "assetId": "0b4b69784f8431f7d19ac8d4a8c449d8667ae34d6823ef34a22ac1fcb007827f",
+          "status": 200,
+          "bytes": 317534,
+          "type": "image/png"
+        },
+        {
+          "assetId": "3dc611f1847ec4c0c1b5b1091279328aa7f5c5aaf962e2e2eb8093c7f52f61d4",
+          "status": 200,
+          "bytes": 308547,
+          "type": "image/png"
+        },
+        {
+          "assetId": "70cf1205e8c5800d4d40a84f439e34323d4bdc6b61ee42441a7ab8991f0ffd9b",
+          "status": 200,
+          "bytes": 287113,
+          "type": "image/png"
+        },
+        {
+          "assetId": "68a507a5bd173a77b9255ba3291bf9416fd4d843f2cab0f53d7fc0bdae228fd2",
+          "status": 200,
+          "bytes": 274447,
+          "type": "image/png"
+        },
+        {
+          "assetId": "eb0d44bd6c5079e0fbad47811fa20cdfcc576bc11329d2b308a9a72308ae4da6",
+          "status": 200,
+          "bytes": 270959,
+          "type": "image/png"
+        },
+        {
+          "assetId": "049ddf95b1924d51e23be549261ab6e5cdc52ea609ef0c358732dbf4e17a727c",
+          "status": 200,
+          "bytes": 265654,
+          "type": "image/png"
+        },
+        {
+          "assetId": "3732a39b9499612f64f7edad6083759a9ff67939467bbac735271b14f4aced56",
+          "status": 200,
+          "bytes": 298406,
+          "type": "image/png"
+        },
+        {
+          "assetId": "1ebfaad40366788f77444b2e97dbcbfa88b9f1eb9adaaa577393caa1a486a915",
+          "status": 200,
+          "bytes": 322495,
+          "type": "image/png"
+        },
+        {
+          "assetId": "7e5aa26e41221b0657d896e11cb316276e091c5ee842bdc3c6963047488716a4",
+          "status": 200,
+          "bytes": 297519,
+          "type": "image/png"
+        },
+        {
+          "assetId": "2f7ba2e7b5287c155789eb979cbd74ecda5618911b2824d4e29ae9f2d8f6ccbd",
+          "status": 200,
+          "bytes": 298053,
+          "type": "image/png"
+        },
+        {
+          "assetId": "75210744947f2218a6dc4eaf4d911876e2b5d54cd6aac6311c56e0dd762cc66c",
+          "status": 200,
+          "bytes": 361258,
+          "type": "image/png"
+        },
+        {
+          "assetId": "2db1689042e02c7ac71709cb47a7deb6b4bc414456a0ae87c74ce60adc9bad4d",
+          "status": 200,
+          "bytes": 288092,
+          "type": "image/png"
+        },
+        {
+          "assetId": "f299b7a175eb2e65e1e65b040f2bd103e5ae8436bdaf55cb3d8b77c59222fdab",
+          "status": 200,
+          "bytes": 290497,
+          "type": "image/png"
+        },
+        {
+          "assetId": "63ae16a6e6a2b89ed62cfc9700d9afddeaae103838ac41ff18115bfc17062ae4",
+          "status": 200,
+          "bytes": 288881,
+          "type": "image/png"
+        },
+        {
+          "assetId": "d08a908b8e6a8ea5507f34e389942a90e85e82fabd9f2ac6d3c6e0e414e4a8b4",
+          "status": 200,
+          "bytes": 823887,
+          "type": "image/png"
+        },
+        {
+          "assetId": "d936e09573cbe4425f4275505a0f9eb0479bc2f86a642d60e65963d7614c0398",
+          "status": 200,
+          "bytes": 905308,
+          "type": "image/png"
+        },
+        {
+          "assetId": "7dcd0a95bfafed4fcee32dcceacb2d073d3aa615dd9f31eb0a9a2d98d2d90519",
+          "status": 200,
+          "bytes": 149292,
+          "type": "image/png"
+        },
+        {
+          "assetId": "0d81716b30da1e6eadc8a67eae620ff466aa59f77eee041da27b526ba07fbb6f",
+          "status": 200,
+          "bytes": 1465310,
+          "type": "image/png"
+        }
+      ],
+      "warnings": ["images_omitted", "text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 25,
+      "documentSHA256": "951297dd84db8a0f135c1300f8ea845ba058b0e6db22b98d4f1b1a51b1d8cacb",
+      "textCharacters": 11732,
+      "loadAfter": [56.1630859375, 54.35107421875, 60.16552734375],
+      "endedAt": "2026-10-21T08:35:25.336Z"
+    },
+    {
+      "article": "habr-avito",
+      "url": "https://habr.com/ru/companies/avito/articles/753244/",
+      "repetition": 5,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:35:25.781609+03:00",
+      "displayedAt": 1792571757628.4001,
+      "elapsedMS": 31847.400146484375,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [56.1630859375, 54.35107421875, 60.16552734375],
+      "startedAt": "2026-10-21T08:35:25.350Z",
+      "userId": "e6fdd81a-de86-4090-81c3-e354875afc13",
+      "ackReceivedAt": 1792571725799.2,
+      "ackServerTime": "2026-10-21T08:35:25.793465Z",
+      "cardId": "5cb8e25e-8a37-4697-ac81-5f8e1f48fa2f",
+      "deadlineAt": "2026-10-21T11:37:25.781609+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [
+        {
+          "assetId": "5b7684b96175f75079bbc6042d3d38065c8d50af5fc303ae18cffc9179a36b1f",
+          "status": 200,
+          "bytes": 897321,
+          "type": "image/png"
+        },
+        {
+          "assetId": "91934dc8b07387543d2a43dd2dffeda45754b279c272666f4ae94ecbaaf7517f",
+          "status": 200,
+          "bytes": 462588,
+          "type": "image/png"
+        },
+        {
+          "assetId": "3ab860a271e0bd2a30f447c8ced4e57ae2afcf5d0044aeb445e5c0a48e1281c2",
+          "status": 200,
+          "bytes": 542980,
+          "type": "image/png"
+        },
+        {
+          "assetId": "e81a73687008c82ea761b3da06e3c40331aa2a86d167b7bbad1f703727c3f584",
+          "status": 200,
+          "bytes": 528665,
+          "type": "image/png"
+        },
+        {
+          "assetId": "a6dba7cf38a472acbf22f9febf3a0ea47cb4902ddbaeac8fe1813918ead09ec4",
+          "status": 200,
+          "bytes": 543233,
+          "type": "image/png"
+        },
+        {
+          "assetId": "60a70bf4c59b85840050707088b3d79d192c18e52613476ade7863cae528974a",
+          "status": 200,
+          "bytes": 515218,
+          "type": "image/png"
+        },
+        {
+          "assetId": "5453a8edbed1d8b67eef9532a474ab3690839852c11309dbfcce98093fc6d38b",
+          "status": 200,
+          "bytes": 446030,
+          "type": "image/png"
+        },
+        {
+          "assetId": "0b4b69784f8431f7d19ac8d4a8c449d8667ae34d6823ef34a22ac1fcb007827f",
+          "status": 200,
+          "bytes": 317534,
+          "type": "image/png"
+        },
+        {
+          "assetId": "3dc611f1847ec4c0c1b5b1091279328aa7f5c5aaf962e2e2eb8093c7f52f61d4",
+          "status": 200,
+          "bytes": 308547,
+          "type": "image/png"
+        },
+        {
+          "assetId": "70cf1205e8c5800d4d40a84f439e34323d4bdc6b61ee42441a7ab8991f0ffd9b",
+          "status": 200,
+          "bytes": 287113,
+          "type": "image/png"
+        },
+        {
+          "assetId": "68a507a5bd173a77b9255ba3291bf9416fd4d843f2cab0f53d7fc0bdae228fd2",
+          "status": 200,
+          "bytes": 274447,
+          "type": "image/png"
+        },
+        {
+          "assetId": "eb0d44bd6c5079e0fbad47811fa20cdfcc576bc11329d2b308a9a72308ae4da6",
+          "status": 200,
+          "bytes": 270959,
+          "type": "image/png"
+        },
+        {
+          "assetId": "049ddf95b1924d51e23be549261ab6e5cdc52ea609ef0c358732dbf4e17a727c",
+          "status": 200,
+          "bytes": 265654,
+          "type": "image/png"
+        },
+        {
+          "assetId": "3732a39b9499612f64f7edad6083759a9ff67939467bbac735271b14f4aced56",
+          "status": 200,
+          "bytes": 298406,
+          "type": "image/png"
+        },
+        {
+          "assetId": "1ebfaad40366788f77444b2e97dbcbfa88b9f1eb9adaaa577393caa1a486a915",
+          "status": 200,
+          "bytes": 322495,
+          "type": "image/png"
+        },
+        {
+          "assetId": "7e5aa26e41221b0657d896e11cb316276e091c5ee842bdc3c6963047488716a4",
+          "status": 200,
+          "bytes": 297519,
+          "type": "image/png"
+        },
+        {
+          "assetId": "2f7ba2e7b5287c155789eb979cbd74ecda5618911b2824d4e29ae9f2d8f6ccbd",
+          "status": 200,
+          "bytes": 298053,
+          "type": "image/png"
+        },
+        {
+          "assetId": "75210744947f2218a6dc4eaf4d911876e2b5d54cd6aac6311c56e0dd762cc66c",
+          "status": 200,
+          "bytes": 361258,
+          "type": "image/png"
+        },
+        {
+          "assetId": "2db1689042e02c7ac71709cb47a7deb6b4bc414456a0ae87c74ce60adc9bad4d",
+          "status": 200,
+          "bytes": 288092,
+          "type": "image/png"
+        },
+        {
+          "assetId": "f299b7a175eb2e65e1e65b040f2bd103e5ae8436bdaf55cb3d8b77c59222fdab",
+          "status": 200,
+          "bytes": 290497,
+          "type": "image/png"
+        },
+        {
+          "assetId": "63ae16a6e6a2b89ed62cfc9700d9afddeaae103838ac41ff18115bfc17062ae4",
+          "status": 200,
+          "bytes": 288881,
+          "type": "image/png"
+        },
+        {
+          "assetId": "d08a908b8e6a8ea5507f34e389942a90e85e82fabd9f2ac6d3c6e0e414e4a8b4",
+          "status": 200,
+          "bytes": 823887,
+          "type": "image/png"
+        },
+        {
+          "assetId": "d936e09573cbe4425f4275505a0f9eb0479bc2f86a642d60e65963d7614c0398",
+          "status": 200,
+          "bytes": 905308,
+          "type": "image/png"
+        },
+        {
+          "assetId": "7dcd0a95bfafed4fcee32dcceacb2d073d3aa615dd9f31eb0a9a2d98d2d90519",
+          "status": 200,
+          "bytes": 149292,
+          "type": "image/png"
+        },
+        {
+          "assetId": "0d81716b30da1e6eadc8a67eae620ff466aa59f77eee041da27b526ba07fbb6f",
+          "status": 200,
+          "bytes": 1465310,
+          "type": "image/png"
+        }
+      ],
+      "warnings": ["images_omitted", "text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 25,
+      "documentSHA256": "951297dd84db8a0f135c1300f8ea845ba058b0e6db22b98d4f1b1a51b1d8cacb",
+      "textCharacters": 11732,
+      "loadAfter": [53.58544921875, 53.837890625, 59.7734375],
+      "endedAt": "2026-10-21T08:35:58.633Z"
+    },
+    {
+      "article": "habr-avito",
+      "url": "https://habr.com/ru/companies/avito/articles/753244/",
+      "repetition": 6,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:35:58.954456+03:00",
+      "displayedAt": 1792571784874.7,
+      "elapsedMS": 25920.699951171875,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [53.58544921875, 53.837890625, 59.7734375],
+      "startedAt": "2026-10-21T08:35:58.651Z",
+      "userId": "40b0c5d3-f6d4-45ea-be69-5031202e286f",
+      "ackReceivedAt": 1792571758964.3,
+      "ackServerTime": "2026-10-21T08:35:58.960329Z",
+      "cardId": "b4f4cb3d-14de-4a66-ad84-78a4ed19d637",
+      "deadlineAt": "2026-10-21T11:37:58.954456+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [
+        {
+          "assetId": "5b7684b96175f75079bbc6042d3d38065c8d50af5fc303ae18cffc9179a36b1f",
+          "status": 200,
+          "bytes": 897321,
+          "type": "image/png"
+        },
+        {
+          "assetId": "91934dc8b07387543d2a43dd2dffeda45754b279c272666f4ae94ecbaaf7517f",
+          "status": 200,
+          "bytes": 462588,
+          "type": "image/png"
+        },
+        {
+          "assetId": "3ab860a271e0bd2a30f447c8ced4e57ae2afcf5d0044aeb445e5c0a48e1281c2",
+          "status": 200,
+          "bytes": 542980,
+          "type": "image/png"
+        },
+        {
+          "assetId": "e81a73687008c82ea761b3da06e3c40331aa2a86d167b7bbad1f703727c3f584",
+          "status": 200,
+          "bytes": 528665,
+          "type": "image/png"
+        },
+        {
+          "assetId": "a6dba7cf38a472acbf22f9febf3a0ea47cb4902ddbaeac8fe1813918ead09ec4",
+          "status": 200,
+          "bytes": 543233,
+          "type": "image/png"
+        },
+        {
+          "assetId": "60a70bf4c59b85840050707088b3d79d192c18e52613476ade7863cae528974a",
+          "status": 200,
+          "bytes": 515218,
+          "type": "image/png"
+        },
+        {
+          "assetId": "5453a8edbed1d8b67eef9532a474ab3690839852c11309dbfcce98093fc6d38b",
+          "status": 200,
+          "bytes": 446030,
+          "type": "image/png"
+        },
+        {
+          "assetId": "0b4b69784f8431f7d19ac8d4a8c449d8667ae34d6823ef34a22ac1fcb007827f",
+          "status": 200,
+          "bytes": 317534,
+          "type": "image/png"
+        },
+        {
+          "assetId": "3dc611f1847ec4c0c1b5b1091279328aa7f5c5aaf962e2e2eb8093c7f52f61d4",
+          "status": 200,
+          "bytes": 308547,
+          "type": "image/png"
+        },
+        {
+          "assetId": "70cf1205e8c5800d4d40a84f439e34323d4bdc6b61ee42441a7ab8991f0ffd9b",
+          "status": 200,
+          "bytes": 287113,
+          "type": "image/png"
+        },
+        {
+          "assetId": "68a507a5bd173a77b9255ba3291bf9416fd4d843f2cab0f53d7fc0bdae228fd2",
+          "status": 200,
+          "bytes": 274447,
+          "type": "image/png"
+        },
+        {
+          "assetId": "eb0d44bd6c5079e0fbad47811fa20cdfcc576bc11329d2b308a9a72308ae4da6",
+          "status": 200,
+          "bytes": 270959,
+          "type": "image/png"
+        },
+        {
+          "assetId": "049ddf95b1924d51e23be549261ab6e5cdc52ea609ef0c358732dbf4e17a727c",
+          "status": 200,
+          "bytes": 265654,
+          "type": "image/png"
+        },
+        {
+          "assetId": "3732a39b9499612f64f7edad6083759a9ff67939467bbac735271b14f4aced56",
+          "status": 200,
+          "bytes": 298406,
+          "type": "image/png"
+        },
+        {
+          "assetId": "1ebfaad40366788f77444b2e97dbcbfa88b9f1eb9adaaa577393caa1a486a915",
+          "status": 200,
+          "bytes": 322495,
+          "type": "image/png"
+        },
+        {
+          "assetId": "7e5aa26e41221b0657d896e11cb316276e091c5ee842bdc3c6963047488716a4",
+          "status": 200,
+          "bytes": 297519,
+          "type": "image/png"
+        },
+        {
+          "assetId": "2f7ba2e7b5287c155789eb979cbd74ecda5618911b2824d4e29ae9f2d8f6ccbd",
+          "status": 200,
+          "bytes": 298053,
+          "type": "image/png"
+        },
+        {
+          "assetId": "75210744947f2218a6dc4eaf4d911876e2b5d54cd6aac6311c56e0dd762cc66c",
+          "status": 200,
+          "bytes": 361258,
+          "type": "image/png"
+        },
+        {
+          "assetId": "2db1689042e02c7ac71709cb47a7deb6b4bc414456a0ae87c74ce60adc9bad4d",
+          "status": 200,
+          "bytes": 288092,
+          "type": "image/png"
+        },
+        {
+          "assetId": "f299b7a175eb2e65e1e65b040f2bd103e5ae8436bdaf55cb3d8b77c59222fdab",
+          "status": 200,
+          "bytes": 290497,
+          "type": "image/png"
+        },
+        {
+          "assetId": "63ae16a6e6a2b89ed62cfc9700d9afddeaae103838ac41ff18115bfc17062ae4",
+          "status": 200,
+          "bytes": 288881,
+          "type": "image/png"
+        },
+        {
+          "assetId": "d08a908b8e6a8ea5507f34e389942a90e85e82fabd9f2ac6d3c6e0e414e4a8b4",
+          "status": 200,
+          "bytes": 823887,
+          "type": "image/png"
+        },
+        {
+          "assetId": "d936e09573cbe4425f4275505a0f9eb0479bc2f86a642d60e65963d7614c0398",
+          "status": 200,
+          "bytes": 905308,
+          "type": "image/png"
+        },
+        {
+          "assetId": "7dcd0a95bfafed4fcee32dcceacb2d073d3aa615dd9f31eb0a9a2d98d2d90519",
+          "status": 200,
+          "bytes": 149292,
+          "type": "image/png"
+        },
+        {
+          "assetId": "0d81716b30da1e6eadc8a67eae620ff466aa59f77eee041da27b526ba07fbb6f",
+          "status": 200,
+          "bytes": 1465310,
+          "type": "image/png"
+        }
+      ],
+      "warnings": ["images_omitted", "text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 25,
+      "documentSHA256": "951297dd84db8a0f135c1300f8ea845ba058b0e6db22b98d4f1b1a51b1d8cacb",
+      "textCharacters": 11732,
+      "loadAfter": [49.90966796875, 52.96533203125, 59.2529296875],
+      "endedAt": "2026-10-21T08:36:26.286Z"
+    },
+    {
+      "article": "habr-avito",
+      "url": "https://habr.com/ru/companies/avito/articles/753244/",
+      "repetition": 7,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:36:26.67211+03:00",
+      "displayedAt": 1792571813150.5,
+      "elapsedMS": 26478.5,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [49.90966796875, 52.96533203125, 59.2529296875],
+      "startedAt": "2026-10-21T08:36:26.301Z",
+      "userId": "74ee1695-de0e-48eb-9453-bb71092ccb3b",
+      "ackReceivedAt": 1792571786690.8,
+      "ackServerTime": "2026-10-21T08:36:26.676855Z",
+      "cardId": "72eed18c-c6b3-4db1-bd88-7878e3ff1e05",
+      "deadlineAt": "2026-10-21T11:38:26.67211+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [
+        {
+          "assetId": "5b7684b96175f75079bbc6042d3d38065c8d50af5fc303ae18cffc9179a36b1f",
+          "status": 200,
+          "bytes": 897321,
+          "type": "image/png"
+        },
+        {
+          "assetId": "91934dc8b07387543d2a43dd2dffeda45754b279c272666f4ae94ecbaaf7517f",
+          "status": 200,
+          "bytes": 462588,
+          "type": "image/png"
+        },
+        {
+          "assetId": "3ab860a271e0bd2a30f447c8ced4e57ae2afcf5d0044aeb445e5c0a48e1281c2",
+          "status": 200,
+          "bytes": 542980,
+          "type": "image/png"
+        },
+        {
+          "assetId": "e81a73687008c82ea761b3da06e3c40331aa2a86d167b7bbad1f703727c3f584",
+          "status": 200,
+          "bytes": 528665,
+          "type": "image/png"
+        },
+        {
+          "assetId": "a6dba7cf38a472acbf22f9febf3a0ea47cb4902ddbaeac8fe1813918ead09ec4",
+          "status": 200,
+          "bytes": 543233,
+          "type": "image/png"
+        },
+        {
+          "assetId": "60a70bf4c59b85840050707088b3d79d192c18e52613476ade7863cae528974a",
+          "status": 200,
+          "bytes": 515218,
+          "type": "image/png"
+        },
+        {
+          "assetId": "5453a8edbed1d8b67eef9532a474ab3690839852c11309dbfcce98093fc6d38b",
+          "status": 200,
+          "bytes": 446030,
+          "type": "image/png"
+        },
+        {
+          "assetId": "0b4b69784f8431f7d19ac8d4a8c449d8667ae34d6823ef34a22ac1fcb007827f",
+          "status": 200,
+          "bytes": 317534,
+          "type": "image/png"
+        },
+        {
+          "assetId": "3dc611f1847ec4c0c1b5b1091279328aa7f5c5aaf962e2e2eb8093c7f52f61d4",
+          "status": 200,
+          "bytes": 308547,
+          "type": "image/png"
+        },
+        {
+          "assetId": "70cf1205e8c5800d4d40a84f439e34323d4bdc6b61ee42441a7ab8991f0ffd9b",
+          "status": 200,
+          "bytes": 287113,
+          "type": "image/png"
+        },
+        {
+          "assetId": "68a507a5bd173a77b9255ba3291bf9416fd4d843f2cab0f53d7fc0bdae228fd2",
+          "status": 200,
+          "bytes": 274447,
+          "type": "image/png"
+        },
+        {
+          "assetId": "eb0d44bd6c5079e0fbad47811fa20cdfcc576bc11329d2b308a9a72308ae4da6",
+          "status": 200,
+          "bytes": 270959,
+          "type": "image/png"
+        },
+        {
+          "assetId": "049ddf95b1924d51e23be549261ab6e5cdc52ea609ef0c358732dbf4e17a727c",
+          "status": 200,
+          "bytes": 265654,
+          "type": "image/png"
+        },
+        {
+          "assetId": "3732a39b9499612f64f7edad6083759a9ff67939467bbac735271b14f4aced56",
+          "status": 200,
+          "bytes": 298406,
+          "type": "image/png"
+        },
+        {
+          "assetId": "1ebfaad40366788f77444b2e97dbcbfa88b9f1eb9adaaa577393caa1a486a915",
+          "status": 200,
+          "bytes": 322495,
+          "type": "image/png"
+        },
+        {
+          "assetId": "7e5aa26e41221b0657d896e11cb316276e091c5ee842bdc3c6963047488716a4",
+          "status": 200,
+          "bytes": 297519,
+          "type": "image/png"
+        },
+        {
+          "assetId": "2f7ba2e7b5287c155789eb979cbd74ecda5618911b2824d4e29ae9f2d8f6ccbd",
+          "status": 200,
+          "bytes": 298053,
+          "type": "image/png"
+        },
+        {
+          "assetId": "75210744947f2218a6dc4eaf4d911876e2b5d54cd6aac6311c56e0dd762cc66c",
+          "status": 200,
+          "bytes": 361258,
+          "type": "image/png"
+        },
+        {
+          "assetId": "2db1689042e02c7ac71709cb47a7deb6b4bc414456a0ae87c74ce60adc9bad4d",
+          "status": 200,
+          "bytes": 288092,
+          "type": "image/png"
+        },
+        {
+          "assetId": "f299b7a175eb2e65e1e65b040f2bd103e5ae8436bdaf55cb3d8b77c59222fdab",
+          "status": 200,
+          "bytes": 290497,
+          "type": "image/png"
+        },
+        {
+          "assetId": "63ae16a6e6a2b89ed62cfc9700d9afddeaae103838ac41ff18115bfc17062ae4",
+          "status": 200,
+          "bytes": 288881,
+          "type": "image/png"
+        },
+        {
+          "assetId": "d08a908b8e6a8ea5507f34e389942a90e85e82fabd9f2ac6d3c6e0e414e4a8b4",
+          "status": 200,
+          "bytes": 823887,
+          "type": "image/png"
+        },
+        {
+          "assetId": "d936e09573cbe4425f4275505a0f9eb0479bc2f86a642d60e65963d7614c0398",
+          "status": 200,
+          "bytes": 905308,
+          "type": "image/png"
+        },
+        {
+          "assetId": "7dcd0a95bfafed4fcee32dcceacb2d073d3aa615dd9f31eb0a9a2d98d2d90519",
+          "status": 200,
+          "bytes": 149292,
+          "type": "image/png"
+        },
+        {
+          "assetId": "0d81716b30da1e6eadc8a67eae620ff466aa59f77eee041da27b526ba07fbb6f",
+          "status": 200,
+          "bytes": 1465310,
+          "type": "image/png"
+        }
+      ],
+      "warnings": ["images_omitted", "text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 25,
+      "documentSHA256": "951297dd84db8a0f135c1300f8ea845ba058b0e6db22b98d4f1b1a51b1d8cacb",
+      "textCharacters": 11732,
+      "loadAfter": [61.03271484375, 55.28173828125, 59.8681640625],
+      "endedAt": "2026-10-21T08:36:59.974Z"
+    },
+    {
+      "article": "habr-avito",
+      "url": "https://habr.com/ru/companies/avito/articles/753244/",
+      "repetition": 8,
+      "state": "failed",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:37:03.267902+03:00",
+      "displayedAt": 1792571943710.5,
+      "elapsedMS": 120443.5,
+      "documentUsable": false,
+      "mediaComplete": false,
+      "loadBefore": [61.03271484375, 55.28173828125, 59.8681640625],
+      "startedAt": "2026-10-21T08:36:59.995Z",
+      "userId": "52c37036-dc05-4844-82c7-f0b5a8f81e3f",
+      "ackReceivedAt": 1792571823358.4,
+      "ackServerTime": "2026-10-21T08:37:03.348925Z",
+      "cardId": "96872976-6d2e-46f0-b2d2-f091b5c30a20",
+      "deadlineAt": "2026-10-21T11:39:03.267902+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": "timeout",
+      "loadAfter": [53.71484375, 58.0732421875, 60.60205078125],
+      "endedAt": "2026-10-21T08:39:03.805Z"
+    },
+    {
+      "article": "habr-avito",
+      "url": "https://habr.com/ru/companies/avito/articles/753244/",
+      "repetition": 9,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:39:04.791388+03:00",
+      "displayedAt": 1792571976684.5,
+      "elapsedMS": 31893.5,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [53.71484375, 58.0732421875, 60.60205078125],
+      "startedAt": "2026-10-21T08:39:03.862Z",
+      "userId": "54568f04-a070-4699-86d9-f153203f28d4",
+      "ackReceivedAt": 1792571944820.6,
+      "ackServerTime": "2026-10-21T08:39:04.815164Z",
+      "cardId": "5e4ed0be-8752-4aae-b15e-fae2ac876e01",
+      "deadlineAt": "2026-10-21T11:41:04.791388+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [
+        {
+          "assetId": "5b7684b96175f75079bbc6042d3d38065c8d50af5fc303ae18cffc9179a36b1f",
+          "status": 200,
+          "bytes": 897321,
+          "type": "image/png"
+        },
+        {
+          "assetId": "91934dc8b07387543d2a43dd2dffeda45754b279c272666f4ae94ecbaaf7517f",
+          "status": 200,
+          "bytes": 462588,
+          "type": "image/png"
+        },
+        {
+          "assetId": "3ab860a271e0bd2a30f447c8ced4e57ae2afcf5d0044aeb445e5c0a48e1281c2",
+          "status": 200,
+          "bytes": 542980,
+          "type": "image/png"
+        },
+        {
+          "assetId": "e81a73687008c82ea761b3da06e3c40331aa2a86d167b7bbad1f703727c3f584",
+          "status": 200,
+          "bytes": 528665,
+          "type": "image/png"
+        },
+        {
+          "assetId": "a6dba7cf38a472acbf22f9febf3a0ea47cb4902ddbaeac8fe1813918ead09ec4",
+          "status": 200,
+          "bytes": 543233,
+          "type": "image/png"
+        },
+        {
+          "assetId": "60a70bf4c59b85840050707088b3d79d192c18e52613476ade7863cae528974a",
+          "status": 200,
+          "bytes": 515218,
+          "type": "image/png"
+        },
+        {
+          "assetId": "5453a8edbed1d8b67eef9532a474ab3690839852c11309dbfcce98093fc6d38b",
+          "status": 200,
+          "bytes": 446030,
+          "type": "image/png"
+        },
+        {
+          "assetId": "0b4b69784f8431f7d19ac8d4a8c449d8667ae34d6823ef34a22ac1fcb007827f",
+          "status": 200,
+          "bytes": 317534,
+          "type": "image/png"
+        },
+        {
+          "assetId": "3dc611f1847ec4c0c1b5b1091279328aa7f5c5aaf962e2e2eb8093c7f52f61d4",
+          "status": 200,
+          "bytes": 308547,
+          "type": "image/png"
+        },
+        {
+          "assetId": "70cf1205e8c5800d4d40a84f439e34323d4bdc6b61ee42441a7ab8991f0ffd9b",
+          "status": 200,
+          "bytes": 287113,
+          "type": "image/png"
+        },
+        {
+          "assetId": "68a507a5bd173a77b9255ba3291bf9416fd4d843f2cab0f53d7fc0bdae228fd2",
+          "status": 200,
+          "bytes": 274447,
+          "type": "image/png"
+        },
+        {
+          "assetId": "eb0d44bd6c5079e0fbad47811fa20cdfcc576bc11329d2b308a9a72308ae4da6",
+          "status": 200,
+          "bytes": 270959,
+          "type": "image/png"
+        },
+        {
+          "assetId": "049ddf95b1924d51e23be549261ab6e5cdc52ea609ef0c358732dbf4e17a727c",
+          "status": 200,
+          "bytes": 265654,
+          "type": "image/png"
+        },
+        {
+          "assetId": "3732a39b9499612f64f7edad6083759a9ff67939467bbac735271b14f4aced56",
+          "status": 200,
+          "bytes": 298406,
+          "type": "image/png"
+        },
+        {
+          "assetId": "1ebfaad40366788f77444b2e97dbcbfa88b9f1eb9adaaa577393caa1a486a915",
+          "status": 200,
+          "bytes": 322495,
+          "type": "image/png"
+        },
+        {
+          "assetId": "7e5aa26e41221b0657d896e11cb316276e091c5ee842bdc3c6963047488716a4",
+          "status": 200,
+          "bytes": 297519,
+          "type": "image/png"
+        },
+        {
+          "assetId": "2f7ba2e7b5287c155789eb979cbd74ecda5618911b2824d4e29ae9f2d8f6ccbd",
+          "status": 200,
+          "bytes": 298053,
+          "type": "image/png"
+        },
+        {
+          "assetId": "75210744947f2218a6dc4eaf4d911876e2b5d54cd6aac6311c56e0dd762cc66c",
+          "status": 200,
+          "bytes": 361258,
+          "type": "image/png"
+        },
+        {
+          "assetId": "2db1689042e02c7ac71709cb47a7deb6b4bc414456a0ae87c74ce60adc9bad4d",
+          "status": 200,
+          "bytes": 288092,
+          "type": "image/png"
+        },
+        {
+          "assetId": "f299b7a175eb2e65e1e65b040f2bd103e5ae8436bdaf55cb3d8b77c59222fdab",
+          "status": 200,
+          "bytes": 290497,
+          "type": "image/png"
+        },
+        {
+          "assetId": "63ae16a6e6a2b89ed62cfc9700d9afddeaae103838ac41ff18115bfc17062ae4",
+          "status": 200,
+          "bytes": 288881,
+          "type": "image/png"
+        },
+        {
+          "assetId": "d08a908b8e6a8ea5507f34e389942a90e85e82fabd9f2ac6d3c6e0e414e4a8b4",
+          "status": 200,
+          "bytes": 823887,
+          "type": "image/png"
+        },
+        {
+          "assetId": "d936e09573cbe4425f4275505a0f9eb0479bc2f86a642d60e65963d7614c0398",
+          "status": 200,
+          "bytes": 905308,
+          "type": "image/png"
+        },
+        {
+          "assetId": "7dcd0a95bfafed4fcee32dcceacb2d073d3aa615dd9f31eb0a9a2d98d2d90519",
+          "status": 200,
+          "bytes": 149292,
+          "type": "image/png"
+        },
+        {
+          "assetId": "0d81716b30da1e6eadc8a67eae620ff466aa59f77eee041da27b526ba07fbb6f",
+          "status": 200,
+          "bytes": 1465310,
+          "type": "image/png"
+        }
+      ],
+      "warnings": ["images_omitted", "text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 25,
+      "documentSHA256": "951297dd84db8a0f135c1300f8ea845ba058b0e6db22b98d4f1b1a51b1d8cacb",
+      "textCharacters": 11732,
+      "loadAfter": [50.4482421875, 56.81982421875, 60.04443359375],
+      "endedAt": "2026-10-21T08:39:37.939Z"
+    },
+    {
+      "article": "habr-avito",
+      "url": "https://habr.com/ru/companies/avito/articles/753244/",
+      "repetition": 10,
+      "state": "ready",
+      "httpStatus": 201,
+      "created": true,
+      "generation": 1,
+      "confirmedAt": "2026-10-21T11:39:38.303938+03:00",
+      "displayedAt": 1792572000220.6,
+      "elapsedMS": 21917.60009765625,
+      "documentUsable": true,
+      "mediaComplete": true,
+      "loadBefore": [50.4482421875, 56.81982421875, 60.04443359375],
+      "startedAt": "2026-10-21T08:39:37.951Z",
+      "userId": "a062edec-4089-4ba2-a37a-9b00b1051397",
+      "ackReceivedAt": 1792571978323.6,
+      "ackServerTime": "2026-10-21T08:39:38.319258Z",
+      "cardId": "e912c401-8aa3-4402-ac37-47becd5f884a",
+      "deadlineAt": "2026-10-21T11:41:38.303938+03:00",
+      "visibilityAtObservation": "visible",
+      "reason": null,
+      "assets": [
+        {
+          "assetId": "5b7684b96175f75079bbc6042d3d38065c8d50af5fc303ae18cffc9179a36b1f",
+          "status": 200,
+          "bytes": 897321,
+          "type": "image/png"
+        },
+        {
+          "assetId": "91934dc8b07387543d2a43dd2dffeda45754b279c272666f4ae94ecbaaf7517f",
+          "status": 200,
+          "bytes": 462588,
+          "type": "image/png"
+        },
+        {
+          "assetId": "3ab860a271e0bd2a30f447c8ced4e57ae2afcf5d0044aeb445e5c0a48e1281c2",
+          "status": 200,
+          "bytes": 542980,
+          "type": "image/png"
+        },
+        {
+          "assetId": "e81a73687008c82ea761b3da06e3c40331aa2a86d167b7bbad1f703727c3f584",
+          "status": 200,
+          "bytes": 528665,
+          "type": "image/png"
+        },
+        {
+          "assetId": "a6dba7cf38a472acbf22f9febf3a0ea47cb4902ddbaeac8fe1813918ead09ec4",
+          "status": 200,
+          "bytes": 543233,
+          "type": "image/png"
+        },
+        {
+          "assetId": "60a70bf4c59b85840050707088b3d79d192c18e52613476ade7863cae528974a",
+          "status": 200,
+          "bytes": 515218,
+          "type": "image/png"
+        },
+        {
+          "assetId": "5453a8edbed1d8b67eef9532a474ab3690839852c11309dbfcce98093fc6d38b",
+          "status": 200,
+          "bytes": 446030,
+          "type": "image/png"
+        },
+        {
+          "assetId": "0b4b69784f8431f7d19ac8d4a8c449d8667ae34d6823ef34a22ac1fcb007827f",
+          "status": 200,
+          "bytes": 317534,
+          "type": "image/png"
+        },
+        {
+          "assetId": "3dc611f1847ec4c0c1b5b1091279328aa7f5c5aaf962e2e2eb8093c7f52f61d4",
+          "status": 200,
+          "bytes": 308547,
+          "type": "image/png"
+        },
+        {
+          "assetId": "70cf1205e8c5800d4d40a84f439e34323d4bdc6b61ee42441a7ab8991f0ffd9b",
+          "status": 200,
+          "bytes": 287113,
+          "type": "image/png"
+        },
+        {
+          "assetId": "68a507a5bd173a77b9255ba3291bf9416fd4d843f2cab0f53d7fc0bdae228fd2",
+          "status": 200,
+          "bytes": 274447,
+          "type": "image/png"
+        },
+        {
+          "assetId": "eb0d44bd6c5079e0fbad47811fa20cdfcc576bc11329d2b308a9a72308ae4da6",
+          "status": 200,
+          "bytes": 270959,
+          "type": "image/png"
+        },
+        {
+          "assetId": "049ddf95b1924d51e23be549261ab6e5cdc52ea609ef0c358732dbf4e17a727c",
+          "status": 200,
+          "bytes": 265654,
+          "type": "image/png"
+        },
+        {
+          "assetId": "3732a39b9499612f64f7edad6083759a9ff67939467bbac735271b14f4aced56",
+          "status": 200,
+          "bytes": 298406,
+          "type": "image/png"
+        },
+        {
+          "assetId": "1ebfaad40366788f77444b2e97dbcbfa88b9f1eb9adaaa577393caa1a486a915",
+          "status": 200,
+          "bytes": 322495,
+          "type": "image/png"
+        },
+        {
+          "assetId": "7e5aa26e41221b0657d896e11cb316276e091c5ee842bdc3c6963047488716a4",
+          "status": 200,
+          "bytes": 297519,
+          "type": "image/png"
+        },
+        {
+          "assetId": "2f7ba2e7b5287c155789eb979cbd74ecda5618911b2824d4e29ae9f2d8f6ccbd",
+          "status": 200,
+          "bytes": 298053,
+          "type": "image/png"
+        },
+        {
+          "assetId": "75210744947f2218a6dc4eaf4d911876e2b5d54cd6aac6311c56e0dd762cc66c",
+          "status": 200,
+          "bytes": 361258,
+          "type": "image/png"
+        },
+        {
+          "assetId": "2db1689042e02c7ac71709cb47a7deb6b4bc414456a0ae87c74ce60adc9bad4d",
+          "status": 200,
+          "bytes": 288092,
+          "type": "image/png"
+        },
+        {
+          "assetId": "f299b7a175eb2e65e1e65b040f2bd103e5ae8436bdaf55cb3d8b77c59222fdab",
+          "status": 200,
+          "bytes": 290497,
+          "type": "image/png"
+        },
+        {
+          "assetId": "63ae16a6e6a2b89ed62cfc9700d9afddeaae103838ac41ff18115bfc17062ae4",
+          "status": 200,
+          "bytes": 288881,
+          "type": "image/png"
+        },
+        {
+          "assetId": "d08a908b8e6a8ea5507f34e389942a90e85e82fabd9f2ac6d3c6e0e414e4a8b4",
+          "status": 200,
+          "bytes": 823887,
+          "type": "image/png"
+        },
+        {
+          "assetId": "d936e09573cbe4425f4275505a0f9eb0479bc2f86a642d60e65963d7614c0398",
+          "status": 200,
+          "bytes": 905308,
+          "type": "image/png"
+        },
+        {
+          "assetId": "7dcd0a95bfafed4fcee32dcceacb2d073d3aa615dd9f31eb0a9a2d98d2d90519",
+          "status": 200,
+          "bytes": 149292,
+          "type": "image/png"
+        },
+        {
+          "assetId": "0d81716b30da1e6eadc8a67eae620ff466aa59f77eee041da27b526ba07fbb6f",
+          "status": 200,
+          "bytes": 1465310,
+          "type": "image/png"
+        }
+      ],
+      "warnings": ["images_omitted", "text_incomplete"],
+      "omittedImages": 0,
+      "imagePositions": 25,
+      "documentSHA256": "951297dd84db8a0f135c1300f8ea845ba058b0e6db22b98d4f1b1a51b1d8cacb",
+      "textCharacters": 11732,
+      "loadAfter": [45.48095703125, 55.13232421875, 59.34130859375],
+      "endedAt": "2026-10-21T08:40:01.565Z"
+    }
+  ]
+}

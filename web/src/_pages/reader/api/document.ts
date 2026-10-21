@@ -1,5 +1,35 @@
 export type Block = {
-  kind: "paragraph" | "heading" | "list" | "quote" | "code";
+  kind:
+    | "image"
+    | "figure"
+    | "figcaption"
+    | "paragraph"
+    | "heading"
+    | "list"
+    | "quote"
+    | "code"
+    | "text"
+    | "strong"
+    | "em"
+    | "inline_code"
+    | "link"
+    | "br"
+    | "list_item"
+    | "table"
+    | "table_head"
+    | "table_body"
+    | "table_foot"
+    | "table_row"
+    | "cell"
+    | "header_cell"
+    | "caption"
+    | "details"
+    | "summary";
+  asset_id?: string;
+  alt?: string;
+  omission?: string;
+  children?: Block[];
+  href?: string;
   text?: string;
   language?: string;
   level?: number;
@@ -11,7 +41,7 @@ export interface ArchivedArticle {
   submitted_url: string;
   generation: number;
   warnings: string[];
-  document: { schema_version: 1; blocks: Block[] };
+  document: { schema_version: 1 | 2; blocks: Block[] };
 }
 export class ReaderError extends Error {
   constructor(
@@ -41,12 +71,14 @@ export async function readArticle(
     !data ||
     typeof data.title !== "string" ||
     typeof data.submitted_url !== "string" ||
-    !/^https?:\/\//i.test(data.submitted_url) ||
-    data.document?.schema_version !== 1 ||
+    !safeHref(data.submitted_url) ||
+    ![1, 2].includes(data.document?.schema_version) ||
     !Array.isArray(data.document.blocks) ||
     !data.document.blocks.length ||
     data.document.blocks.length > 10000 ||
-    !data.document.blocks.every(validBlock)
+    !(data.document.schema_version === 1
+      ? data.document.blocks.every(validBlock)
+      : validTree(data.document.blocks))
   )
     throw new ReaderError("unsupported_document", 409);
   return data;
@@ -73,4 +105,200 @@ function validBlock(block: Block) {
     (block.kind !== "heading" ||
       (Number.isInteger(block.level) && block.level! >= 2 && block.level! <= 6))
   );
+}
+
+function safeHref(value: unknown): value is string {
+  if (typeof value !== "string" || /[\r\n\t]/.test(value)) return false;
+  try {
+    const u = new URL(value);
+    return (
+      ["http:", "https:"].includes(u.protocol) &&
+      !!u.hostname &&
+      !u.username &&
+      !u.password
+    );
+  } catch {
+    return false;
+  }
+}
+function validTree(blocks: Block[]): boolean {
+  let count = 0,
+    size = 0;
+  const inline = new Set([
+    "text",
+    "strong",
+    "em",
+    "inline_code",
+    "link",
+    "br",
+    "image",
+  ]);
+  const containers = new Set([
+    "figure",
+    "figcaption",
+    "paragraph",
+    "heading",
+    "quote",
+    "list",
+    "list_item",
+    "table",
+    "table_head",
+    "table_body",
+    "table_foot",
+    "table_row",
+    "cell",
+    "header_cell",
+    "caption",
+    "details",
+    "summary",
+    "strong",
+    "em",
+    "inline_code",
+    "link",
+  ]);
+  const structural = new Set([
+    "list_item",
+    "table_head",
+    "table_body",
+    "table_foot",
+    "table_row",
+    "cell",
+    "header_cell",
+    "caption",
+    "summary",
+  ]);
+  function visit(b: Block, parent: string, depth: number): boolean {
+    if (!b || typeof b !== "object" || ++count > 10000 || depth > 64)
+      return false;
+    if (
+      Object.keys(b).some(
+        (k) =>
+          ![
+            "asset_id",
+            "alt",
+            "omission",
+            "kind",
+            "children",
+            "href",
+            "language",
+            "text",
+            "level",
+            "ordered",
+          ].includes(k),
+      )
+    )
+      return false;
+    if (
+      [b.alt, b.asset_id, b.omission].some(
+        (v) => v !== undefined && typeof v !== "string",
+      )
+    )
+      return false;
+    if (
+      b.kind !== "image" &&
+      [b.alt, b.asset_id, b.omission].some((v) => v !== undefined)
+    )
+      return false;
+    size +=
+      (b.text?.length ?? 0) + (b.href?.length ?? 0) + (b.alt?.length ?? 0);
+    if (
+      size > 3 * 1024 * 1024 ||
+      (b.href !== undefined && (b.kind !== "link" || !safeHref(b.href))) ||
+      (b.language !== undefined &&
+        (b.kind !== "code" || !/^[a-z0-9_+#.-]{1,40}$/.test(b.language))) ||
+      (b.level !== undefined && b.kind !== "heading") ||
+      (b.ordered !== undefined &&
+        (b.kind !== "list" || typeof b.ordered !== "boolean"))
+    )
+      return false;
+    if (["text", "code"].includes(b.kind)) {
+      if (
+        typeof b.text !== "string" ||
+        !b.text ||
+        b.children !== undefined ||
+        (b.kind === "code" && !b.text.trim())
+      )
+        return false;
+    } else if (b.kind === "image") {
+      if (
+        b.text !== undefined ||
+        b.children !== undefined ||
+        !!b.asset_id === !!b.omission
+      )
+        return false;
+      if (b.asset_id && !/^[a-f0-9]{64}$/.test(b.asset_id)) return false;
+      if (
+        b.omission &&
+        ![
+          "image_not_saved",
+          "image_invalid",
+          "image_too_large",
+          "image_total_limit",
+          "image_count_limit",
+          "image_fetch_failed",
+          "image_source_unsupported",
+        ].includes(b.omission)
+      )
+        return false;
+    } else if (b.kind === "br") {
+      if (b.text !== undefined || b.children !== undefined) return false;
+    } else if (
+      !containers.has(b.kind) ||
+      b.text !== undefined ||
+      !Array.isArray(b.children) ||
+      !b.children.length
+    )
+      return false;
+    if (
+      b.kind === "heading" &&
+      (!Number.isInteger(b.level) || b.level! < 1 || b.level! > 6)
+    )
+      return false;
+    if (b.kind === "link" && !safeHref(b.href)) return false;
+    if (
+      [
+        "paragraph",
+        "heading",
+        "strong",
+        "em",
+        "inline_code",
+        "link",
+        "summary",
+        "caption",
+        "figcaption",
+      ].includes(parent)
+    ) {
+      if (!inline.has(b.kind) || (parent === "link" && b.kind === "link"))
+        return false;
+    } else if (parent === "list") {
+      if (b.kind !== "list_item") return false;
+    } else if (parent === "table") {
+      if (
+        ![
+          "caption",
+          "table_head",
+          "table_body",
+          "table_foot",
+          "table_row",
+        ].includes(b.kind)
+      )
+        return false;
+    } else if (["table_head", "table_body", "table_foot"].includes(parent)) {
+      if (b.kind !== "table_row") return false;
+    } else if (parent === "table_row") {
+      if (!["cell", "header_cell"].includes(b.kind)) return false;
+    } else if (
+      structural.has(b.kind) &&
+      !(parent === "details" && b.kind === "summary")
+    )
+      return false;
+    if (
+      b.kind === "details" &&
+      (b.children?.[0]?.kind !== "summary" ||
+        b.children.slice(1).some((c) => c?.kind === "summary"))
+    )
+      return false;
+    return !b.children || b.children.every((c) => visit(c, b.kind, depth + 1));
+  }
+  return blocks.every((b) => visit(b, "root", 0));
 }

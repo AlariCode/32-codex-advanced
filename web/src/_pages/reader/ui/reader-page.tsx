@@ -8,6 +8,7 @@ import {
   type ArchivedArticle,
   type Block,
 } from "../api/document";
+import { RichBlock } from "./rich-block";
 import { CodeBlock } from "./code-block";
 import styles from "./reader.module.css";
 
@@ -46,17 +47,24 @@ export function ReaderPage({ id }: { id: string }) {
   const [checking, setChecking] = useState(true);
   useEffect(() => {
     let controller = new AbortController();
-    async function load() {
+    let loaded = false;
+    let loading = false;
+    async function load(background = false) {
+      if (loading) return;
+      loading = true;
       controller.abort();
       controller = new AbortController();
       const request = controller;
-      setChecking(true);
-      setArticle(null);
+      if (!background || !loaded) {
+        setChecking(true);
+        setArticle(null);
+      }
       setError("");
       try {
         const data = await readArticle(id, request.signal);
         if (!request.signal.aborted) {
           setArticle(data);
+          loaded = true;
           setChecking(false);
         }
       } catch (error) {
@@ -64,11 +72,17 @@ export function ReaderPage({ id }: { id: string }) {
         setChecking(false);
         const code =
           error instanceof ReaderError ? error.code : "internal_error";
+        if (code !== "internal_error") {
+          loaded = false;
+          setArticle(null);
+        }
         setError(code);
+      } finally {
+        loading = false;
       }
     }
     const restore = () => {
-      if (document.visibilityState === "visible") void load();
+      if (document.visibilityState === "visible") void load(true);
     };
     void load();
     window.addEventListener("focus", restore);
@@ -102,7 +116,7 @@ export function ReaderPage({ id }: { id: string }) {
       {checking && <p role="status">Открываем статью…</p>}
       {error && (
         <>
-          <h1>Статья недоступна</h1>
+          {!article && <h1>Статья недоступна</h1>}
           <p role="alert">{message}</p>
           {error === "unauthorized" && <Link href="/login">Войти</Link>}
         </>
@@ -119,16 +133,39 @@ export function ReaderPage({ id }: { id: string }) {
           >
             Открыть оригинал ↗
           </a>
-          {article.warnings?.length > 0 && (
+          {article.warnings?.includes("images_omitted") && (
             <p className={styles.warning} role="note">
-              Сохранён текст статьи. Изображения и некоторые элементы оформления
-              пропущены.
+              Часть изображений или оформления не сохранена. Пропущенные
+              изображения отмечены в тексте.
+            </p>
+          )}
+          {article.warnings?.includes("html_truncated") && (
+            <p className={styles.warning} role="note">
+              Сохранена часть статьи: HTML страницы превысил предел 3 MiB после
+              распаковки. Текст после этого предела не сохранён.
+            </p>
+          )}
+          {article.warnings?.includes("text_incomplete") && (
+            <p className={styles.warning} role="note">
+              Часть основного текста не удалось сохранить при извлечении статьи.
+              Доступный текст сохранён; полную версию можно проверить в
+              оригинале.
+            </p>
+          )}
+          {article.warnings?.includes("text_only_archive") && (
+            <p className={styles.warning} role="note">
+              Часть оформления основного содержимого не поддерживается и не
+              сохранена.
             </p>
           )}
           <div className={styles.body}>
-            {article.document.blocks.map((block, index) => (
-              <TextBlock key={index} block={block} />
-            ))}
+            {article.document.blocks.map((block, index) =>
+              article.document.schema_version === 2 ? (
+                <RichBlock key={index} block={block} linkID={id} />
+              ) : (
+                <TextBlock key={index} block={block} />
+              ),
+            )}
           </div>
         </article>
       )}

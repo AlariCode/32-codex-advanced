@@ -1,0 +1,584 @@
+[
+  {
+    "article": "go-strings",
+    "sourceSelector": "div.Article div.markdown",
+    "sourceParagraphs": 53,
+    "allParagraphsPresentInOrder": true,
+    "sourceHeadings": 8,
+    "allSourceHeadingsPresent": true,
+    "sourceLists": 1,
+    "archivedLists": 1,
+    "sourceQuotes": 0,
+    "archivedQuotes": 0,
+    "sourceCodeBlocks": 21,
+    "archivedCodeBlocks": 21,
+    "allCodeExactAndOrdered": true,
+    "sourceTables": 0,
+    "tableCells": 0,
+    "allTableCellsExactAndOrdered": true,
+    "visibleSourceImages": 0,
+    "archivedImagePositions": 0,
+    "archivedImageAssets": 0,
+    "sourceCaptions": 0,
+    "allCaptionsPresent": true,
+    "warnings": ["text_incomplete"],
+    "copiesChecked": 10,
+    "copies": [
+      {
+        "repetition": 1,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 2,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 3,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 4,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 5,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 6,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 7,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 8,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 9,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 10,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      }
+    ]
+  },
+  {
+    "article": "go-pipelines",
+    "sourceSelector": "div.Article div.markdown",
+    "sourceParagraphs": 50,
+    "allParagraphsPresentInOrder": true,
+    "sourceHeadings": 10,
+    "allSourceHeadingsPresent": true,
+    "sourceLists": 4,
+    "archivedLists": 4,
+    "sourceQuotes": 0,
+    "archivedQuotes": 0,
+    "sourceCodeBlocks": 26,
+    "archivedCodeBlocks": 26,
+    "allCodeExactAndOrdered": true,
+    "sourceTables": 0,
+    "tableCells": 0,
+    "allTableCellsExactAndOrdered": true,
+    "visibleSourceImages": 0,
+    "archivedImagePositions": 0,
+    "archivedImageAssets": 0,
+    "sourceCaptions": 0,
+    "allCaptionsPresent": true,
+    "warnings": ["text_incomplete"],
+    "copiesChecked": 10,
+    "copies": [
+      {
+        "repetition": 1,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 2,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 3,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 4,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 5,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 6,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 7,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 8,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 9,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 10,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      }
+    ]
+  },
+  {
+    "article": "mdn",
+    "sourceSelector": ".reference-layout__body",
+    "sourceParagraphs": 28,
+    "allParagraphsPresentInOrder": true,
+    "sourceHeadings": 11,
+    "allSourceHeadingsPresent": true,
+    "sourceLists": 7,
+    "archivedLists": 7,
+    "sourceQuotes": 0,
+    "archivedQuotes": 0,
+    "sourceCodeBlocks": 2,
+    "archivedCodeBlocks": 2,
+    "allCodeExactAndOrdered": true,
+    "sourceTables": 1,
+    "tableCells": 8,
+    "allTableCellsExactAndOrdered": true,
+    "visibleSourceImages": 1,
+    "archivedImagePositions": 1,
+    "archivedImageAssets": 1,
+    "sourceCaptions": 0,
+    "allCaptionsPresent": true,
+    "warnings": ["text_incomplete"],
+    "copiesChecked": 10,
+    "copies": [
+      {
+        "repetition": 1,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 2,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 3,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 4,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 5,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 6,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 7,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 8,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 9,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 10,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      }
+    ]
+  },
+  {
+    "article": "cloudflare",
+    "sourceSelector": ".article-content",
+    "sourceParagraphs": 29,
+    "allParagraphsPresentInOrder": true,
+    "sourceHeadings": 6,
+    "allSourceHeadingsPresent": true,
+    "sourceLists": 1,
+    "archivedLists": 1,
+    "sourceQuotes": 0,
+    "archivedQuotes": 0,
+    "sourceCodeBlocks": 6,
+    "archivedCodeBlocks": 6,
+    "allCodeExactAndOrdered": true,
+    "sourceTables": 0,
+    "tableCells": 0,
+    "allTableCellsExactAndOrdered": true,
+    "visibleSourceImages": 2,
+    "archivedImagePositions": 4,
+    "archivedImageAssets": 0,
+    "sourceCaptions": 0,
+    "allCaptionsPresent": true,
+    "warnings": ["images_omitted", "text_incomplete"],
+    "copiesChecked": 10,
+    "copies": [
+      {
+        "repetition": 1,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 2,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 3,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 4,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 5,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 6,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 7,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 8,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 9,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 10,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      }
+    ]
+  },
+  {
+    "article": "habr-gc",
+    "sourceSelector": ".article-body",
+    "sourceParagraphs": 86,
+    "allParagraphsPresentInOrder": true,
+    "sourceHeadings": 12,
+    "allSourceHeadingsPresent": true,
+    "sourceLists": 2,
+    "archivedLists": 2,
+    "sourceQuotes": 0,
+    "archivedQuotes": 0,
+    "sourceCodeBlocks": 13,
+    "archivedCodeBlocks": 13,
+    "allCodeExactAndOrdered": true,
+    "sourceTables": 0,
+    "tableCells": 0,
+    "allTableCellsExactAndOrdered": true,
+    "visibleSourceImages": 13,
+    "archivedImagePositions": 13,
+    "archivedImageAssets": 13,
+    "sourceCaptions": 11,
+    "allCaptionsPresent": true,
+    "warnings": ["images_omitted", "text_incomplete"],
+    "copiesChecked": 10,
+    "copies": [
+      {
+        "repetition": 1,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 2,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 3,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 4,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 5,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 6,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 7,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 8,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 9,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 10,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      }
+    ]
+  },
+  {
+    "article": "habr-avito",
+    "sourceSelector": ".article-body",
+    "sourceParagraphs": 85,
+    "allParagraphsPresentInOrder": true,
+    "sourceHeadings": 6,
+    "allSourceHeadingsPresent": true,
+    "sourceLists": 5,
+    "archivedLists": 5,
+    "sourceQuotes": 1,
+    "archivedQuotes": 1,
+    "sourceCodeBlocks": 3,
+    "archivedCodeBlocks": 3,
+    "allCodeExactAndOrdered": true,
+    "sourceTables": 0,
+    "tableCells": 0,
+    "allTableCellsExactAndOrdered": true,
+    "visibleSourceImages": 25,
+    "archivedImagePositions": 25,
+    "archivedImageAssets": 25,
+    "sourceCaptions": 0,
+    "allCaptionsPresent": true,
+    "warnings": ["images_omitted", "text_incomplete"],
+    "copiesChecked": 10,
+    "copies": [
+      {
+        "repetition": 1,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 2,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 3,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 4,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 5,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 6,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 7,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 8,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 9,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      },
+      {
+        "repetition": 10,
+        "paragraphsPresentInOrder": true,
+        "codeExactAndOrdered": true,
+        "headingsPresent": true,
+        "tableCellsExactAndOrdered": true
+      }
+    ]
+  }
+]

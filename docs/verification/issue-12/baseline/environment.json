@@ -1,0 +1,78 @@
+{
+  "startedAt": "2026-10-21T08:27:53.905Z",
+  "measuredFrom": "server requested_at to first visible DOM ready/card observation",
+  "clocks": "API and browser on same host",
+  "platform": "darwin",
+  "release": "27.0.0",
+  "arch": "arm64",
+  "cpus": 8,
+  "cpuModel": "Apple M1 Pro",
+  "physicalMemoryBytes": 17179869184,
+  "freeMemoryBytes": 167313408,
+  "loadStart": [57.19677734375, 70.38720703125, 67.80859375],
+  "node": "v24.21.0",
+  "go": "go version go1.27.2 darwin/arm64",
+  "chromium": "153.0.8010.12",
+  "next": "16.3.8",
+  "readeck": "v2.1.3 (backend/worker/go.mod)",
+  "gitCommit": "2ac6039ddb16a32d480a2b624a2ae78975347338",
+  "dirtyFiles": "M Makefile\n M package.json\n M web/next-env.d.ts\n?? scripts/archive-benchmark/",
+  "driverSHA256": "cb6bdaa940a26d2ad9e7da400a7992669d0d13f341532849078918091c694c44",
+  "corpusSHA256": "3da1470ee8f4dcf394c8189332d70a092d22581a9f4f32128b8c2fb8ba82d593",
+  "workerConcurrency": 1,
+  "saveConcurrency": 1,
+  "independentAccounts": true,
+  "workerGOMAXPROCS": 1,
+  "workerGOMEMLIMIT": "384MiB",
+  "resourceIsolation": "host processes; no CPU quota, no container worker firewall; normal safehttp.New with SSRF checks; test PostgreSQL in Docker",
+  "apiGOMAXPROCS": 2,
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "pollingMS": 2000,
+  "productionNextBuild": true,
+  "database": {
+    "host": "127.0.0.1",
+    "port": "15433",
+    "database": "linkbook_test",
+    "schema": "e2e_benchmark_41e6a9af51ea40ac8fa5c09a9d20c15d"
+  },
+  "postgres": "postgres (PostgreSQL) 18.6 (Debian 18.6-1.pgdg13+2)",
+  "network": {
+    "throttling": false,
+    "browserProxy": "none configured",
+    "workerProxy": "safehttp production configuration",
+    "publicInternet": true,
+    "httpProxyEnvironmentPresent": false,
+    "connectionType": "not instrumented",
+    "CDNCache": "uncontrolled; unchanged URLs; no cache busting"
+  },
+  "corpus": [
+    {
+      "id": "go-strings",
+      "url": "https://go.dev/blog/strings"
+    },
+    {
+      "id": "go-pipelines",
+      "url": "https://go.dev/blog/pipelines"
+    },
+    {
+      "id": "mdn",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Introduction"
+    },
+    {
+      "id": "cloudflare",
+      "url": "https://blog.cloudflare.com/pingora-open-source/"
+    },
+    {
+      "id": "habr-gc",
+      "url": "https://habr.com/ru/articles/742402/"
+    },
+    {
+      "id": "habr-avito",
+      "url": "https://habr.com/ru/companies/avito/articles/753244/"
+    }
+  ],
+  "repetitions": 10
+}

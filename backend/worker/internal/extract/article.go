@@ -2,14 +2,15 @@ package extract
 
 import (
 	"bytes"
+	"crypto/rand"
 	"errors"
 	"io"
 	"net/url"
-	"strconv"
 	"strings"
 
 	readability "codeberg.org/readeck/go-readability/v2"
 	"golang.org/x/net/html"
+	"golang.org/x/net/html/atom"
 	"linkbook/linkprocessing"
 )
 
@@ -78,11 +79,29 @@ func Article(body []byte, finalURL string) (linkprocessing.Result, error) {
 	if !inspect(root, 0) {
 		return result, ErrResources
 	}
+	resolveStreamedHTML(root)
+	// Segment insertion can increase depth even though it creates no new nodes.
+	nodes = 0
+	if !inspect(root, 0) {
+		return result, ErrResources
+	}
 	u, err := url.Parse(finalURL)
 	if err != nil {
 		return result, err
 	}
-	metadata := ""
+	metadata, blocked, declaredArticle, prose := availability(root)
+	result.Title = metadata
+	if result.Title == "" {
+		result.Title = u.Hostname()
+	}
+	if blocked || (!declaredArticle && prose < 200) {
+		result.Reason = "article_unavailable"
+		return result, nil
+	}
+	base := documentBase(root, u)
+	evidence := mainEvidence(root)
+	mainNodes := declaredMainNodes(root)
+
 	omitted := false
 	var clean func(*html.Node)
 	clean = func(n *html.Node) {
@@ -91,9 +110,9 @@ func Article(body []byte, finalURL string) (linkprocessing.Result, error) {
 			if child.Type == html.ElementNode {
 				switch child.Data {
 				case "title":
-					metadata = text(child)
-				case "img", "picture", "video", "audio", "table":
-					omitted = true
+					if metadata == "" {
+						metadata = text(child)
+					}
 				}
 				if active(child.Data) {
 					n.RemoveChild(child)
@@ -105,6 +124,49 @@ func Article(body []byte, finalURL string) (linkprocessing.Result, error) {
 		}
 	}
 	clean(root)
+	// Readeck unwraps details, discards some short tables, and can mistake
+	// syntax-highlighted code comments for page discussion. Preserve selected
+	// visible pre blocks verbatim along with the existing structural placeholders.
+	// Keep their position inside its selected article using text-bearing placeholders.
+	// Only placeholders surviving selection are restored; unrelated page content is never appended.
+	protected := map[string]*html.Node{}
+	restored := map[string]bool{}
+	var protect func(*html.Node)
+	protect = func(n *html.Node) {
+		for c := n.FirstChild; c != nil; {
+			next := c.NextSibling
+			heading := len(c.Data) == 2 && c.Data[0] == 'h' && c.Data[1] >= '1' && c.Data[1] <= '6'
+			if c.Type == html.ElementNode && (c.Data == "table" || c.Data == "details" || heading || c.Data == "figure" || c.Data == "img" || (c.Data == "pre" && !hiddenForSelection(c))) {
+				marker := "LINKBOOKARCHIVE" + rand.Text() + "END"
+				placeholder := &html.Node{Type: html.ElementNode, Data: "p", DataAtom: atom.P}
+				if c.Data == "img" {
+					// Inline markers must not introduce a paragraph inside a paragraph.
+					// Readeck may unwrap spans or merge adjacent text nodes; structured
+					// restores these image tokens within text, never their ancestors.
+					marker = "LINKBOOKIMAGE" + rand.Text() + ":END"
+					placeholder.Data, placeholder.DataAtom = "span", atom.Span
+				}
+				protected[marker] = c
+				// Retain selection hints only inside Readeck; none become archive props.
+				for _, a := range c.Attr {
+					if a.Key == "class" || a.Key == "id" {
+						placeholder.Attr = append(placeholder.Attr, a)
+					}
+				}
+				value := marker + " " + text(c)
+				if c.Data == "img" {
+					value = marker
+				}
+				placeholder.AppendChild(&html.Node{Type: html.TextNode, Data: value})
+				n.InsertBefore(placeholder, c)
+				n.RemoveChild(c)
+			} else {
+				protect(c)
+			}
+			c = next
+		}
+	}
+	protect(root)
 	parser := readability.NewParser()
 	parser.MaxElemsToParse = 50000
 	parser.KeepClasses = true // Read language markers; classes never enter the document.
@@ -119,45 +181,27 @@ func Article(body []byte, finalURL string) (linkprocessing.Result, error) {
 	if result.Title == "" {
 		result.Title = u.Hostname()
 	}
-	doc := linkprocessing.Document{SchemaVersion: 1, Blocks: []linkprocessing.Block{}}
-	var convert func(*html.Node)
-	convert = func(n *html.Node) {
-		if n.Type == html.ElementNode {
-			var b linkprocessing.Block
-			switch n.Data {
-			case "p":
-				b = linkprocessing.Block{Kind: "paragraph", Text: text(n)}
-			case "h1", "h2", "h3", "h4", "h5", "h6":
-				level, _ := strconv.Atoi(n.Data[1:])
-				if level < 2 {
-					level = 2
-				}
-				b = linkprocessing.Block{Kind: "heading", Level: level, Text: text(n)}
-			case "blockquote":
-				b = linkprocessing.Block{Kind: "quote", Text: text(n)}
-			case "ul", "ol":
-				b = linkprocessing.Block{Kind: "list", Ordered: n.Data == "ol"}
-				for c := n.FirstChild; c != nil; c = c.NextSibling {
-					if c.Type == html.ElementNode && c.Data == "li" {
-						if s := text(c); s != "" {
-							b.Items = append(b.Items, s)
-						}
-					}
-				}
-			case "pre":
-				b = linkprocessing.Block{Kind: "code", Text: codeText(n), Language: codeLanguage(n)}
-			}
-			if b.Text != "" || len(b.Items) > 0 {
-				doc.Blocks = append(doc.Blocks, b)
-				return
-			}
-		}
-		for c := n.FirstChild; c != nil; c = c.NextSibling {
-			convert(c)
+	doc := linkprocessing.Document{SchemaVersion: linkprocessing.SchemaVersion}
+	if article.Node != nil {
+		doc.Blocks = structured(article.Node, base, protected, restored)
+	}
+	if article.Node == nil || strings.TrimSpace(documentText(doc.Blocks)) == "" {
+		result.Reason = "article_unavailable"
+		return result, nil
+	}
+	lostText, lostImages := evidence.lost(doc.Blocks), false
+	for marker, n := range protected {
+		if !restored[marker] && mainNodes[n] {
+			lostText = lostText || text(n) != ""
+			lostImages = lostImages || containsMainImage(n, mainNodes)
 		}
 	}
-	if article.Node != nil {
-		convert(article.Node)
+	if lostImages {
+		result.Warnings = append(result.Warnings, "images_omitted")
+	}
+	omitted = selectedLoss(article.Node, protected, restored)
+	if lostText {
+		result.Warnings = append(result.Warnings, "text_incomplete")
 	}
 	if err = linkprocessing.ValidateDocument(doc); err != nil {
 		return result, err
@@ -165,9 +209,43 @@ func Article(body []byte, finalURL string) (linkprocessing.Result, error) {
 	if omitted {
 		result.Warnings = append(result.Warnings, "text_only_archive")
 	}
+	var images bool
+	var inspectImages func([]linkprocessing.Block)
+	inspectImages = func(bs []linkprocessing.Block) {
+		for _, b := range bs {
+			if b.Kind == "image" {
+				images = true
+			}
+			inspectImages(b.Children)
+		}
+	}
+	inspectImages(doc.Blocks)
+	if images {
+		result.Warnings = append(result.Warnings, "images_pending")
+	}
 	result.Document = &doc
 	return result, nil
 }
+
+// Hidden playground prefixes/suffixes are implementation scaffolding, not
+// visible tutorial code. Leave them to Readeck's normal visibility filtering.
+func hiddenForSelection(n *html.Node) bool {
+	for ; n != nil; n = n.Parent {
+		for _, a := range n.Attr {
+			if a.Key == "hidden" || (a.Key == "aria-hidden" && strings.EqualFold(a.Val, "true")) {
+				return true
+			}
+			if a.Key == "style" {
+				style := strings.Join(strings.Fields(strings.ToLower(a.Val)), "")
+				if strings.Contains(style, "display:none") || strings.Contains(style, "visibility:hidden") {
+					return true
+				}
+			}
+		}
+	}
+	return false
+}
+
 func voidTag(tag string) bool {
 	switch tag {
 	case "area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr":
@@ -177,7 +255,7 @@ func voidTag(tag string) bool {
 }
 func active(tag string) bool {
 	switch tag {
-	case "script", "style", "iframe", "svg", "math", "form", "input", "button", "object", "embed", "template", "noscript", "nav", "footer":
+	case "script", "style", "iframe", "svg", "math", "form", "input", "button", "object", "embed", "template", "noscript", "nav", "footer", "aside":
 		return true
 	}
 	return false

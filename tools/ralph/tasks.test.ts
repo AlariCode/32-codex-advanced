@@ -84,3 +84,17 @@ test("dependency lookup errors are propagated", async () => {
     /GitHub unavailable/,
   );
 });
+
+test("ralph-failed is skipped and its open dependents remain unavailable", async () => {
+  const tasks = [
+    {
+      number: 1,
+      title: "failed",
+      body: "",
+      labels: [{ name: "ralph-failed" }],
+    },
+    { number: 2, title: "dependent", body: "## Зависимости\n#1", labels: [] },
+    { number: 3, title: "ready", body: "", labels: [] },
+  ];
+  assert.equal((await selectNextTask(tasks, async () => "OPEN"))?.number, 3);
+});

@@ -147,3 +147,75 @@
 .code :global(.hljs-name) {
   color: #fcd34d;
 }
+
+.body {
+  min-width: 0;
+  max-width: 100%;
+}
+.body a {
+  display: inline;
+  min-height: auto;
+  overflow-wrap: anywhere;
+}
+.body h1 {
+  margin: 2.5rem 0 1rem;
+  font-size: 1.85rem;
+  line-height: 1.3;
+}
+.body details {
+  margin-bottom: 1.5rem;
+}
+.body summary {
+  cursor: pointer;
+  padding-block: 0.75rem;
+  font-weight: 600;
+}
+.body summary:focus-visible,
+.tableScroll:focus-visible {
+  outline: 2px solid #111;
+  outline-offset: 2px;
+}
+.body :not(pre) > code {
+  font-size: 0.9em;
+  white-space: break-spaces;
+}
+.tableScroll {
+  max-width: 100%;
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+}
+.tableScroll table {
+  border-collapse: collapse;
+  min-width: 100%;
+  overflow-wrap: normal;
+}
+.tableScroll td,
+.tableScroll th {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d7d9d7;
+  text-align: left;
+}
+.tableScroll caption {
+  text-align: left;
+  font-weight: 600;
+}
+
+.archivedImage {
+  max-width: 100%;
+  height: auto;
+}
+.body figure {
+  margin: 1.5rem 0;
+}
+.body figcaption {
+  font-size: 0.9em;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.imagePlaceholder {
+  display: inline-block;
+  max-width: 100%;
+  padding: 0.75rem;
+  border: 1px solid currentColor;
+  overflow-wrap: anywhere;
+}

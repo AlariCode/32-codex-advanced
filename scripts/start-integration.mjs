@@ -1,3 +1,5 @@
+import { articleFixture } from "./article-fixtures.mjs";
+import { imageFixture } from "./image-fixtures.mjs";
 import { spawn } from "node:child_process";
 import { mkdir, readFile } from "node:fs/promises";
 import { createServer } from "node:http";
@@ -56,6 +58,9 @@ const close = (server) =>
     server.closeAllConnections();
   });
 const html = await readFile(resolve(root, "web/tests/fixtures/article.html"));
+const formatting = await readFile(
+  resolve(root, "web/tests/fixtures/formatting.html"),
+);
 let fixture;
 let fixtureHits = 0;
 let forbiddenHits = 0;
@@ -63,6 +68,13 @@ async function fixtureOn() {
   if (fixture?.listening) return;
   fixture = createServer((request, response) => {
     fixtureHits++;
+    if (articleFixture(request, response)) return;
+    if (imageFixture(request, response)) return;
+    if (request.url.startsWith("/formatting/")) {
+      response.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+      response.end(formatting);
+      return;
+    }
     if (request.url.startsWith("/redirect-blocked")) {
       response.writeHead(302, { Location: "http://127.0.0.1:39877/forbidden" });
       response.end();
@@ -225,6 +237,17 @@ try {
     API_ORIGIN: "http://127.0.0.1:18080",
     FIXTURE_ORIGIN: "http://127.0.0.1:39876",
   };
+  // The phase acceptance suite exercises a fixed production build. Build with
+  // its proxy origin before starting Next; no HMR compilation affects timers.
+  await run(
+    process.execPath,
+    [
+      resolve(root, "web/node_modules/next/dist/bin/next"),
+      "build",
+      resolve(root, "web"),
+    ],
+    env,
+  );
   await fixtureOn();
   await listen(control, 39877);
   start(resolve(artifacts, "api"), [], env);
@@ -234,7 +257,7 @@ try {
     process.execPath,
     [
       resolve(root, "web/node_modules/next/dist/bin/next"),
-      "dev",
+      "start",
       resolve(root, "web"),
       "--hostname",
       "127.0.0.1",

@@ -42,10 +42,13 @@ func (s *Service) Document(ctx context.Context, owner, id string) (DocumentRespo
 	if state != "ready" {
 		return out, ErrNotReady
 	}
-	if !version.Valid || version.Int64 != linkprocessing.SchemaVersion {
+	if !version.Valid || (version.Int64 != 1 && version.Int64 != linkprocessing.SchemaVersion) {
 		return out, linkprocessing.ErrDocument
 	}
 	out.Document, err = linkprocessing.DecodeDocument(raw)
+	if err == nil && int64(out.Document.SchemaVersion) != version.Int64 {
+		err = linkprocessing.ErrDocument
+	}
 	return out, err
 }
 

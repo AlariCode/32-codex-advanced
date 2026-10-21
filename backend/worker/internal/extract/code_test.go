@@ -3,6 +3,8 @@ package extract
 import (
 	"strings"
 	"testing"
+
+	"linkbook/linkprocessing"
 )
 
 func TestArticlePreservesCodeWhitespaceAndLanguage(t *testing.T) {
@@ -28,4 +30,26 @@ func TestArticlePreservesCodeWhitespaceAndLanguage(t *testing.T) {
 		}
 	}
 	t.Fatal("code was flattened into a paragraph")
+}
+
+func TestArticlePreservesHighlightedCodeCommentsWithoutHiddenScaffolding(t *testing.T) {
+	code := "func main() {\n\t// Explain the pipeline.\n\tfmt.Println(4) // expected result\n}\n"
+	input := `<article><h1>Pipeline example</h1><p>` + strings.Repeat("A public tutorial explains channels and cancellation with complete runnable examples. ", 20) + `</p><div class="playground"><pre style="display: none">HIDDEN LICENSE AND PACKAGE SCAFFOLDING</pre><pre>func main() {
+	<span class="comment">// Explain the pipeline.</span>
+	fmt.Println(4) <span class="comment">// expected result</span>
+}
+</pre></div><div hidden><pre>HIDDEN WRAPPER SCAFFOLDING</pre></div><p>The complete conclusion.</p></article>`
+	r, err := Article([]byte(input), "https://example.com/tutorial")
+	if err != nil || r.Document == nil {
+		t.Fatalf("article rejected: %+v %v", r, err)
+	}
+	var codes []linkprocessing.Block
+	for _, b := range r.Document.Blocks {
+		if b.Kind == "code" {
+			codes = append(codes, b)
+		}
+	}
+	if len(codes) != 1 || codes[0].Text != code || codes[0].Language != "" {
+		t.Fatalf("code comments changed or hidden content archived: %+v", codes)
+	}
 }

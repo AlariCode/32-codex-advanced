@@ -250,6 +250,61 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/links/{id}/assets/{asset_id}": {
+            "get": {
+                "produces": [
+                    "image/png",
+                    "image/jpeg",
+                    "image/gif"
+                ],
+                "tags": [
+                    "links"
+                ],
+                "summary": "Read a private archived image",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Link UUID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Asset ID (64 lowercase hex characters)",
+                        "name": "asset_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Verified image bytes; Cache-Control: no-store; X-Content-Type-Options: nosniff",
+                        "schema": {
+                            "type": "file"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.errorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.errorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/links/{id}/document": {
             "get": {
                 "produces": [
@@ -295,6 +350,95 @@ const docTemplate = `{
                     },
                     "409": {
                         "description": "article_not_ready, article_unavailable or unsupported_document",
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/links/{id}/retry": {
+            "post": {
+                "description": "Requires a session and matching Origin through the loopback proxy. The observed generation is an idempotency fence: replay after a lost response returns the current card without enqueueing. One active attempt; a new 120-second deadline includes queue time. ID and created_at do not change.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "links"
+                ],
+                "summary": "Retry an unavailable or failed article",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Link UUID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Observed generation",
+                        "name": "retry",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.retryLinkRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.retryLinkResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.errorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.errorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.errorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.errorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "retry_conflict",
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.errorResponse"
+                        }
+                    },
+                    "413": {
+                        "description": "Request Entity Too Large",
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.errorResponse"
+                        }
+                    },
+                    "415": {
+                        "description": "Unsupported Media Type",
                         "schema": {
                             "$ref": "#/definitions/httpapi.errorResponse"
                         }
@@ -547,6 +691,29 @@ const docTemplate = `{
                 }
             }
         },
+        "httpapi.retryLinkRequest": {
+            "type": "object",
+            "required": [
+                "generation"
+            ],
+            "properties": {
+                "generation": {
+                    "type": "integer",
+                    "minimum": 1
+                }
+            }
+        },
+        "httpapi.retryLinkResponse": {
+            "type": "object",
+            "properties": {
+                "link": {
+                    "$ref": "#/definitions/link.Card"
+                },
+                "server_time": {
+                    "type": "string"
+                }
+            }
+        },
         "httpapi.saveLinkRequest": {
             "type": "object",
             "properties": {
@@ -653,6 +820,21 @@ const docTemplate = `{
         "linkprocessing.Block": {
             "type": "object",
             "properties": {
+                "alt": {
+                    "type": "string"
+                },
+                "asset_id": {
+                    "type": "string"
+                },
+                "children": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/linkprocessing.Block"
+                    }
+                },
+                "href": {
+                    "type": "string"
+                },
                 "items": {
                     "type": "array",
                     "items": {
@@ -667,6 +849,9 @@ const docTemplate = `{
                 },
                 "level": {
                     "type": "integer"
+                },
+                "omission": {
+                    "type": "string"
                 },
                 "ordered": {
                     "type": "boolean"

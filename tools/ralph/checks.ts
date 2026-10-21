@@ -7,9 +7,11 @@ export async function runChecks(
   run: CommandRunner,
   commands: string[][],
   log: string,
+  { requireChanges = true } = {},
 ): Promise<boolean> {
-  let green = await hasChanges(run);
-  appendFileSync(log, `\nWorking copy has changes: ${green}\n`);
+  const changes = await hasChanges(run);
+  let green = !requireChanges || changes;
+  appendFileSync(log, `\nWorking copy has changes: ${changes}\n`);
   for (const command of commands) {
     appendFileSync(log, `\n$ ${formatCommand(command)}\n`);
     const result = await run(command, {

@@ -206,3 +206,115 @@ test("document access is private and expired session hides reader", async ({
     page.getByText("Войдите, чтобы прочитать сохранённую статью."),
   ).toBeVisible();
 });
+
+test("formatted archive preserves structure and safe links after origin shutdown", async ({
+  page,
+  request,
+}) => {
+  await login(page);
+  const url = `${fixture}/formatting/${crypto.randomUUID()}`;
+  const card = await save(page, url);
+  await expect(card.getByRole("link", { name: "Читать статью" })).toBeVisible({
+    timeout: 15000,
+  });
+  const path = (await card
+    .getByRole("link", { name: "Читать статью" })
+    .getAttribute("href"))!;
+  const response = page.waitForResponse(
+    (r) => r.url().endsWith("/document") && r.status() === 200,
+  );
+  await card.getByRole("link", { name: "Читать статью" }).click();
+  const document = (await (await response).json()).document;
+  expect(document.schema_version).toBe(2);
+  const article = page.getByRole("article", {
+    name: "Сохранённая статья",
+    exact: true,
+  });
+  await expect(
+    article.locator("h1").filter({ hasText: "Semantic heading marker" }),
+  ).toHaveCount(1);
+  await expect(article.locator("strong")).toHaveText("Strong marker");
+  await expect(article.locator("em")).toHaveText("Emphasis marker");
+  await expect(article.locator("p > code")).toHaveText("inline marker");
+  await expect(article.locator("ol > li > ul > li")).toHaveText(
+    "Nested child marker",
+  );
+  await expect(article.locator("ol > li > p")).toHaveText(
+    "After nested marker",
+  );
+  await expect(article.locator("table caption")).toHaveText("Table marker");
+  await expect(article.locator("thead th").first()).toHaveText("Column marker");
+  await expect(article.locator("tbody td").first()).toHaveText("Cell marker");
+  await expect(article.locator("details summary")).toHaveText(
+    "Disclosure marker",
+  );
+  await expect(
+    article.getByText("Hidden content marker", { exact: true }),
+  ).not.toBeVisible();
+  await article.locator("summary").click();
+  await expect(
+    article.getByText("Hidden content marker", { exact: true }),
+  ).toBeVisible();
+  await expect(article.locator("details blockquote p")).toHaveText(
+    "Nested quote marker",
+  );
+  await expect(article.locator("pre code")).toHaveText(
+    "* {\n  margin: 0;\n  padding: 0;\n}\n",
+  );
+  await expect(article.locator("pre .hljs-attribute").first()).toBeVisible();
+  const link = article.getByRole("link", {
+    name: "Reference marker",
+    exact: true,
+  });
+  await expect(link).toHaveAttribute("href", `${fixture}/reference`);
+  await expect(link).toHaveAttribute("rel", "noopener noreferrer");
+  const opened = page.waitForEvent("popup");
+  await link.click();
+  const popup = await opened;
+  await expect(popup).toHaveURL(`${fixture}/reference`);
+  expect(await popup.evaluate(() => window.opener === null)).toBe(true);
+  await popup.close();
+  expect(
+    await article
+      .locator(
+        "a[href^='javascript:'],a[href^='data:'],[onclick],[style],script,iframe,svg,math,form",
+      )
+      .count(),
+  ).toBe(0);
+  await expect(article).not.toContainText("SECRET");
+  expect(
+    await page.evaluate(() => Object.hasOwn(window, "fixtureAttack")),
+  ).toBe(false);
+  const table = article.getByRole("region", { name: "Таблица статьи" });
+  await table.focus();
+  await expect(table).toBeFocused();
+  expect(await table.evaluate((el) => el.scrollWidth > el.clientWidth)).toBe(
+    true,
+  );
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(
+    page.viewportSize()!.width,
+  );
+  // Returning from the external tab may revalidate the reader and reset details.
+  // Compare the same native disclosure state before and after reopening.
+  if (
+    await article.locator("details").evaluate((el) => el.hasAttribute("open"))
+  ) {
+    await article.locator("summary").click();
+  }
+  await expect(article.locator("ol > li")).toContainText(
+    /Parent marker[\s\S]*Nested child marker[\s\S]*After nested marker/,
+  );
+  const before = await article.innerText();
+  expect((await request.post(`${control}/off`)).ok()).toBeTruthy();
+  await page.goto("/");
+  await page.goto(path);
+  await expect(article).toBeVisible();
+  expect(await article.innerText()).toBe(before);
+  await article.locator("summary").click();
+  await expect(
+    article.getByText("Hidden content marker", { exact: true }),
+  ).toBeVisible();
+  expect(
+    await page.evaluate(() => Object.hasOwn(window, "fixtureAttack")),
+  ).toBe(false);
+});
