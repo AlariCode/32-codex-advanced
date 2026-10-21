@@ -59,6 +59,7 @@ build:
 	npm run build
 
 check:
+	node --test scripts/archive-benchmark/metrics.test.mjs
 	go test ./backend/api/... ./backend/worker/... ./backend/migrations/... ./backend/linkprocessing/...
 	go vet ./backend/api/... ./backend/worker/... ./backend/migrations/... ./backend/linkprocessing/...
 	npm run lint

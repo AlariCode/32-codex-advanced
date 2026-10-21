@@ -14,7 +14,9 @@
     "typecheck": "npm run typecheck --prefix web",
     "test": "make test",
     "test:e2e": "npm run test:e2e --prefix web",
-    "test:e2e:integration": "npm run test:e2e:integration --prefix web"
+    "test:e2e:integration": "npm run test:e2e:integration --prefix web",
+    "benchmark:archive": "node scripts/archive-benchmark/run.mjs",
+    "benchmark:recalculate": "node scripts/archive-benchmark/recalculate.mjs"
   },
   "devDependencies": {
     "lefthook": "^2.1.17",

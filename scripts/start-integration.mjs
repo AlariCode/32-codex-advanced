@@ -237,6 +237,17 @@ try {
     API_ORIGIN: "http://127.0.0.1:18080",
     FIXTURE_ORIGIN: "http://127.0.0.1:39876",
   };
+  // The phase acceptance suite exercises a fixed production build. Build with
+  // its proxy origin before starting Next; no HMR compilation affects timers.
+  await run(
+    process.execPath,
+    [
+      resolve(root, "web/node_modules/next/dist/bin/next"),
+      "build",
+      resolve(root, "web"),
+    ],
+    env,
+  );
   await fixtureOn();
   await listen(control, 39877);
   start(resolve(artifacts, "api"), [], env);
@@ -246,7 +257,7 @@ try {
     process.execPath,
     [
       resolve(root, "web/node_modules/next/dist/bin/next"),
-      "dev",
+      "start",
       resolve(root, "web"),
       "--hostname",
       "127.0.0.1",

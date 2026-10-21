@@ -298,7 +298,8 @@ HTTP fixture-server на 39876 и локальный управляющий endp
 включёнными в `make test`. Fixtures проекта не зависят от публичных сайтов.
 
 Mock-прогон `npm run test:e2e` запускается отдельно. Прогоны Next.js одного
-checkout следует запускать последовательно: dev-сервер использует общий lock.
+checkout следует запускать последовательно: оба набора собирают общий `.next`
+и проверяют production Next.js через `next start` с собственным API_ORIGIN.
 Видео обоих наборов сохраняются в `tmp/playwright/videos/`, включая успешные
 сценарии и второй браузер владельца. [Покрытие #2 и #3](docs/verification/issue-2-3.md).
 
@@ -309,3 +310,20 @@ SIGKILL/перезапуск worker и истечение сессии в БД. 
 сквозной прогон занимает около семи минут. Управляющий fixture endpoint остаётся
 локальным тестовым инструментом; production worker не получает эти настройки.
 [Покрытие #4](docs/verification/issue-4.md).
+
+## Живой benchmark архива
+
+Из корня репозитория, отдельно от детерминированных тестов:
+
+```sh
+npm run benchmark:archive -- --output tmp/archive-benchmark-new
+npm run benchmark:recalculate -- tmp/archive-benchmark-new/runs.jsonl
+```
+
+Команда выполняет 60 последовательных новых сохранений фиксированного RU/EN
+корпуса через production API/worker и реальную карточку UI. Она сохраняет
+каждую попытку, условия, ошибки и полный отчёт; Exit 0 не означает достижения
+порога 54/60. Нужны Docker, Chromium и публичный интернет; используется только
+изолированная схема локальной `linkbook_test`.
+[Методика и ограничения](docs/verification/issue-12-method.md),
+[отчёт приёмки #12](docs/verification/issue-12.md).
