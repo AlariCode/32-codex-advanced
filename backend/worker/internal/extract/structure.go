@@ -76,10 +76,11 @@ func structured(root *html.Node, base *url.URL, protected map[string]*html.Node,
 				if a.Key == "alt" {
 					b.Alt = a.Val
 				}
-				if a.Key == "src" && linkprocessing.SafeHref(a.Val) {
-					b.Source = a.Val
-					b.Omission = "image_not_saved"
-				}
+			}
+			b.Candidates = imageCandidates(n, base)
+			if len(b.Candidates) > 0 {
+				b.Source = b.Candidates[0]
+				b.Omission = "image_not_saved"
 			}
 			return []linkprocessing.Block{b}
 		case "figure", "figcaption":

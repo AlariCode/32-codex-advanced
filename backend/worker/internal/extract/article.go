@@ -83,6 +83,9 @@ func Article(body []byte, finalURL string) (linkprocessing.Result, error) {
 	if err != nil {
 		return result, err
 	}
+	base := documentBase(root, u)
+	evidence := mainEvidence(root)
+	mainNodes := declaredMainNodes(root)
 	metadata := ""
 	omitted := false
 	var clean func(*html.Node)
@@ -90,16 +93,9 @@ func Article(body []byte, finalURL string) (linkprocessing.Result, error) {
 		for child := n.FirstChild; child != nil; {
 			next := child.NextSibling
 			if child.Type == html.ElementNode {
-				for _, a := range child.Attr {
-					if a.Key == "rowspan" || a.Key == "colspan" || a.Key == "start" {
-						omitted = true
-					}
-				}
 				switch child.Data {
 				case "title":
 					metadata = text(child)
-				case "picture", "video", "audio", "hr", "dl", "sup", "sub", "del", "s":
-					omitted = true
 				}
 				if active(child.Data) {
 					n.RemoveChild(child)
@@ -167,12 +163,25 @@ func Article(body []byte, finalURL string) (linkprocessing.Result, error) {
 	}
 	doc := linkprocessing.Document{SchemaVersion: linkprocessing.SchemaVersion}
 	if article.Node != nil {
-		doc.Blocks = structured(article.Node, u, protected, restored)
+		doc.Blocks = structured(article.Node, base, protected, restored)
 	}
-	for marker := range protected {
-		if !restored[marker] {
-			omitted = true
+	if article.Node == nil || strings.TrimSpace(documentText(doc.Blocks)) == "" {
+		result.Reason = "article_unavailable"
+		return result, nil
+	}
+	lostText, lostImages := evidence.lost(doc.Blocks), false
+	for marker, n := range protected {
+		if !restored[marker] && mainNodes[n] {
+			lostText = lostText || text(n) != ""
+			lostImages = lostImages || containsMainImage(n, mainNodes)
 		}
+	}
+	if lostImages {
+		result.Warnings = append(result.Warnings, "images_omitted")
+	}
+	omitted = selectedLoss(article.Node, protected, restored)
+	if lostText {
+		result.Warnings = append(result.Warnings, "text_incomplete")
 	}
 	if err = linkprocessing.ValidateDocument(doc); err != nil {
 		return result, err

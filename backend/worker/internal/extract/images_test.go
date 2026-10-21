@@ -73,7 +73,7 @@ func TestArticleMixedImageParagraphPreservesEveryPosition(t *testing.T) {
 				}
 			}
 			walk(r.Document.Blocks)
-			want := []string{"https://images.example/first.png|First|image_not_saved", "Important middle text", "https://images.example/second.png|Second|image_not_saved", "Closing text", "|Missing|image_source_unsupported"}
+			want := []string{"https://images.example/first.png|First|image_not_saved", "Important middle text", "https://images.example/second.png|Second|image_not_saved", "Closing text", "https://example.com/missing.png|Missing|image_not_saved"}
 			if strings.Join(positions, "\n") != strings.Join(want, "\n") {
 				t.Fatalf("positions:\n%v\nwant:\n%v", positions, want)
 			}

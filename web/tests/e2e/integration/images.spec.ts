@@ -156,3 +156,98 @@ for (const [mode, count, placeholders, reason] of [
       (await (await request.get(`${control}/stats`)).json()).forbiddenHits,
     ).toBe(0);
   });
+
+for (const [mode, codecs] of [
+  ["candidates", ["png", "jpeg", "gif", "jpeg"]],
+  ["unsafe-base", ["png"]],
+] as const)
+  test(`relative/lazy/srcset and checked base: ${mode}`, async ({
+    page,
+    request,
+  }) => {
+    await login(page);
+    const external: string[] = [];
+    page.on("request", (r) => {
+      if (new URL(r.url()).origin !== "http://127.0.0.1:3200")
+        external.push(r.url());
+    });
+    const article = await open(page, mode);
+    await expect(article.locator("img")).toHaveCount(codecs.length);
+    await expect(article.locator("figcaption")).toHaveText(
+      mode === "candidates"
+        ? [1, 2, 3, 4].map((i) => `Candidate caption ${i}`)
+        : ["Safe fallback caption"],
+    );
+    const sources = await article
+      .locator("img")
+      .evaluateAll((imgs) => imgs.map((img) => img.getAttribute("src")!));
+    expect((await request.post(`${control}/off`)).ok()).toBeTruthy();
+    await page.reload();
+    await expect(article.locator("img")).toHaveCount(codecs.length);
+    for (const [i, codec] of codecs.entries()) {
+      const img = article.locator("img").nth(i);
+      await img.scrollIntoViewIfNeeded();
+      await expect
+        .poll(() => img.evaluate((el) => (el as HTMLImageElement).naturalWidth))
+        .toBe(320);
+      const src = (await img.getAttribute("src"))!;
+      expect(src).toBe(sources[i]);
+      expect(src).toMatch(/^\/api\/links\/[a-f0-9-]+\/assets\/[a-f0-9]{64}$/);
+      const bytes = await page.evaluate(
+        async (s) =>
+          Array.from(new Uint8Array(await (await fetch(s)).arrayBuffer())),
+        src,
+      );
+      expect(Buffer.from(bytes)).toEqual(
+        await readFile(`tests/fixtures/images/archive.${codec}`),
+      );
+    }
+    expect(external).toEqual([]);
+    expect(
+      (await (await request.get(`${control}/stats`)).json()).forbiddenHits,
+    ).toBe(0);
+  });
+
+for (const [mode, reason] of [
+  ["partial-html", "HTML страницы превысил предел 3 MiB"],
+  ["text-loss", "Часть основного текста не удалось сохранить"],
+] as const)
+  test(`partial article explains actual loss: ${mode}`, async ({
+    page,
+    request,
+  }) => {
+    await login(page);
+    const article = await open(page, mode);
+    await expect(
+      article.getByRole("note").filter({ hasText: reason }),
+    ).toBeVisible();
+    await expect(article).not.toContainText("UNSAVED MAIN PARAGRAPH");
+    await expect(article).toContainText("This is the final paragraph");
+    expect((await request.post(`${control}/off`)).ok()).toBeTruthy();
+    await page.reload();
+    await expect(
+      article.getByRole("note").filter({ hasText: reason }),
+    ).toBeVisible();
+    await expect(article).toContainText("This is the final paragraph");
+  });
+
+test("oversized empty page remains unavailable rather than a failed or ready article", async ({
+  page,
+}) => {
+  await login(page);
+  const url = `${fixture}/images/empty-large/${crypto.randomUUID()}`;
+  await page.getByLabel("Ссылка на статью", { exact: true }).fill(url);
+  await page
+    .getByRole("button", { name: "Сохранить ссылку", exact: true })
+    .click();
+  const card = page.getByRole("article", {
+    name: `Сохранённая ссылка ${url}`,
+    exact: true,
+  });
+  await expect(
+    card.getByText("Текст статьи недоступен", { exact: true }),
+  ).toBeVisible({ timeout: 20000 });
+  await expect(card.getByRole("link", { name: "Читать статью" })).toHaveCount(
+    0,
+  );
+});

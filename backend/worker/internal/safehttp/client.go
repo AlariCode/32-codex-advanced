@@ -19,8 +19,9 @@ import (
 )
 
 type Page struct {
-	HTML     []byte
-	FinalURL string
+	HTML      []byte
+	Truncated bool
+	FinalURL  string
 }
 type failure string
 
@@ -189,6 +190,9 @@ func retryAt(value string) time.Time {
 	return date
 }
 func (c *Client) fetchOnce(parent context.Context, raw string, image bool) (Page, error) {
+	return c.fetchBounded(parent, raw, image, linkprocessing.MaxImageBytes)
+}
+func (c *Client) fetchBounded(parent context.Context, raw string, image bool, imageBudget int) (Page, error) {
 	ctx, cancel := context.WithTimeout(parent, 25*time.Second)
 	defer cancel()
 	if len(raw) > 65536 || strings.ContainsAny(raw, "\\\r\n\t ") {
@@ -199,6 +203,9 @@ func (c *Client) fetchOnce(parent context.Context, raw string, image bool) (Page
 		return Page{}, failure("destination_blocked")
 	}
 	for redirects := 0; redirects <= 5; redirects++ {
+		if ctx.Err() != nil {
+			return Page{}, failure("network_error")
+		}
 		address, err := c.destination(ctx, current)
 		if err != nil {
 			return Page{}, err
@@ -265,18 +272,28 @@ func (c *Client) fetchOnce(parent context.Context, raw string, image bool) (Page
 		limit := linkprocessing.MaxHTMLBytes
 		if image {
 			limit = linkprocessing.MaxImageBytes
+			if imageBudget < limit {
+				limit = imageBudget
+			}
 		}
 		body, err := io.ReadAll(io.LimitReader(response.Body, int64(limit+1)))
 		_ = response.Body.Close()
 		transport.CloseIdleConnections()
 		if err != nil {
+			if image {
+				return Page{HTML: body[:min(len(body), limit)]}, transientFailure{code: "network_error"}
+			}
 			return Page{}, transientFailure{code: "network_error"}
 		}
 		if len(body) > limit {
 			if image {
-				return Page{}, failure("image_too_large")
+				code := "image_too_large"
+				if imageBudget < linkprocessing.MaxImageBytes {
+					code = "image_total_limit"
+				}
+				return Page{HTML: body[:limit]}, failure(code)
 			}
-			return Page{}, failure("html_too_large")
+			return Page{HTML: body[:limit], FinalURL: current.String(), Truncated: true}, nil
 		}
 		return Page{HTML: body, FinalURL: current.String()}, nil
 	}
@@ -286,5 +303,15 @@ func (c *Client) fetchOnce(parent context.Context, raw string, image bool) (Page
 // FetchImage uses exactly the HTML destination, DNS, pinned dial and redirect policy.
 func (c *Client) FetchImage(ctx context.Context, raw string) ([]byte, error) {
 	page, err := c.fetchOnce(ctx, raw, true)
+	return page.HTML, err
+}
+
+// FetchImageBudget caps decompressed input by the remaining article budget.
+// Failed and invalid downloads consume that budget too.
+func (c *Client) FetchImageBudget(ctx context.Context, raw string, remaining int) ([]byte, error) {
+	if remaining <= 0 {
+		return nil, failure("image_total_limit")
+	}
+	page, err := c.fetchBounded(ctx, raw, true, remaining)
 	return page.HTML, err
 }

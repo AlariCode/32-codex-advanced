@@ -97,15 +97,7 @@ func process(parent context.Context, db *sql.DB, client Fetcher, e linkprocessin
 	}()
 	defer func() { cancel(); <-heartbeatDone }()
 	page, err := client.Fetch(ctx, e.FetchURL)
-	result := linkprocessing.Result{}
-	if err != nil {
-		result.Reason = safehttp.Code(err)
-	} else {
-		result, err = extract.Article(page.HTML, page.FinalURL)
-		if err != nil {
-			result = linkprocessing.Result{Reason: "processing_error"}
-		}
-	}
+	result := pageResult(page, err)
 	images, _ := client.(ImageFetcher)
 	archiveImages(ctx, images, &result)
 	if parent.Err() != nil {
@@ -148,4 +140,20 @@ func waitSchema(ctx context.Context, db *sql.DB) error {
 		case <-ticker.C:
 		}
 	}
+}
+
+// A bounded HTML prefix is useful only if extraction found article text.
+// Transport/parser failures retain their technical classification.
+func pageResult(page safehttp.Page, fetchErr error) linkprocessing.Result {
+	if fetchErr != nil {
+		return linkprocessing.Result{Reason: safehttp.Code(fetchErr)}
+	}
+	r, err := extract.Article(page.HTML, page.FinalURL)
+	if err != nil {
+		return linkprocessing.Result{Reason: "processing_error"}
+	}
+	if page.Truncated && r.Document != nil {
+		r.Warnings = append(r.Warnings, "html_truncated")
+	}
+	return r
 }
