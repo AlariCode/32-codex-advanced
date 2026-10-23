@@ -1,4 +1,11 @@
 import { expect, test } from "@playwright/test";
+
+test.beforeEach(async ({ page }) => {
+  await page.route("**/api/users/me", (r) =>
+    r.fulfill({ json: { id: "owner", email: "owner@example.com" } }),
+  );
+});
+
 const id = "12345678-1234-4234-8234-123456789abc";
 const css = "* {\n  margin: 0;\n  padding: 0;\n}\n";
 test("code keeps whitespace, highlights syntax, and scrolls independently of the page", async ({

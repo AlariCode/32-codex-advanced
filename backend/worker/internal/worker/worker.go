@@ -68,7 +68,7 @@ func RunWith(ctx context.Context, dsn string, client Fetcher) error {
 			continue
 		}
 		if err = process(ctx, db, client, *exec); err != nil && ctx.Err() == nil {
-			slog.Error("Worker publication failed", "link_id", exec.LinkID)
+			slog.Error("Worker publication failed", "link_id", exec.LinkID, "error", err)
 		}
 	}
 }

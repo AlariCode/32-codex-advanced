@@ -1,4 +1,11 @@
 import { test, expect } from "@playwright/test";
+
+test.beforeEach(async ({ page }) => {
+  await page.route("**/api/users/me", (r) =>
+    r.fulfill({ json: { id: "owner", email: "owner@example.com" } }),
+  );
+});
+
 const id = "12345678-1234-4234-8234-123456789abc";
 const asset = "a".repeat(64);
 test("reader uses private assets and explains each missing position without source fallback", async ({

@@ -24,12 +24,23 @@ const expectedStops = new WeakSet();
 let worker;
 let workerEnv;
 const retryHits = new Map();
-function run(command, args, env = baseEnv) {
+function run(command, args, env = baseEnv, capture = false) {
   return new Promise((resolve, reject) => {
-    const child = spawn(command, args, { cwd: root, env, stdio: "inherit" });
+    const child = spawn(command, args, {
+      cwd: root,
+      env,
+      stdio: capture ? ["ignore", "pipe", "inherit"] : "inherit",
+    });
+    let output = "";
+    if (capture)
+      child.stdout.on("data", (chunk) => {
+        output += chunk;
+      });
     child.on("error", reject);
     child.on("exit", (code) =>
-      code === 0 ? resolve() : reject(new Error(`${command} exited ${code}`)),
+      code === 0
+        ? resolve(output)
+        : reject(new Error(`${command} exited ${code}`)),
     );
   });
 }
@@ -154,6 +165,30 @@ const control = createServer(async (request, response) => {
     if (!worker)
       worker = start(resolve(artifacts, "integration-worker"), [], workerEnv);
     response.end("worker started");
+    return;
+  }
+  if (request.method === "GET" && request.url.startsWith("/owner/stats?")) {
+    const owner = new URL(request.url, "http://control").searchParams.get(
+      "user",
+    );
+    if (!/^[a-f0-9-]{36}$/.test(owner ?? "")) {
+      response.writeHead(400);
+      response.end();
+      return;
+    }
+    try {
+      const output = await run(
+        resolve(artifacts, "integration-db"),
+        ["owner-stats", schema, owner],
+        baseEnv,
+        true,
+      );
+      response.setHeader("Content-Type", "application/json");
+      response.end(output);
+    } catch {
+      response.writeHead(500);
+      response.end();
+    }
     return;
   }
   if (request.method === "POST" && request.url.startsWith("/session/expire?")) {

@@ -1,4 +1,4 @@
-import type { UserDTO } from "@/shared/api";
+import { verifySession } from "@/shared/auth";
 import { validURL, type LinkCard } from "../model/library";
 
 export class LibraryError extends Error {
@@ -49,12 +49,7 @@ function isCard(value: LinkCard) {
     ["processing", "ready", "unavailable", "failed"].includes(value.state)
   );
 }
-export async function currentUser(signal: AbortSignal): Promise<UserDTO> {
-  const user = await request("/api/users/me", signal);
-  if (!user || typeof user.id !== "string" || typeof user.email !== "string")
-    throw new Error("invalid_response");
-  return user;
-}
+export const currentUser = verifySession;
 export async function listLinks(
   signal: AbortSignal,
   cursor = "",

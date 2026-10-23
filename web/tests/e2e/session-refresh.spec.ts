@@ -1,5 +1,11 @@
 import { expect, test, type Page } from "@playwright/test";
 
+test.beforeEach(async ({ page }) => {
+  await page.route("**/api/users/me", (r) =>
+    r.fulfill({ json: { id: "owner", email: "owner@example.com" } }),
+  );
+});
+
 const identity = {
   id: "owner",
   email: "owner@example.com",
@@ -137,9 +143,7 @@ test("expired session on focus still clears private content", async ({
     r.fulfill({ status: 401, json: { code: "unauthorized" } }),
   );
   await restore(page);
-  await expect(
-    page.getByText("Войдите, чтобы открыть личную библиотеку."),
-  ).toBeVisible();
+  await expect(page).toHaveURL(/\/login\?returnTo=/);
   await expect(page.getByRole("article")).toHaveCount(0);
   await expect(page.getByText(identity.email)).toHaveCount(0);
 });
@@ -207,9 +211,7 @@ for (const result of ["success", "network", "unauthorized"] as const) {
     expect(await node!.evaluate((el) => el.isConnected)).toBe(true);
     wait.release();
     if (result === "unauthorized") {
-      await expect(
-        page.getByText("Войдите, чтобы прочитать сохранённую статью."),
-      ).toBeVisible();
+      await expect(page).toHaveURL(/\/login\?returnTo=/);
       await expect(content).toHaveCount(0);
     } else if (result === "network") {
       await expect(page.getByRole("main").getByRole("alert")).toBeVisible();

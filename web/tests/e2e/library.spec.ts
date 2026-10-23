@@ -283,7 +283,7 @@ for (const operation of ["save", "page", "metadata"] as const) {
       page.getByText("https://example.com/private-draft", { exact: true }),
     ).toHaveCount(0);
     await expect(
-      page.getByRole("link", { name: "Уже есть аккаунт? Войти" }),
+      page.getByRole("heading", { name: "Вход", exact: true }),
     ).toBeVisible();
   });
 }
@@ -376,9 +376,7 @@ test("late POST cannot restore private cards after a 401", async ({ page }) => {
   await page
     .getByRole("button", { name: "Открыть карточку", exact: true })
     .click();
-  await expect(
-    page.getByText("Войдите, чтобы открыть личную библиотеку."),
-  ).toBeVisible();
+  await expect(page).toHaveURL(/\/login\?returnTo=/);
   release();
   await expect(page.getByRole("article")).toHaveCount(0);
 });

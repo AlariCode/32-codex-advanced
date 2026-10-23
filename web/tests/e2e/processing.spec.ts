@@ -104,9 +104,7 @@ test("401 during polling removes all private content", async ({ page }) => {
   );
   await page.goto("/");
   await expect(page.getByText("Обрабатываем", { exact: true })).toBeVisible();
-  await expect(
-    page.getByText("Войдите, чтобы открыть личную библиотеку."),
-  ).toBeVisible();
+  await expect(page).toHaveURL(/\/login\?returnTo=/);
   await expect(page.getByRole("article")).toHaveCount(0);
   await expect(page.getByText("owner@example.com")).toHaveCount(0);
 });
@@ -141,6 +139,9 @@ test("late metadata from earlier generation cannot replace current ready card", 
 test("reader rejects incompatible document and renders dangerous markup as text", async ({
   page,
 }) => {
+  await page.route("**/api/users/me", (r) =>
+    r.fulfill({ json: { id: "owner", email: "owner@example.com" } }),
+  );
   await page.route(`**/api/links/${id}/document`, (r) =>
     r.fulfill({
       json: {

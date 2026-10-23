@@ -135,9 +135,7 @@ test("Retry-After crosses 30s; closing page and expired session do not cancel co
   ).toBeTruthy();
   await page.evaluate(() => window.dispatchEvent(new Event("focus")));
   await expect(page.getByRole("article")).toHaveCount(0);
-  await expect(
-    page.getByText("Войдите, чтобы открыть личную библиотеку."),
-  ).toBeVisible();
+  await expect(page).toHaveURL(/\/login\?returnTo=/);
   await page.close();
   await new Promise((resolve) => setTimeout(resolve, 6500));
   const returned = await context.newPage();

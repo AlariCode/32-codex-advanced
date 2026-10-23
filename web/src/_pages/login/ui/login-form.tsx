@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { announceSessionChange, safeReturnTo } from "@/shared/auth";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Button, PasswordVisibilityToggle, TextField } from "@/shared/ui";
@@ -41,7 +42,12 @@ export function LoginForm() {
       await loginUser(email.trim(), password);
       setPassword("");
       setShowPassword(false);
-      router.replace("/");
+      announceSessionChange();
+      router.replace(
+        safeReturnTo(
+          new URLSearchParams(window.location.search).get("returnTo"),
+        ),
+      );
       router.refresh();
     } catch (error) {
       showErrors(
