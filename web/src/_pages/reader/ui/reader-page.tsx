@@ -1,7 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import {
+  usePrivateHistory,
+  verifySession,
+  isUnauthorized,
+  loginPath,
+  resetSession,
+  subscribeSessionReset,
+} from "@/shared/auth";
+import { Button } from "@/shared/ui";
+import { useEffect, useState, useRef } from "react";
 import {
   readArticle,
   ReaderError,
@@ -42,13 +51,23 @@ function TextBlock({ block }: { block: Block }) {
   }
 }
 export function ReaderPage({ id }: { id: string }) {
+  const [historyHidden, revealHistory] = usePrivateHistory();
   const [article, setArticle] = useState<ArchivedArticle | null>(null);
   const [error, setError] = useState("");
   const [checking, setChecking] = useState(true);
+  const reload = useRef<() => void>(() => {});
   useEffect(() => {
+    let owner: string | null = null;
     let controller = new AbortController();
     let loaded = false;
     let loading = false;
+    const unsubscribe = subscribeSessionReset(() => {
+      controller.abort();
+      owner = null;
+      loaded = false;
+      setArticle(null);
+      setChecking(false);
+    });
     async function load(background = false) {
       if (loading) return;
       loading = true;
@@ -61,6 +80,15 @@ export function ReaderPage({ id }: { id: string }) {
       }
       setError("");
       try {
+        const identity = await verifySession(request.signal);
+        if (request.signal.aborted) return;
+        if (owner && owner !== identity.id) {
+          loaded = false;
+          setArticle(null);
+          setChecking(true);
+        }
+        owner = identity.id;
+        revealHistory();
         const data = await readArticle(id, request.signal);
         if (!request.signal.aborted) {
           setArticle(data);
@@ -70,8 +98,15 @@ export function ReaderPage({ id }: { id: string }) {
       } catch (error) {
         if (request.signal.aborted) return;
         setChecking(false);
-        const code =
-          error instanceof ReaderError ? error.code : "internal_error";
+        const code = isUnauthorized(error)
+          ? "unauthorized"
+          : error instanceof ReaderError
+            ? error.code
+            : "internal_error";
+        if (isUnauthorized(error)) {
+          resetSession();
+          window.location.replace(loginPath());
+        }
         if (code !== "internal_error") {
           loaded = false;
           setArticle(null);
@@ -84,19 +119,23 @@ export function ReaderPage({ id }: { id: string }) {
     const restore = () => {
       if (document.visibilityState === "visible") void load(true);
     };
+    reload.current = () => {
+      void load(true);
+    };
     void load();
     window.addEventListener("focus", restore);
     window.addEventListener("pageshow", restore);
     window.addEventListener("online", restore);
     document.addEventListener("visibilitychange", restore);
     return () => {
+      unsubscribe();
       controller.abort();
       window.removeEventListener("focus", restore);
       window.removeEventListener("pageshow", restore);
       window.removeEventListener("online", restore);
       document.removeEventListener("visibilitychange", restore);
     };
-  }, [id]);
+  }, [id, revealHistory]);
   const message =
     (
       {
@@ -107,6 +146,18 @@ export function ReaderPage({ id }: { id: string }) {
         unsupported_document: "Эта версия статьи не поддерживается.",
       } as Record<string, string>
     )[error] ?? "Не удалось загрузить статью.";
+  if (historyHidden)
+    return (
+      <main className={styles.reader}>
+        <p role="status">Проверяем вход…</p>
+        {error && (
+          <>
+            <p role="alert">Не удалось проверить вход.</p>
+            <Button onClick={() => reload.current()}>Повторить</Button>
+          </>
+        )}
+      </main>
+    );
   return (
     <main className={styles.reader}>
       <nav aria-label="Навигация читалки">
@@ -118,7 +169,10 @@ export function ReaderPage({ id }: { id: string }) {
         <>
           {!article && <h1>Статья недоступна</h1>}
           <p role="alert">{message}</p>
-          {error === "unauthorized" && <Link href="/login">Войти</Link>}
+          {error === "internal_error" && (
+            <Button onClick={() => reload.current()}>Повторить</Button>
+          )}
+          {error === "unauthorized" && <Link href={loginPath()}>Войти</Link>}
         </>
       )}
       {!checking && article && (
@@ -161,7 +215,12 @@ export function ReaderPage({ id }: { id: string }) {
           <div className={styles.body}>
             {article.document.blocks.map((block, index) =>
               article.document.schema_version === 2 ? (
-                <RichBlock key={index} block={block} linkID={id} />
+                <RichBlock
+                  key={index}
+                  block={block}
+                  linkID={id}
+                  revalidate={() => reload.current()}
+                />
               ) : (
                 <TextBlock key={index} block={block} />
               ),

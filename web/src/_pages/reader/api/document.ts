@@ -64,7 +64,14 @@ export async function readArticle(
     try {
       code = (await response.json()).code ?? code;
     } catch {}
-    throw new ReaderError(code, response.status);
+    throw new ReaderError(
+      response.status === 401
+        ? "unauthorized"
+        : response.status >= 500
+          ? "internal_error"
+          : code,
+      response.status,
+    );
   }
   const data = await response.json();
   if (

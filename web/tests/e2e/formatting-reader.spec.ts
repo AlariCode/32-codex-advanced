@@ -1,4 +1,11 @@
 import { expect, test } from "@playwright/test";
+
+test.beforeEach(async ({ page }) => {
+  await page.route("**/api/users/me", (r) =>
+    r.fulfill({ json: { id: "owner", email: "owner@example.com" } }),
+  );
+});
+
 const id = "12345678-1234-4234-8234-123456789abc";
 const text = (value: string) => ({ kind: "text", text: value });
 

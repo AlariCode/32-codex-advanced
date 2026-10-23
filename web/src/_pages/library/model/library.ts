@@ -14,7 +14,9 @@ export interface LinkCard {
 export interface Draft {
   id: string;
   url: string;
-  state: "sending" | "invalid" | "error";
+  state: "sending" | "invalid" | "error" | "unknown";
+  user_id: string;
+  updated_at: string;
 }
 export function validURL(raw: string) {
   try {

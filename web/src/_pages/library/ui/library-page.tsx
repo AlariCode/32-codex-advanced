@@ -8,6 +8,14 @@ import {
   useState,
   type FormEvent,
 } from "react";
+import {
+  usePrivateHistory,
+  isUnauthorized,
+  loginPath,
+  resetSession,
+  subscribeSessionReset,
+} from "@/shared/auth";
+import { readDrafts, writeDrafts } from "../model/draft-storage";
 import type { UserDTO } from "@/shared/api";
 import { Button, TextField } from "@/shared/ui";
 import {
@@ -67,11 +75,13 @@ function Welcome({ children }: { children?: React.ReactNode }) {
 function DraftCard({
   draft,
   send,
+  edit,
 }: {
   draft: Draft;
   send: (id: string, url: string) => void;
+  edit: (id: string, url: string) => void;
 }) {
-  const [url, setURL] = useState(draft.url);
+  const url = draft.url;
   const input = useRef<HTMLInputElement>(null);
   useEffect(() => {
     if (draft.state !== "sending") input.current?.focus();
@@ -91,7 +101,9 @@ function DraftCard({
           <p id={`draft-${draft.id}-error`} role="alert">
             {draft.state === "invalid"
               ? "Проверьте адрес. Нужна ссылка с http:// или https:// без логина и пароля."
-              : "Не удалось подтвердить сохранение. Повторите отправку."}
+              : draft.state === "unknown"
+                ? "Исход отправки неизвестен. Повторите отправку для подтверждения сохранения."
+                : "Не удалось подтвердить сохранение. Повторите отправку."}
           </p>
           <form
             noValidate
@@ -105,7 +117,7 @@ function DraftCard({
               ref={input}
               id={`draft-${draft.id}`}
               value={url}
-              onChange={(event) => setURL(event.target.value)}
+              onChange={(event) => edit(draft.id, event.target.value)}
               inputMode="url"
               autoCapitalize="none"
               spellCheck={false}
@@ -125,6 +137,7 @@ function DraftCard({
 }
 
 export function LibraryPage() {
+  const [historyHidden, revealHistory] = usePrivateHistory();
   const [user, setUser] = useState<UserDTO | null>(null);
   const [status, setStatus] = useState<
     "checking" | "anonymous" | "ready" | "error"
@@ -144,6 +157,15 @@ export function LibraryPage() {
   const [cards, setCards] = useState<LinkCard[]>([]);
   const [drafts, setDrafts] = useState<Draft[]>([]);
   const [url, setURL] = useState("");
+  const [storageError, setStorageError] = useState(false);
+  useEffect(() => {
+    if (!user || authenticatedUser.current !== user.id) return;
+    try {
+      writeDrafts(user.id, url, drafts);
+    } catch {
+      setStorageError(true);
+    }
+  }, [user, url, drafts]);
   const [cursor, setCursor] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
@@ -169,6 +191,7 @@ export function LibraryPage() {
     }
   }, [cards]);
   const reload = useRef<() => void>(() => {});
+  const repeat = useRef<() => void>(() => reload.current());
 
   const invalidate = useCallback(() => {
     scope.current.abort();
@@ -194,8 +217,10 @@ export function LibraryPage() {
   }, []);
   const unauthorized = useCallback(
     (error: unknown) => {
-      if (error instanceof LibraryError && error.status === 401) {
+      if (isUnauthorized(error)) {
+        resetSession();
         invalidate();
+        window.location.replace(loginPath());
         return true;
       }
       return false;
@@ -203,6 +228,7 @@ export function LibraryPage() {
     [invalidate],
   );
   useEffect(() => {
+    const unsubscribe = subscribeSessionReset(invalidate);
     let loading = false;
     let revalidating = false;
     async function load() {
@@ -236,6 +262,14 @@ export function LibraryPage() {
         if (controller.signal.aborted) return;
         authenticatedUser.current = identity.id;
         setUser(identity);
+        try {
+          const saved = readDrafts(identity.id);
+          setURL(saved.url);
+          setDrafts(saved.drafts);
+          setStorageError(false);
+        } catch {
+          setStorageError(true);
+        }
         syncClock(page.server_time);
         setCards(page.links);
         setCursor(page.next_cursor);
@@ -247,15 +281,14 @@ export function LibraryPage() {
               Math.max(active.current.get(card.id) ?? 0, card.generation),
             ),
           );
+        revealHistory();
         setStatus("ready");
         void discover(controller);
       } catch (error) {
         if (controller.signal.aborted) return;
-        setStatus(
-          error instanceof LibraryError && error.status === 401
-            ? "anonymous"
-            : "error",
-        );
+        if (isUnauthorized(error)) revealHistory();
+        else setError("Не удалось загрузить библиотеку. Попробуйте ещё раз.");
+        setStatus(isUnauthorized(error) ? "anonymous" : "error");
       } finally {
         loading = false;
       }
@@ -276,20 +309,23 @@ export function LibraryPage() {
           await load();
           return;
         }
+        revealHistory();
         const page = await listLinks(controller.signal);
         if (controller.signal.aborted) return;
         setUser(identity);
         setError("");
         syncClock(page.server_time);
         setCards((current) => mergeCards(current, page.links));
-        setCursor((current) => current || page.next_cursor);
+
         // Preserve loaded pagination, drafts, input and in-flight mutations.
         await discover(controller);
       } catch (error) {
-        if (!controller.signal.aborted && !unauthorized(error))
+        if (!controller.signal.aborted && !unauthorized(error)) {
+          repeat.current = () => reload.current();
           setError(
-            "Не удалось обновить библиотеку. Попробуем при восстановлении связи.",
+            "Не удалось обновить библиотеку. Повторите загрузку или дождитесь восстановления связи.",
           );
+        }
       } finally {
         revalidating = false;
       }
@@ -311,8 +347,14 @@ export function LibraryPage() {
           setCards((current) => mergeCards(current, page.links));
           cursor = page.next_cursor;
         } while (cursor && !controller.signal.aborted);
+        if (!controller.signal.aborted) setError("");
       } catch (error) {
-        if (!controller.signal.aborted) unauthorized(error);
+        if (!controller.signal.aborted && !unauthorized(error)) {
+          repeat.current = () => reload.current();
+          setError(
+            "Не удалось проверить обрабатываемые ссылки. Повторите загрузку.",
+          );
+        }
       }
     }
     async function refresh() {
@@ -358,10 +400,14 @@ export function LibraryPage() {
           }
         }
       } catch (error) {
-        if (!controller.signal.aborted && !unauthorized(error))
+        if (!controller.signal.aborted && !unauthorized(error)) {
+          repeat.current = () => {
+            void refresh();
+          };
           setError(
-            "Не удалось обновить статусы. Проверим снова при восстановлении связи.",
+            "Не удалось обновить статусы. Повторите загрузку или дождитесь восстановления связи.",
           );
+        }
       } finally {
         polling = false;
       }
@@ -373,7 +419,8 @@ export function LibraryPage() {
       void refresh();
     }, 2000);
     reload.current = () => {
-      void load();
+      if (authenticatedUser.current) void revalidate();
+      else void load();
     };
     void load();
     const restore = () => {
@@ -384,6 +431,7 @@ export function LibraryPage() {
     window.addEventListener("online", restore);
     document.addEventListener("visibilitychange", restore);
     return () => {
+      unsubscribe();
       scope.current.abort();
       window.removeEventListener("pageshow", restore);
       window.removeEventListener("focus", restore);
@@ -392,7 +440,7 @@ export function LibraryPage() {
       window.clearInterval(timer);
       window.clearInterval(clockTimer);
     };
-  }, [unauthorized, syncClock]);
+  }, [unauthorized, syncClock, invalidate, revealHistory]);
 
   async function send(id: string, raw: string) {
     if (busy.current.has(id)) return;
@@ -401,6 +449,8 @@ export function LibraryPage() {
       id,
       url: normalized,
       state: validURL(normalized) ? "sending" : "invalid",
+      user_id: authenticatedUser.current!,
+      updated_at: new Date().toISOString(),
     };
     setDrafts((current) => [
       draft,
@@ -427,10 +477,13 @@ export function LibraryPage() {
           item.id === id
             ? {
                 ...item,
+                updated_at: new Date().toISOString(),
                 state:
                   error instanceof LibraryError && error.code === "invalid_url"
                     ? "invalid"
-                    : "error",
+                    : error instanceof LibraryError
+                      ? "error"
+                      : "unknown",
               }
             : item,
         ),
@@ -502,8 +555,12 @@ export function LibraryPage() {
         setCursor(page.next_cursor);
       }
     } catch (error) {
-      if (!controller.signal.aborted && !unauthorized(error))
+      if (!controller.signal.aborted && !unauthorized(error)) {
+        repeat.current = () => {
+          void more();
+        };
         setError("Не удалось загрузить ссылки. Попробуйте ещё раз.");
+      }
     } finally {
       if (scope.current === controller) {
         moreBusy.current = false;
@@ -532,8 +589,12 @@ export function LibraryPage() {
         setCards((current) => mergeCards(current, [card]));
       }
     } catch (error) {
-      if (!controller.signal.aborted && !unauthorized(error))
+      if (!controller.signal.aborted && !unauthorized(error)) {
+        repeat.current = () => {
+          void openCard(id);
+        };
         setError("Не удалось открыть карточку. Попробуйте ещё раз.");
+      }
     } finally {
       if (scope.current === controller) {
         openBusy.current = false;
@@ -541,6 +602,20 @@ export function LibraryPage() {
       }
     }
   }
+
+  if (historyHidden)
+    return (
+      <main>
+        <h1>Linkbook</h1>
+        <p role="status">Проверяем вход…</p>
+        {error && (
+          <>
+            <p role="alert">{error}</p>
+            <Button onClick={() => reload.current()}>Повторить</Button>
+          </>
+        )}
+      </main>
+    );
 
   if (status === "checking")
     return (
@@ -595,6 +670,12 @@ export function LibraryPage() {
           Сохранить ссылку <span aria-hidden="true">↗</span>
         </Button>
       </form>
+      {storageError && (
+        <p role="status">
+          Восстановление черновиков недоступно. Вы можете сохранять ссылки, пока
+          страница открыта.
+        </p>
+      )}
       <p role="status" className={styles.message}>
         {message}
       </p>
@@ -609,6 +690,19 @@ export function LibraryPage() {
           <DraftCard
             key={draft.id}
             draft={draft}
+            edit={(id, value) =>
+              setDrafts((current) =>
+                current.map((item) =>
+                  item.id === id
+                    ? {
+                        ...item,
+                        url: value,
+                        updated_at: new Date().toISOString(),
+                      }
+                    : item,
+                ),
+              )
+            }
             send={(id, raw) => {
               void send(id, raw);
             }}
@@ -689,7 +783,12 @@ export function LibraryPage() {
           </article>
         ))}
       </section>
-      {error && <p role="alert">{error}</p>}
+      {error && (
+        <div>
+          <p role="alert">{error}</p>
+          <Button onClick={() => repeat.current()}>Повторить загрузку</Button>
+        </div>
+      )}
       {cursor && (
         <Button
           onClick={() => {

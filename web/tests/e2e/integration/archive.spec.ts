@@ -202,9 +202,7 @@ test("document access is private and expired session hides reader", async ({
   await expect(
     page.getByRole("article", { name: "Сохранённая статья", exact: true }),
   ).toHaveCount(0);
-  await expect(
-    page.getByText("Войдите, чтобы прочитать сохранённую статью."),
-  ).toBeVisible();
+  await expect(page).toHaveURL(/\/login\?returnTo=/);
 });
 
 test("formatted archive preserves structure and safe links after origin shutdown", async ({
