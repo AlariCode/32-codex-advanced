@@ -14,9 +14,11 @@ const reasons: Record<string, string> = {
 export function ArchivedImage({
   block,
   linkID,
+  revalidate,
 }: {
   block: Block;
   linkID: string;
+  revalidate: () => void;
 }) {
   const [failed, setFailed] = useState(false);
   if (!block.asset_id || failed)
@@ -38,7 +40,10 @@ export function ArchivedImage({
       alt={block.alt ?? ""}
       loading="lazy"
       decoding="async"
-      onError={() => setFailed(true)}
+      onError={() => {
+        setFailed(true);
+        revalidate();
+      }}
     />
   );
 }

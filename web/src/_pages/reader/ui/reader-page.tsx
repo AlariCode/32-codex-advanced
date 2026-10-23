@@ -215,7 +215,12 @@ export function ReaderPage({ id }: { id: string }) {
           <div className={styles.body}>
             {article.document.blocks.map((block, index) =>
               article.document.schema_version === 2 ? (
-                <RichBlock key={index} block={block} linkID={id} />
+                <RichBlock
+                  key={index}
+                  block={block}
+                  linkID={id}
+                  revalidate={() => reload.current()}
+                />
               ) : (
                 <TextBlock key={index} block={block} />
               ),

@@ -212,3 +212,62 @@ test("return after login to an absent article shows a library exit", async ({
   await expect(input(page)).toBeVisible();
   await expect(page.getByRole("article")).toHaveCount(0);
 });
+
+test("session expiring during a private image request hides the reader and returns after login", async ({
+  page,
+  request,
+}) => {
+  const user = await create(page);
+  await page.goto("/login");
+  await login(page, user.email);
+  await expect(input(page)).toBeVisible();
+  const owner = await session(page);
+  await input(page).fill(
+    `http://127.0.0.1:39876/images/normal/${crypto.randomUUID()}`,
+  );
+  await save(page).click();
+  await expect(page.getByRole("link", { name: "Читать статью" })).toBeVisible({
+    timeout: 15000,
+  });
+  let release!: () => void;
+  const wait = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  let started!: () => void;
+  const seen = new Promise<void>((resolve) => {
+    started = resolve;
+  });
+  await page.route("**/assets/**", async (r) => {
+    started();
+    await wait;
+    await r.continue().catch(() => {});
+  });
+  await page.getByRole("link", { name: "Читать статью" }).click();
+  await expect(page).toHaveURL(/\/links\/[a-f0-9-]+$/);
+  const path = new URL(page.url()).pathname;
+  await expect(page.getByRole("article")).toBeVisible();
+  await seen;
+  expect(
+    (await request.post(`${control}/session/expire?user=${owner.id}`)).ok(),
+  ).toBeTruthy();
+  release();
+  await expect(page).toHaveURL(/\/login\?returnTo=/);
+  await expect(page.getByRole("article")).toHaveCount(0);
+  await page.unroute("**/assets/**");
+  await login(page, user.email);
+  await expect(page).toHaveURL(new RegExp(path + "$"));
+  await expect(page.getByRole("article")).toBeVisible();
+  await expect(page.getByRole("article").locator("img").first()).toBeVisible();
+  await expect
+    .poll(() =>
+      page
+        .getByRole("article")
+        .locator("img")
+        .first()
+        .evaluate((img: HTMLImageElement) => img.naturalWidth),
+    )
+    .toBeGreaterThan(0);
+  expect(
+    await (await request.get(`${control}/owner/stats?user=${owner.id}`)).json(),
+  ).toEqual({ links: 1, jobs: 1, generation: 1 });
+});

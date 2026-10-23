@@ -25,13 +25,28 @@ const tags = {
 } as const;
 
 // All tags and props are selected here; archived data is never spread into React.
-export function RichBlock({ block, linkID }: { block: Block; linkID: string }) {
+export function RichBlock({
+  block,
+  linkID,
+  revalidate,
+}: {
+  block: Block;
+  linkID: string;
+  revalidate: () => void;
+}) {
   const children = block.children?.map((child, index) => (
-    <RichBlock key={index} block={child} linkID={linkID} />
+    <RichBlock
+      key={index}
+      block={child}
+      linkID={linkID}
+      revalidate={revalidate}
+    />
   ));
   switch (block.kind) {
     case "image":
-      return <ArchivedImage block={block} linkID={linkID} />;
+      return (
+        <ArchivedImage block={block} linkID={linkID} revalidate={revalidate} />
+      );
     case "text":
       return block.text;
     case "br":

@@ -539,3 +539,73 @@ test("failure discovering processing links is visible and can be retried", async
   await expect(input(page)).toHaveValue("preserved unsent");
   await expect(page.getByRole("article")).toHaveCount(1);
 });
+
+for (const change of ["expired", "other-owner"] as const) {
+  test(`private image failure rechecks session: ${change}`, async ({
+    page,
+  }) => {
+    await mock(page);
+    const asset = "a".repeat(64);
+    const illustrated = {
+      ...article,
+      document: {
+        schema_version: 2,
+        blocks: [
+          {
+            kind: "paragraph",
+            children: [{ kind: "text", text: "Private illustrated content" }],
+          },
+          { kind: "image", asset_id: asset, alt: "Private illustration" },
+        ],
+      },
+    };
+    await page.route(`**/api/links/${id}/document`, (r) =>
+      r.fulfill({ json: illustrated }),
+    );
+    let release!: () => void;
+    const wait = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    let started!: () => void;
+    const seen = new Promise<void>((resolve) => {
+      started = resolve;
+    });
+    await page.route(`**/api/links/${id}/assets/${asset}`, async (r) => {
+      started();
+      await wait;
+      await r
+        .fulfill({
+          status: change === "expired" ? 401 : 404,
+          json: { code: change === "expired" ? "unauthorized" : "not_found" },
+        })
+        .catch(() => {});
+    });
+    await page.goto(`/links/${id}`, { waitUntil: "domcontentloaded" });
+    await expect(page.getByRole("article")).toContainText(
+      "Private illustrated content",
+    );
+    await seen;
+    await page.route("**/api/users/me", (r) =>
+      change === "expired"
+        ? r.fulfill({ status: 401, json: { code: "unauthorized" } })
+        : r.fulfill({
+            json: { ...identity, id: "other", email: "other@example.com" },
+          }),
+    );
+    if (change === "other-owner")
+      await page.route(`**/api/links/${id}/document`, (r) =>
+        r.fulfill({ status: 404, json: { code: "not_found" } }),
+      );
+    release();
+    if (change === "expired")
+      await expect(page).toHaveURL(/\/login\?returnTo=/);
+    else
+      await expect(
+        page.getByText("Статья не найдена.", { exact: true }),
+      ).toBeVisible();
+    await expect(page.getByRole("article")).toHaveCount(0);
+    await expect(
+      page.getByText("Private illustrated content", { exact: true }),
+    ).toHaveCount(0);
+  });
+}
