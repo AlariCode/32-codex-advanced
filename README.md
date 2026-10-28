@@ -204,7 +204,9 @@ make check
 make build
 ```
 
-`make check` проверяет Go-пакеты, запускает `go vet`, ESLint и TypeScript.
+`make check` запускает тесты метрик benchmark, проверяет Go-пакеты, запускает
+`go vet`, ESLint и TypeScript. При успехе команда ничего не выводит; при ошибке
+останавливается и показывает накопленный вывод проверок.
 `make build` собирает Go-бинарники в `bin/` и production-сборку Web.
 После сборки Web можно запустить командой `npm start`.
 

@@ -59,11 +59,20 @@ build:
 	npm run build
 
 check:
-	node --test scripts/archive-benchmark/metrics.test.mjs
-	go test ./backend/api/... ./backend/worker/... ./backend/migrations/... ./backend/linkprocessing/...
-	go vet ./backend/api/... ./backend/worker/... ./backend/migrations/... ./backend/linkprocessing/...
-	npm run lint
-	npm run typecheck
+	@mkdir -p tmp; \
+	log=$$(mktemp tmp/check.XXXXXX) || exit 1; \
+	trap 'rm -f "$$log"' EXIT; \
+	if { \
+		node --test scripts/archive-benchmark/metrics.test.mjs && \
+		go test ./backend/api/... ./backend/worker/... ./backend/migrations/... ./backend/linkprocessing/... && \
+		go vet ./backend/api/... ./backend/worker/... ./backend/migrations/... ./backend/linkprocessing/... && \
+		npm run lint && \
+		npm run typecheck; \
+	} >"$$log" 2>&1; then \
+		:; \
+	else \
+		status=$$?; cat "$$log"; exit "$$status"; \
+	fi
 
 ralph:
 	@test -n "$(PHASE)" || (echo "Usage: make ralph PHASE=2"; exit 1)
