@@ -193,3 +193,42 @@ func (h libraryHandler) get(w http.ResponseWriter, r *http.Request) {
 }
 
 func serverTime() string { return time.Now().UTC().Format(time.RFC3339Nano) }
+
+// delete permanently removes an owner's card and its complete private archive.
+// @Summary Delete a saved link permanently
+// @Description Requires the owner's session and matching Origin through the loopback proxy. Atomically removes jobs, snapshot and assets. Missing and foreign IDs return the same 404. Private responses are no-store.
+// @Tags links
+// @Param id path string true "Link UUID"
+// @Success 204 "Deleted"
+// @Failure 400 {object} errorResponse
+// @Failure 401 {object} errorResponse
+// @Failure 403 {object} errorResponse
+// @Failure 404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Router /api/links/{id} [delete]
+func (h libraryHandler) delete(w http.ResponseWriter, r *http.Request) {
+	current, ok := h.authenticated(w, r)
+	if !ok {
+		return
+	}
+	host, _, err := net.SplitHostPort(r.RemoteAddr)
+	peer := net.ParseIP(host)
+	if err != nil || peer == nil || !peer.IsLoopback() || r.Header.Get("Origin") != h.origin {
+		writeJSON(w, 403, errorResponse{"forbidden_origin"})
+		return
+	}
+	id := r.PathValue("id")
+	if !link.ValidID(id) {
+		writeJSON(w, 400, errorResponse{"invalid_request"})
+		return
+	}
+	err = h.links.Delete(r.Context(), current.ID, id)
+	switch {
+	case errors.Is(err, sql.ErrNoRows):
+		writeJSON(w, 404, errorResponse{"not_found"})
+	case err != nil:
+		writeJSON(w, 500, errorResponse{"internal_error"})
+	default:
+		w.WriteHeader(http.StatusNoContent)
+	}
+}

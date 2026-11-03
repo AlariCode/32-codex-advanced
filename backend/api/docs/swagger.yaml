@@ -257,6 +257,42 @@ paths:
       tags:
       - links
   /api/links/{id}:
+    delete:
+      description: Requires the owner's session and matching Origin through the loopback
+        proxy. Atomically removes jobs, snapshot and assets. Missing and foreign IDs
+        return the same 404. Private responses are no-store.
+      parameters:
+      - description: Link UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: Deleted
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+      summary: Delete a saved link permanently
+      tags:
+      - links
     get:
       parameters:
       - description: Link UUID

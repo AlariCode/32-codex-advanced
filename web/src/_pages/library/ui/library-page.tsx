@@ -4,6 +4,7 @@ import { Button } from "@/shared/ui";
 import { useLibraryState } from "../model/use-library-state";
 import { useLibrarySync } from "../model/use-library-sync";
 import { useLibraryActions } from "../model/use-library-actions";
+import { useLibraryDelete } from "../model/use-library-delete";
 import { DraftCard } from "./draft-card";
 import { LibraryWelcome } from "./library-welcome";
 import { SavedLinkCard } from "./saved-link-card";
@@ -13,9 +14,12 @@ import styles from "./library.module.css";
 export function LibraryPage() {
   const library = useLibraryState();
   useLibrarySync(library);
+  const remove = useLibraryDelete(library);
   const { send, retry, submit, more, openCard, editDraft } =
     useLibraryActions(library);
   const {
+    deleting,
+    deleteErrors,
     historyHidden,
     user,
     status,
@@ -121,6 +125,9 @@ export function LibraryPage() {
           <SavedLinkCard
             key={card.id}
             card={card}
+            deleting={!!deleting[card.id]}
+            deleteError={deleteErrors[card.id]}
+            remove={remove}
             serverNow={
               serverClockRef.current.server +
               monotonicNow -

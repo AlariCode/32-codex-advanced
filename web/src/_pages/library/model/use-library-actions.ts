@@ -11,6 +11,7 @@ import type { LibraryState } from "./use-library-state";
 
 export function useLibraryActions(library: LibraryState) {
   const {
+    deletedRef,
     syncClock,
     setCards,
     setDrafts,
@@ -56,6 +57,10 @@ export function useLibraryActions(library: LibraryState) {
     try {
       const result = await saveLink(controller.signal, normalized);
       if (controller.signal.aborted) return;
+      if (deletedRef.current.has(result.link.id)) {
+        setDrafts((current) => current.filter((item) => item.id !== id));
+        return;
+      }
       syncClock(result.server_time);
       focusCardRef.current = result.link.id;
       if (result.link.state === "processing")
@@ -98,7 +103,7 @@ export function useLibraryActions(library: LibraryState) {
     const controller = scopeRef.current;
     try {
       const result = await retryLink(controller.signal, card.id, generation);
-      if (controller.signal.aborted) return;
+      if (controller.signal.aborted || deletedRef.current.has(card.id)) return;
       retryGenerationRef.current.delete(card.id);
       syncClock(result.server_time);
       if (result.link.state === "processing")
@@ -135,6 +140,9 @@ export function useLibraryActions(library: LibraryState) {
     try {
       const page = await listLinks(controller.signal, cursor);
       if (!controller.signal.aborted) {
+        page.links = page.links.filter(
+          (card) => !deletedRef.current.has(card.id),
+        );
         syncClock(page.server_time);
         page.links
           .filter((card) => card.state === "processing")
@@ -169,7 +177,7 @@ export function useLibraryActions(library: LibraryState) {
     const controller = scopeRef.current;
     try {
       const card = await getLink(controller.signal, id);
-      if (!controller.signal.aborted) {
+      if (!controller.signal.aborted && !deletedRef.current.has(id)) {
         focusCardRef.current = id;
         if (card.state === "processing") {
           activeRef.current.set(

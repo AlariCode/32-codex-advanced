@@ -214,3 +214,19 @@ func (s *Service) list(ctx context.Context, owner, encoded string, limit int, ac
 	page.ServerTime = time.Now().UTC()
 	return page, nil
 }
+
+// Delete atomically removes the archive and jobs through cascading foreign keys.
+func (s *Service) Delete(ctx context.Context, owner, id string) error {
+	result, err := s.db.ExecContext(ctx, `DELETE FROM links WHERE user_id=$1 AND id=$2`, owner, id)
+	if err != nil {
+		return err
+	}
+	count, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if count == 0 {
+		return sql.ErrNoRows
+	}
+	return nil
+}

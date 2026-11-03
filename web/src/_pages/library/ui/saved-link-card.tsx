@@ -1,3 +1,4 @@
+import { useRef, useState } from "react";
 import Link from "next/link";
 import type { LinkCard } from "../model/library";
 import styles from "./library.module.css";
@@ -24,6 +25,9 @@ function processingReason(reason?: string | null) {
 
 type SavedLinkCardProps = {
   card: LinkCard;
+  deleting: boolean;
+  deleteError?: string;
+  remove: (id: string) => Promise<void>;
   serverNow: number;
   retryError?: string;
   retrying: boolean;
@@ -34,6 +38,9 @@ type SavedLinkCardProps = {
 
 export function SavedLinkCard({
   card,
+  deleting,
+  deleteError,
+  remove,
   serverNow,
   retryError,
   retrying,
@@ -41,6 +48,12 @@ export function SavedLinkCard({
   retry,
   openCard,
 }: SavedLinkCardProps) {
+  const [confirming, setConfirming] = useState(false);
+  const deleteButton = useRef<HTMLButtonElement>(null);
+  function cancel() {
+    setConfirming(false);
+    requestAnimationFrame(() => deleteButton.current?.focus());
+  }
   return (
     <article
       id={`link-${card.id}`}
@@ -72,9 +85,45 @@ export function SavedLinkCard({
         </p>
       )}
       {retryError && <p role="alert">{retryError}</p>}
+      {deleteError && <p role="alert">{deleteError}</p>}
+      {deleting && (
+        <p role="status">Удаляем… Проверяем результат на сервере.</p>
+      )}
+      {confirming && !deleting && (
+        <div
+          className={styles.deleteConfirmation}
+          role="group"
+          aria-label="Подтверждение удаления"
+          onKeyDown={(event) => {
+            if (event.key === "Escape") cancel();
+          }}
+        >
+          <p>
+            Удалить ссылку и сохранённую статью навсегда? Обработка остановится.
+            Восстановить их не получится.
+          </p>
+          <div className={styles.actions}>
+            <button autoFocus onClick={cancel}>
+              Отмена
+            </button>
+            <button
+              className={styles.danger}
+              onClick={() => {
+                setConfirming(false);
+                void remove(card.id);
+              }}
+            >
+              Удалить навсегда
+            </button>
+          </div>
+        </div>
+      )}
       <div className={styles.actions}>
         {(card.state === "failed" || card.state === "unavailable") && (
-          <button disabled={!!retrying} onClick={() => void retry(card)}>
+          <button
+            disabled={!!retrying || deleting}
+            onClick={() => void retry(card)}
+          >
             {retrying ? "Отправляем повтор…" : "Повторить"}
           </button>
         )}
@@ -84,7 +133,7 @@ export function SavedLinkCard({
 
         {card.state !== "ready" && (
           <button
-            disabled={opening !== null}
+            disabled={opening !== null || deleting}
             onClick={() => {
               void openCard(card.id);
             }}
@@ -92,6 +141,18 @@ export function SavedLinkCard({
             {opening === card.id ? "Открываем…" : "Открыть карточку"}
           </button>
         )}
+        <button
+          ref={deleteButton}
+          className={styles.danger}
+          disabled={deleting || confirming}
+          onClick={() => setConfirming(true)}
+        >
+          {deleting
+            ? "Удаляем…"
+            : deleteError
+              ? "Повторить удаление"
+              : "Удалить"}
+        </button>
         <a href={card.submitted_url} target="_blank" rel="noopener noreferrer">
           Открыть оригинал <span aria-hidden="true">↗</span>
         </a>

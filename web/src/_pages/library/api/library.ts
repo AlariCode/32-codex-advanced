@@ -117,3 +117,35 @@ export async function retryLink(
     throw new Error("invalid_response");
   return result;
 }
+
+// A lost response (or DELETE 404) is ambiguous. Only a fresh metadata 404
+// confirms absence; never infer it from a cached library page or document.
+export async function deleteLink(
+  signal: AbortSignal,
+  id: string,
+): Promise<void> {
+  try {
+    const response = await fetch(`/api/links/${encodeURIComponent(id)}`, {
+      method: "DELETE",
+      cache: "no-store",
+      credentials: "same-origin",
+      signal,
+    });
+    if (response.status === 204) return;
+    throw new LibraryError(response.status, "delete_failed");
+  } catch (error) {
+    if (
+      signal.aborted ||
+      (error instanceof LibraryError && error.status !== 404)
+    )
+      throw error;
+    try {
+      await getLink(signal, id);
+    } catch (verification) {
+      if (verification instanceof LibraryError && verification.status === 404)
+        return;
+      throw verification;
+    }
+    throw new Error("delete_unconfirmed");
+  }
+}

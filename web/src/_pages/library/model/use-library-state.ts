@@ -1,4 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type SetStateAction,
+} from "react";
 import {
   usePrivateHistory,
   isUnauthorized,
@@ -27,7 +33,20 @@ export function useLibraryState() {
       setMonotonicNow(local);
     }
   }, []);
-  const [cards, setCards] = useState<LinkCard[]>([]);
+  const deletedRef = useRef(new Set<string>());
+  const deleteBusyRef = useRef(new Set<string>());
+  const [deleting, setDeleting] = useState<Record<string, boolean>>({});
+  const [deleteErrors, setDeleteErrors] = useState<Record<string, string>>({});
+  const [cards, updateCards] = useState<LinkCard[]>([]);
+  // Every ingress (list, status, duplicate save, retry and metadata) shares this
+  // fence, including React updates queued before DELETE completed.
+  const setCards = useCallback((next: SetStateAction<LinkCard[]>) => {
+    updateCards((current) =>
+      (typeof next === "function" ? next(current) : next).filter(
+        (card) => !deletedRef.current.has(card.id),
+      ),
+    );
+  }, []);
   const [drafts, setDrafts] = useState<Draft[]>([]);
   const [url, setURL] = useState("");
   const [storageError, setStorageError] = useState(false);
@@ -73,6 +92,10 @@ export function useLibraryState() {
     authenticatedUserRef.current = null;
     focusCardRef.current = null;
     busyRef.current.clear();
+    deletedRef.current.clear();
+    deleteBusyRef.current.clear();
+    setDeleting({});
+    setDeleteErrors({});
     activeRef.current.clear();
     retryGenerationRef.current.clear();
     setRetrying({});
@@ -89,7 +112,7 @@ export function useLibraryState() {
     setLoadingMore(false);
     setOpening(null);
     setStatus("anonymous");
-  }, []);
+  }, [setCards]);
   const unauthorized = useCallback(
     (error: unknown) => {
       if (isUnauthorized(error)) {
@@ -116,6 +139,12 @@ export function useLibraryState() {
     syncClock,
     cards,
     setCards,
+    deletedRef,
+    deleteBusyRef,
+    deleting,
+    setDeleting,
+    deleteErrors,
+    setDeleteErrors,
     drafts,
     setDrafts,
     url,

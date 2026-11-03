@@ -141,3 +141,17 @@
     padding-bottom: 2.5rem;
   }
 }
+
+.deleteConfirmation {
+  margin: 1rem 0;
+  padding: 1rem;
+  border: 1px solid #8a2e18;
+  background: #fff8f5;
+}
+.deleteConfirmation p {
+  margin: 0 0 0.5rem;
+  line-height: 1.6;
+}
+.actions .danger {
+  color: #8a2e18;
+}

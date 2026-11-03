@@ -1,12 +1,20 @@
 import { useEffect } from "react";
 import { isUnauthorized, subscribeSessionReset } from "@/shared/auth";
-import { currentUser, listLinks, statuses } from "../api/library";
+import {
+  currentUser,
+  listLinks,
+  statuses,
+  getLink,
+  LibraryError,
+} from "../api/library";
 import { readDrafts } from "./draft-storage";
 import { mergeCards } from "./library";
 import type { LibraryState } from "./use-library-state";
 
 export function useLibrarySync(library: LibraryState) {
   const {
+    deletedRef,
+    deleteBusyRef,
     revealHistory,
     setUser,
     setStatus,
@@ -69,6 +77,9 @@ export function useLibrarySync(library: LibraryState) {
         const identity = await currentUser(controller.signal);
         const page = await listLinks(controller.signal);
         if (controller.signal.aborted) return;
+        page.links = page.links.filter(
+          (card) => !deletedRef.current.has(card.id),
+        );
         authenticatedUserRef.current = identity.id;
         setUser(identity);
         try {
@@ -121,6 +132,9 @@ export function useLibrarySync(library: LibraryState) {
         revealHistory();
         const page = await listLinks(controller.signal);
         if (controller.signal.aborted) return;
+        page.links = page.links.filter(
+          (card) => !deletedRef.current.has(card.id),
+        );
         setUser(identity);
         setError("");
         syncClock(page.server_time);
@@ -146,6 +160,9 @@ export function useLibrarySync(library: LibraryState) {
         do {
           const page = await statuses(controller.signal, undefined, cursor);
           if (controller.signal.aborted) return;
+          page.links = page.links.filter(
+            (card) => !deletedRef.current.has(card.id),
+          );
           syncClock(page.server_time);
           page.links.forEach((card) =>
             activeRef.current.set(
@@ -177,11 +194,16 @@ export function useLibrarySync(library: LibraryState) {
       polling = true;
       const controller = scopeRef.current;
       try {
-        const ids = [...activeRef.current.keys()];
+        const ids = [...activeRef.current.keys()].filter(
+          (id) => !deletedRef.current.has(id),
+        );
         for (let i = 0; i < ids.length; i += 100) {
           const batch = ids.slice(i, i + 100);
           const page = await statuses(controller.signal, batch);
           if (controller.signal.aborted) return;
+          page.links = page.links.filter(
+            (card) => !deletedRef.current.has(card.id),
+          );
           syncClock(page.server_time);
           setError("");
           const returned = new Set(page.links.map((card) => card.id));
@@ -203,9 +225,25 @@ export function useLibrarySync(library: LibraryState) {
           if (completed.length)
             setMessage(`Обработка завершена: ${completed.length}.`);
           setCards((current) => mergeCards(current, page.links));
-          if (batch.some((id) => !returned.has(id))) {
-            await load();
-            return;
+          for (const id of batch) {
+            if (
+              returned.has(id) ||
+              deletedRef.current.has(id) ||
+              deleteBusyRef.current.has(id)
+            )
+              continue;
+            try {
+              const card = await getLink(controller.signal, id);
+              if (controller.signal.aborted) return;
+              setCards((current) => mergeCards(current, [card]));
+            } catch (error) {
+              if (controller.signal.aborted) return;
+              if (!(error instanceof LibraryError && error.status === 404))
+                throw error;
+              deletedRef.current.add(id);
+              activeRef.current.delete(id);
+              setCards((current) => current.filter((card) => card.id !== id));
+            }
           }
         }
       } catch (error) {
@@ -250,6 +288,8 @@ export function useLibrarySync(library: LibraryState) {
       window.clearInterval(clockTimer);
     };
   }, [
+    deletedRef,
+    deleteBusyRef,
     unauthorized,
     syncClock,
     invalidate,
