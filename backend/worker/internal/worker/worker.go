@@ -98,6 +98,9 @@ func process(parent context.Context, db *sql.DB, client Fetcher, e linkprocessin
 	}()
 	defer func() { cancel(); <-heartbeatDone }()
 	page, err := client.Fetch(ctx, e.FetchURL)
+	if ctx.Err() != nil {
+		return ctx.Err()
+	}
 	result := pageResult(page, err)
 	if result.Title == "" {
 		if u, err := url.Parse(e.FetchURL); err == nil {
@@ -106,11 +109,12 @@ func process(parent context.Context, db *sql.DB, client Fetcher, e linkprocessin
 	}
 	images, _ := client.(ImageFetcher)
 	archiveImages(ctx, images, &result)
-	if parent.Err() != nil {
-		return parent.Err()
+	if ctx.Err() != nil {
+		return ctx.Err()
 	}
-	// Parsing completion does not authorize publication: SQL checks durable clocks.
-	commitCtx, cancelCommit := context.WithTimeout(parent, 5*time.Second)
+	// Keep the original attempt deadline and heartbeat cancellation through COMMIT,
+	// including time spent waiting for SQL locks. SQL fences remain authoritative.
+	commitCtx, cancelCommit := context.WithTimeout(ctx, 5*time.Second)
 	defer cancelCommit()
 	_, err = linkprocessing.Publish(commitCtx, db, e, result)
 	return err

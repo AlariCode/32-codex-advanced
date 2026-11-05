@@ -340,6 +340,12 @@ SIGKILL/перезапуск worker и истечение сессии в БД. 
 локальным тестовым инструментом; production worker не получает эти настройки.
 [Покрытие #4](docs/verification/issue-4.md).
 
+Конкурентные проверки #19 запускаются той же командой
+`npm run test:e2e:integration` в проекте `recovery`: два worker, управляемые
+HTML/media и SQL COMMIT-барьеры, SIGSTOP/SIGKILL, retry/delete из двух вкладок
+и полная остановка API/worker до исходного deadline. Production worker не
+получает настройки барьеров. [Сценарии и ограничения проверки](docs/verification/issue-19.md).
+
 ## Живой benchmark архива
 
 Из корня репозитория, отдельно от детерминированных тестов:

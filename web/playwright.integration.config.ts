@@ -15,22 +15,22 @@ export default defineConfig({
   projects: [
     {
       name: "mobile",
-      testIgnore: "**/recovery.spec.ts",
+      testIgnore: ["**/recovery.spec.ts", "**/concurrency.spec.ts"],
       use: { viewport: { width: 375, height: 812 } },
     },
     {
       name: "tablet",
-      testIgnore: "**/recovery.spec.ts",
+      testIgnore: ["**/recovery.spec.ts", "**/concurrency.spec.ts"],
       use: { viewport: { width: 768, height: 1024 } },
     },
     {
       name: "desktop",
-      testIgnore: "**/recovery.spec.ts",
+      testIgnore: ["**/recovery.spec.ts", "**/concurrency.spec.ts"],
       use: { viewport: { width: 1440, height: 900 } },
     },
     {
       name: "recovery",
-      testMatch: "**/recovery.spec.ts",
+      testMatch: ["**/recovery.spec.ts", "**/concurrency.spec.ts"],
       use: { viewport: { width: 1440, height: 900 } },
     },
   ],

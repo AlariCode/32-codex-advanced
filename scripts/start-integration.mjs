@@ -23,6 +23,18 @@ let created = false;
 const expectedStops = new WeakSet();
 let worker;
 let workerEnv;
+let secondWorker;
+let api;
+let publicationGate;
+const barriers = new Map();
+async function kill(child) {
+  if (!child || child.exitCode !== null || child.signalCode !== null) return;
+  expectedStops.add(child);
+  await new Promise((resolve) => {
+    child.once("exit", resolve);
+    child.kill("SIGKILL");
+  });
+}
 const retryHits = new Map();
 function run(command, args, env = baseEnv, capture = false) {
   return new Promise((resolve, reject) => {
@@ -72,6 +84,13 @@ const html = await readFile(resolve(root, "web/tests/fixtures/article.html"));
 const formatting = await readFile(
   resolve(root, "web/tests/fixtures/formatting.html"),
 );
+const imageHTML = await readFile(
+  resolve(root, "web/tests/fixtures/images.html"),
+  "utf8",
+);
+const imagePNG = await readFile(
+  resolve(root, "web/tests/fixtures/images/archive.png"),
+);
 let fixture;
 let fixtureHits = 0;
 let forbiddenHits = 0;
@@ -79,6 +98,44 @@ async function fixtureOn() {
   if (fixture?.listening) return;
   fixture = createServer((request, response) => {
     fixtureHits++;
+    const fixtureURL = new URL(request.url, "http://fixture");
+    if (fixtureURL.pathname.startsWith("/barrier/article/")) {
+      const key = fixtureURL.pathname.split("/").at(-1);
+      response.writeHead(200, { "Content-Type": "text/html" });
+      response.end(
+        imageHTML.replace(
+          "@@IMAGES@@",
+          `<figure><img src="http://127.0.0.1:39876/barrier/media/${key}" alt="Controlled image"></figure>`,
+        ),
+      );
+      return;
+    }
+    if (/^\/barrier\/(html|media)\//.test(fixtureURL.pathname)) {
+      const key = fixtureURL.pathname;
+      const previous = barriers.get(key);
+      const send = () => {
+        response.writeHead(200, {
+          "Content-Type": key.includes("/media/") ? "image/png" : "text/html",
+        });
+        response.end(key.includes("/media/") ? imagePNG : html);
+      };
+      if (previous) {
+        previous.hits++;
+        send();
+      } else {
+        const barrier = {
+          hits: 1,
+          released: false,
+          closed: false,
+          release: send,
+        };
+        barriers.set(key, barrier);
+        response.on("close", () => {
+          barrier.closed = true;
+        });
+      }
+      return;
+    }
     if (articleFixture(request, response)) return;
     if (imageFixture(request, response)) return;
     if (request.url.startsWith("/formatting/")) {
@@ -149,22 +206,100 @@ const control = createServer(async (request, response) => {
     response.end("on");
     return;
   }
-  if (request.method === "POST" && request.url === "/worker/off") {
-    if (worker && worker.exitCode === null && worker.signalCode === null) {
-      expectedStops.add(worker);
-      await new Promise((resolve) => {
-        worker.once("exit", resolve);
-        worker.kill("SIGKILL");
-      });
+  const target = new URL(request.url, "http://control");
+  if (
+    request.method === "POST" &&
+    /^\/(worker|worker2|api)\/(on|off|pause|resume)$/.test(target.pathname)
+  ) {
+    const [, name, action] = target.pathname.split("/");
+    let child =
+      name === "worker" ? worker : name === "worker2" ? secondWorker : api;
+    if (action === "off") {
+      await kill(child);
+      child = undefined;
     }
-    worker = undefined;
-    response.end("worker stopped");
+    if (action === "on" && !child)
+      child = start(
+        resolve(artifacts, name === "api" ? "api" : "integration-worker"),
+        [],
+        workerEnv,
+      );
+    if (action === "pause") child?.kill("SIGSTOP");
+    if (action === "resume") child?.kill("SIGCONT");
+    if (name === "worker") worker = child;
+    else if (name === "worker2") secondWorker = child;
+    else api = child;
+    response.end(action);
     return;
   }
-  if (request.method === "POST" && request.url === "/worker/on") {
-    if (!worker)
-      worker = start(resolve(artifacts, "integration-worker"), [], workerEnv);
-    response.end("worker started");
+  if (request.method === "POST" && target.pathname === "/barrier/release") {
+    const barrier = barriers.get(target.searchParams.get("key"));
+    if (!barrier) {
+      response.writeHead(404);
+      response.end();
+      return;
+    }
+    barrier.released = true;
+    barrier.release();
+    response.end("released");
+    return;
+  }
+  if (target.pathname === "/publication/release" && request.method === "POST") {
+    await kill(publicationGate);
+    publicationGate = undefined;
+    response.end("released");
+    return;
+  }
+  if (["/publication/hold", "/link/stats"].includes(target.pathname)) {
+    const id = target.searchParams.get("id");
+    if (!/^[a-f0-9-]{36}$/.test(id ?? "")) {
+      response.writeHead(400);
+      response.end();
+      return;
+    }
+    try {
+      if (target.pathname === "/link/stats" && request.method === "GET") {
+        response.setHeader("Content-Type", "application/json");
+        response.end(
+          await run(
+            resolve(artifacts, "integration-db"),
+            ["link-stats", schema, id],
+            baseEnv,
+            true,
+          ),
+        );
+      } else if (
+        target.pathname === "/publication/hold" &&
+        request.method === "POST"
+      ) {
+        if (publicationGate) throw new Error("publication gate already held");
+        publicationGate = spawn(
+          resolve(artifacts, "integration-db"),
+          ["hold-publication", schema, id],
+          {
+            cwd: root,
+            env: baseEnv,
+            stdio: ["ignore", "pipe", "inherit"],
+          },
+        );
+        children.push(publicationGate);
+        await new Promise((resolve, reject) => {
+          publicationGate.once("error", reject);
+          publicationGate.once("exit", () =>
+            reject(new Error("publication gate exited")),
+          );
+          publicationGate.stdout.once("data", resolve);
+        });
+        response.end("held");
+      } else {
+        response.writeHead(405);
+        response.end();
+      }
+    } catch (error) {
+      console.error(error);
+      response.writeHead(500);
+      response.end();
+    }
     return;
   }
   if (request.method === "GET" && request.url.startsWith("/owner/stats?")) {
@@ -220,6 +355,17 @@ const control = createServer(async (request, response) => {
         fixtureHits,
         forbiddenHits,
         workerRunning: Boolean(worker),
+        secondWorkerRunning: Boolean(secondWorker),
+        barriers: Object.fromEntries(
+          [...barriers].map(([key, value]) => [
+            key,
+            {
+              hits: value.hits,
+              released: value.released,
+              closed: value.closed,
+            },
+          ]),
+        ),
         retryHits: Object.fromEntries(retryHits),
       }),
     );
@@ -285,7 +431,7 @@ try {
   );
   await fixtureOn();
   await listen(control, 39877);
-  start(resolve(artifacts, "api"), [], env);
+  api = start(resolve(artifacts, "api"), [], env);
   workerEnv = env;
   worker = start(resolve(artifacts, "integration-worker"), [], env);
   start(
