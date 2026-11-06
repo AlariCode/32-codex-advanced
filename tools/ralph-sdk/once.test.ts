@@ -1,7 +1,55 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import type { Thread, ThreadEvent } from "@openai/codex-sdk";
-import { compact, parseIssueNumber, runTurn, solve } from "./once.ts";
+import { compact } from "./lib/log.ts";
+import { parseIssueNumber } from "./lib/io.ts";
+import {
+  attempt,
+  runTurn as executeTurn,
+  addUsage,
+  emptyUsage,
+  tokens,
+} from "./lib/attempt.ts";
+import { mkdir, mkdtemp, rm } from "node:fs/promises";
+import { join } from "node:path";
+const testTmp = join(process.cwd(), "tmp");
+await mkdir(testTmp, { recursive: true });
+
+// Keep the original behavioural cases while exercising the extracted attempt.
+async function solve(
+  thread: Pick<Thread, "runStreamed">,
+  task: typeof issue,
+  saveThread: (id: string) => Promise<void>,
+  check: (fixes: number) => Promise<{ code: number; output: string }>,
+  log: (line: string) => void,
+) {
+  const directory = await mkdtemp(join(testTmp, "ralph-sdk-test-"));
+  try {
+    const result = await attempt(
+      task,
+      {
+        startThread: () => thread as Thread,
+        resumeThread: () => thread as Thread,
+      },
+      { root: process.cwd(), directory, saveThread, check, log },
+    );
+    return {
+      passed: result.checkOk,
+      fixes: result.fixes,
+      response: result.report.summary,
+    };
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
+}
+async function runTurn(
+  thread: Pick<Thread, "runStreamed">,
+  prompt: string,
+  saveThread: (id: string) => Promise<void>,
+  log: (line: string) => void,
+) {
+  return executeTurn(thread, prompt, { saveThread, log });
+}
 
 const issue = {
   number: 42,
@@ -28,7 +76,26 @@ function mockThread(events: ThreadEvent[]) {
       prompts.push(input as string);
       return {
         events: (async function* () {
-          yield* events;
+          for (const event of events) {
+            if (
+              event.type === "turn.completed" &&
+              !events.some(
+                (e) =>
+                  e.type === "item.completed" &&
+                  e.item.type === "agent_message",
+              )
+            ) {
+              yield {
+                type: "item.completed",
+                item: {
+                  type: "agent_message",
+                  id: "report",
+                  text: JSON.stringify({ summary: "", files: [] }),
+                },
+              } as ThreadEvent;
+            }
+            yield event;
+          }
         })(),
       };
     },
@@ -56,7 +123,11 @@ test("зелёная проверка завершает попытку без �
     { type: "thread.started", thread_id: "saved-thread" },
     {
       type: "item.completed",
-      item: { type: "agent_message", id: "answer", text: "Готово" },
+      item: {
+        type: "agent_message",
+        id: "answer",
+        text: JSON.stringify({ summary: "Готово", files: [] }),
+      },
     },
     completed,
   ]);
@@ -173,7 +244,111 @@ test("стрим команд компактен, дельты и полный s
     async () => {},
     (line) => lines.push(line),
   );
-  assert.deepEqual(lines, ["  $ echo hello", "  ✓ exit 0"]);
+  assert.deepEqual(lines.slice(0, 2), ["  $ echo hello", "  ✓ exit 0"]);
   assert.equal(compact("\u001b[31mred\u001b[0m\ntext"), "red text");
   assert.equal(compact("x".repeat(300)).length, 140);
+});
+
+test("usage суммируется по ходам, включая cached input без двойного счёта", async () => {
+  const usage = emptyUsage();
+  const { thread } = mockThread([completed]);
+  let turns = 0;
+  await executeTurn(thread, "prompt", {
+    log: () => {},
+    onUsage: async (part) => {
+      turns++;
+      addUsage(usage, { ...part, cached_input_tokens: 1 });
+    },
+  });
+  assert.equal(turns, 1);
+  assert.equal(tokens(usage), 2);
+});
+
+test("таймаут передаёт AbortSignal и останавливает ход", async () => {
+  const thread: Pick<Thread, "runStreamed"> = {
+    async runStreamed(_prompt, options) {
+      assert.ok(options?.signal);
+      return {
+        events: (async function* () {
+          await new Promise((_resolve, reject) => {
+            options.signal!.addEventListener(
+              "abort",
+              () => reject(new Error("aborted")),
+              { once: true },
+            );
+          });
+        })(),
+      };
+    },
+  };
+  await assert.rejects(
+    executeTurn(thread, "prompt", { timeoutMs: 5 }),
+    /Таймаут/,
+  );
+});
+
+test("сохранённый этап check возобновляет worker, не повторяя ход", async () => {
+  const directory = await mkdtemp(join(testTmp, "ralph-sdk-test-"));
+  let resumed = false;
+  try {
+    const result = await attempt(
+      issue,
+      {
+        startThread: () => {
+          throw new Error("новый поток запрещён");
+        },
+        resumeThread: (id) => {
+          assert.equal(id, "worker-id");
+          resumed = true;
+          return {
+            runStreamed: () => {
+              throw new Error("повторный ход запрещён");
+            },
+          } as unknown as Thread;
+        },
+      },
+      {
+        root: process.cwd(),
+        directory,
+        threadId: "worker-id",
+        log: () => {},
+        progress: {
+          phase: "check",
+          fixes: 1,
+          prompt: "",
+          report: { summary: "Готово", files: ["file.ts"] },
+        },
+        check: async (fixes) => {
+          assert.equal(fixes, 1);
+          return { code: 0, output: "" };
+        },
+      },
+    );
+    assert.ok(resumed);
+    assert.equal(result.threadId, "worker-id");
+    assert.equal(result.checkOk, true);
+    assert.equal(tokens(result.usage), 0);
+    assert.deepEqual(result.report.files, ["file.ts"]);
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
+});
+
+test("предохранитель останавливает запуск до нового хода", async () => {
+  let called = false;
+  const thread = {
+    runStreamed: async () => {
+      called = true;
+      throw new Error("лишний ход");
+    },
+  };
+  await assert.rejects(
+    executeTurn(thread, "prompt", {
+      beforeTurn: () => {
+        throw new Error("Бюджет исчерпан");
+      },
+    }),
+    /Бюджет/,
+  );
+  assert.equal(called, false);
 });

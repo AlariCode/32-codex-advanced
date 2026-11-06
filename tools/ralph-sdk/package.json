@@ -7,12 +7,14 @@
   },
   "scripts": {
     "once": "tsx once.ts",
-    "test": "tsx --test once.test.ts",
-    "typecheck": "tsc --noEmit"
+    "test": "tsx --test *.test.ts",
+    "typecheck": "tsc --noEmit",
+    "ralph": "tsx ralph.ts"
   },
   "dependencies": {
     "@openai/codex-sdk": "^0.166.0",
-    "zod": "^4.0.0"
+    "zod": "^4.0.0",
+    "zod-to-json-schema": "^3.25.2"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
