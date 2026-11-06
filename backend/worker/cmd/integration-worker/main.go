@@ -14,6 +14,7 @@ import (
 )
 
 func main() {
+	slog.SetDefault(slog.New(slog.NewJSONHandler(os.Stderr, nil)))
 	config, err := pgx.ParseConfig(os.Getenv("DATABASE_URL"))
 	if err != nil || config.Database != "linkbook_test" {
 		slog.Error("Integration worker requires isolated linkbook_test")
@@ -31,7 +32,7 @@ func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 	if err = worker.RunWith(ctx, os.Getenv("DATABASE_URL"), client); err != nil && ctx.Err() == nil {
-		slog.Error("Integration worker failed", "error", err)
+		slog.Error("Integration worker failed", "outcome", "error")
 		os.Exit(1)
 	}
 }

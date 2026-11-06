@@ -27,4 +27,14 @@ test("OpenAI schema содержит findings и обязательные пол
   for (const field of ["findings", "priority", "file", "line", "text"])
     assert.ok(json.includes(`"${field}"`));
   assert.ok(json.includes('"additionalProperties":false'));
+  assert.ok(json.includes('"minimum":1'));
+  assert.ok(!json.includes('"exclusiveMinimum"'));
+  for (const line of [0, -1, 1.5]) {
+    assert.equal(
+      reviewSchema.safeParse({
+        findings: [{ priority: "P1", file: "file.ts", line, text: "Ошибка" }],
+      }).success,
+      false,
+    );
+  }
 });

@@ -13,6 +13,7 @@ const LeaseDuration = 45 * time.Second
 type Execution struct {
 	JobID, LinkID, FetchURL, Token string
 	Generation                     int
+	Number                         int
 	Deadline                       time.Time
 }
 
@@ -25,11 +26,13 @@ func Claim(ctx context.Context, db *sql.DB) (*Execution, error) {
 	}
 	defer func() { _ = tx.Rollback() }()
 	var e Execution
-	err = tx.QueryRowContext(ctx, `SELECT j.id::text,l.id::text,l.fetch_url,j.generation,LEAST(j.deadline_at,l.deadline_at)
+	var reclaimed bool
+	var queueAge float64
+	err = tx.QueryRowContext(ctx, `SELECT j.id::text,l.id::text,l.fetch_url,j.generation,LEAST(j.deadline_at,l.deadline_at),j.state='running',GREATEST(0,EXTRACT(EPOCH FROM (clock_timestamp()-j.available_at)))
  FROM processing_jobs j JOIN links l ON l.id=j.link_id
 	WHERE (j.state='queued' OR (j.state='running' AND j.lease_expires_at<=clock_timestamp())) AND l.state='processing' AND j.generation=l.generation
  AND j.available_at<=clock_timestamp() AND j.deadline_at>clock_timestamp() AND l.deadline_at>clock_timestamp()
- ORDER BY j.available_at,j.id FOR UPDATE OF j SKIP LOCKED LIMIT 1`).Scan(&e.JobID, &e.LinkID, &e.FetchURL, &e.Generation, &e.Deadline)
+ ORDER BY j.available_at,j.id FOR UPDATE OF j SKIP LOCKED LIMIT 1`).Scan(&e.JobID, &e.LinkID, &e.FetchURL, &e.Generation, &e.Deadline, &reclaimed, &queueAge)
 	if errors.Is(err, sql.ErrNoRows) {
 		return nil, nil
 	}
@@ -37,20 +40,41 @@ func Claim(ctx context.Context, db *sql.DB) (*Execution, error) {
 		return nil, err
 	}
 	err = tx.QueryRowContext(ctx, `UPDATE processing_jobs SET state='running',execution_token=gen_random_uuid(),
- lease_expires_at=LEAST(deadline_at,$3,clock_timestamp()+($2*interval '1 second')),executions=executions+1 WHERE id=$1 RETURNING execution_token::text`, e.JobID, int(LeaseDuration/time.Second), e.Deadline).Scan(&e.Token)
+ lease_expires_at=LEAST(deadline_at,$3,clock_timestamp()+($2*interval '1 second')),executions=executions+1 WHERE id=$1 RETURNING execution_token::text,executions`, e.JobID, int(LeaseDuration/time.Second), e.Deadline).Scan(&e.Token, &e.Number)
 	if err != nil {
 		return nil, err
 	}
 	if err = tx.Commit(); err != nil {
 		return nil, err
 	}
+	e.Log("archive_claim", "reclaimed", reclaimed, "queue_age_seconds", queueAge, "deadline_at", e.Deadline)
 	return &e, nil
 }
 
 // Publish locks the card and execution in a short transaction and repeats the
 // fences in the final UPDATE. A deferred-constraint/commit failure rolls back all
 // changes, including the snapshot and job completion.
-func Publish(ctx context.Context, db *sql.DB, e Execution, r Result) (bool, error) {
+func Publish(ctx context.Context, db *sql.DB, e Execution, r Result) (published bool, publishErr error) {
+	started := time.Now()
+	var documentBytes, mediaBytes int64
+	defer func() {
+		outcome := ErrorOutcome(publishErr)
+		if publishErr == nil {
+			outcome = "rejected"
+			if published {
+				outcome = "failed"
+				if r.Document != nil {
+					outcome = "ready"
+				} else if r.Reason == "article_unavailable" {
+					outcome = "unavailable"
+				}
+			}
+		}
+		if !published {
+			documentBytes, mediaBytes = 0, 0
+		}
+		e.Log("archive_publication", "outcome", outcome, "duration_ms", float64(time.Since(started))/float64(time.Millisecond), "document_bytes", documentBytes, "media_bytes", mediaBytes, "stored_bytes", documentBytes+mediaBytes)
+	}()
 	var raw []byte
 	var err error
 	if r.Document != nil {
@@ -98,7 +122,7 @@ func Publish(ctx context.Context, db *sql.DB, e Execution, r Result) (bool, erro
 	}
 	if r.Document != nil {
 		state, jobState = "ready", "completed"
-		_, err = tx.ExecContext(ctx, `INSERT INTO snapshots(link_id,generation,schema_version,document) VALUES($1,$2,$3,$4)`, e.LinkID, e.Generation, r.Document.SchemaVersion, raw)
+		err = tx.QueryRowContext(ctx, `INSERT INTO snapshots(link_id,generation,schema_version,document) VALUES($1,$2,$3,$4) RETURNING octet_length(document::text)`, e.LinkID, e.Generation, r.Document.SchemaVersion, raw).Scan(&documentBytes)
 		if err != nil {
 			return false, err
 		}
@@ -124,6 +148,9 @@ func Publish(ctx context.Context, db *sql.DB, e Execution, r Result) (bool, erro
 	_, err = tx.ExecContext(ctx, `UPDATE processing_jobs SET state=$2,execution_token=NULL,lease_expires_at=NULL,last_error=NULLIF($3,'') WHERE id=$1`, e.JobID, jobState, r.Reason)
 	if err != nil {
 		return false, err
+	}
+	for _, asset := range r.Assets {
+		mediaBytes += int64(len(asset.Data))
 	}
 	if err = tx.Commit(); err != nil {
 		return false, err

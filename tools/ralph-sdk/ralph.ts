@@ -18,7 +18,7 @@ export const reviewSchema = z.object({
     z.object({
       priority: z.enum(["P0", "P1", "P2", "P3"]),
       file: z.string(),
-      line: z.number().int().positive(),
+      line: z.number().int().min(1),
       text: z.string(),
     }),
   ),
@@ -280,6 +280,7 @@ async function main() {
       console.log(
         `#${number} · ${state.commit ? "commit" : "stopped"} · раунды ${state.round} · токены ${state.tokens} · ${state.commit ?? "—"}`,
       );
+      if (state.reason) console.error(`Причина остановки: ${state.reason}`);
       if (!state.commit || !state.commentOk) process.exitCode = 1;
     } catch (error) {
       console.error(

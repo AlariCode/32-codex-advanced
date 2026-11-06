@@ -362,3 +362,125 @@ npm run benchmark:recalculate -- tmp/archive-benchmark-new/runs.jsonl
 изолированная схема локальной `linkbook_test`.
 [Методика и ограничения](docs/verification/issue-12-method.md),
 [отчёт приёмки #12](docs/verification/issue-12.md).
+
+## Диагностика обработки архива
+
+Worker пишет JSON Lines в stderr. Для контейнера:
+
+```sh
+mkdir -p tmp
+# Снимок логов; для наблюдения вживую добавьте --follow.
+docker compose -f compose.worker.yaml logs --no-log-prefix worker > tmp/worker.log
+```
+
+Снимок очереди и объёма архива можно получить независимо от API/worker.
+Нужны работающая PostgreSQL и применённые API миграции 001–006:
+
+```sh
+docker compose exec -T postgres sh -c 'psql -X -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -At' \
+  < backend/linkprocessing/diagnostics.sql > tmp/archive-diagnostics.json
+```
+
+Это один read-only SQL-запрос с одним MVCC-снимком, без изменения состояний и
+без вывода URL, заголовков, текста, last_error, DSN или токенов. Он также встроен
+в Go-модуль как `linkprocessing.DiagnosticsSQL`, поэтому integration-тесты
+проверяют тот же запрос. Для тестового контейнера и **точного имени схемы**,
+созданной вашим тестовым harness:
+
+```sh
+docker compose -f compose.test.yaml exec -T postgres-test \
+  psql -X -v ON_ERROR_STOP=1 -U linkbook_test -d linkbook_test -At \
+  -c 'SET search_path TO e2e_ИМЯ_ВАШЕЙ_СХЕМЫ' -f - \
+  < backend/linkprocessing/diagnostics.sql
+```
+
+Harness удаляет схему после завершения; снимок этой схемы нужно получать во время
+прогона. Пароли/DSN не передавайте аргументами команд и не копируйте в отчёты.
+
+Поля снимка (числа — gauges на `observed_at`, кроме оговорённого счётчика):
+
+| Поле                   | Определение и единица                                                                                                                                                                                 |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `processing`           | Число карточек в сохранённом состоянии processing, включая просроченные                                                                                                                               |
+| `queued`, `running`    | Число заданий текущей generation карточек processing по сохранённому состоянию; queued включает ещё не доступные и просроченные задания                                                               |
+| `queue_age_seconds`    | Максимальный возраст queued от available_at в секундах, минимум 0; `null` означает отсутствие очереди, 0 — available_at ещё не наступил либо совпал с observed_at                                     |
+| `deadline_overdue`     | Число текущих queued/running карточек processing, у которых минимум deadline карточки и задания уже истёк; работает и до sweep API                                                                    |
+| `failed`, `timeout`    | Число карточек failed и его подмножество с reason=timeout; overdue ещё не обязательно failed                                                                                                          |
+| `reclaimable`          | Число текущих running с истёкшим lease, доступных сейчас и ещё не достигших deadline                                                                                                                  |
+| `reclaimed_executions` | Сумма max(executions−1,0) по всем сохранившимся заданиям, включая старые generation; счётчик повторных claim после истечения lease                                                                    |
+| `document_bytes`       | Сумма octet_length(document::text) сохранённых snapshots: UTF-8 JSONB в текстовом представлении PostgreSQL                                                                                            |
+| `media_bytes`          | Сумма octet_length(data) сохранённых assets, без повторного счёта ссылок на один asset                                                                                                                |
+| `stored_bytes`         | document_bytes + media_bytes; логический payload, без TOAST, индексов, WAL и метаданных                                                                                                               |
+| `jobs`                 | Текущие queued/running/failed: безопасные ID, generation, число исполнений, состояния, available_at, deadline_at, lease_expires_at; age_seconds от available_at и знаковый deadline_remaining_seconds |
+
+Это показатели сохранившихся данных, а не бессрочные накопительные метрики:
+удаление карточки уменьшает counts/bytes/reclaimed; retry меняет текущую generation.
+Времена SQL — часы PostgreSQL; duration_ms в логах — монотонные часы Go.
+Возраст округляется только при отображении; дробная часть сохраняется.
+
+Корреляция логов: `job_id` + `generation` + `execution` (номер успешного claim,
+начиная с 1), также есть `link_id`. execution_token в диагностику не попадает.
+
+- `archive_claim`: committed claim; `reclaimed=true` означает замену истёкшего
+  исполнения. `queue_age_seconds` — время от исходного available_at до claim,
+  при reclaim включает предыдущее исполнение, deadline_at сохраняется.
+- `archive_stage`: `html` (загрузка с redirects/retries), `extraction`, `media`
+  (загрузка, проверка и подготовка всех изображений), `attempt` (весь process,
+  включая ожидание heartbeat при завершении). `duration_ms` — миллисекунды.
+  `ok` означает завершение данного этапа, `ready` — извлечённый документ,
+  `unavailable` — отсутствие статьи, `failed`/`error` — неуспех,
+  `skipped` — этап не применим, `partial` — есть пропущенные изображения.
+- `archive_publication`: валидация и SQL до окончания COMMIT, `duration_ms` и
+  `document_bytes`, `media_bytes`, `stored_bytes` именно этой публикации.
+  `ready`, `unavailable`, `failed` — зафиксированный результат карточки.
+  `rejected` — fence отказал (удаление, старая generation/token, lease/deadline
+  или уже завершённая работа); это не успешная публикация.
+  `error`, `deadline`, `canceled` — ошибка/истечение context/отмена.
+  При любом незавершённом COMMIT или отказе все bytes равны 0.
+- `archive_renewal`: логируется только неуспешное продление lease;
+  `rejected` — потеря права исполнять, `error`/`deadline`/`canceled` — ошибка
+  или завершение context. После этого attempt отменяется best effort.
+- `archive_idle`: первый пустой claim после старта/работы, без повторов каждые
+  500 мс. Не означает пустую БД: работа может быть занята, недоступна по времени
+  или просрочена. Ошибка claim логируется отдельно как `Worker claim failed`.
+
+`attempt` получает итог ready/unavailable/failed/rejected либо
+error/deadline/canceled; успешный HTML/media сам по себе не означает сохранённый
+архив. `deadline` в логах относится к context операции (включая 5 секунд на
+публикацию), durable deadline проверяется SQL-снимком. При SIGKILL финального
+события нет: незавершённый claim, истёкший lease и следующий reclaimed claim
+показывают восстановление. Логи не являются транзакционным audit trail: при
+падении процесса сразу после COMMIT событие может отсутствовать, истина — БД.
+Сохраняйте stderr средствами окружения, если нужна история после удаления/retry.
+Не включайте сырые ошибки драйвера/HTTP в диагностику: они могут содержать секреты.
+
+Пример расследования зависшей/медленной обработки:
+
+1. Снимите SQL дважды с интервалом несколько секунд. queued=1 и растущий
+   queue_age_seconds при отсутствии claim указывают на ожидание исполнителя;
+   running=1, reclaimable=1 — на истёкший lease. deadline_overdue=1 при failed=0
+   означает, что deadline прошёл, но API ещё не выполнил sweep; перезапуск worker
+   не продлевает бюджет. После sweep timeout увеличится.
+2. Найдите события нужного `job_id` в `tmp/worker.log`. Например:
+   `archive_claim execution=1`, `html duration_ms=800`, `extraction duration_ms=40`,
+   `media duration_ms=9000`, `archive_publication outcome=ready stored_bytes=42000`
+   указывают на задержку media. Это иллюстративные числа, не benchmark.
+3. Для reclaim ожидайте следующий `archive_claim execution=2 reclaimed=true`
+   с прежним deadline_at. Позднее `archive_publication execution=1 outcome=rejected
+stored_bytes=0` подтверждает отказ старому исполнителю. При остановке worker
+   до deadline/после него различайте reclaimable и deadline_overdue по SQL.
+4. Сравните bytes публикации с SQL: без других записей/удалений разница снимков
+   должна совпасть с bytes ready-публикации. Для конкретного архива берите суммы
+   snapshots/assets по link_id, используя те же octet_length выражения.
+
+Автоматические сценарии наблюдаемости входят в `make test`: реальный HTTP fixture
+с изображением, сверка bytes с БД, queued/overdue/failed/timeout/reclaim,
+отказ старой публикации, отмена/deadline, SQL-ошибка и откат на COMMIT.
+Проверяется отсутствие секретного маркера в URL/query, execution_token,
+ошибках и содержимом. Unit-тест проверяет классификацию и корреляцию событий.
+Сквозной архив дополнительно проверяется существующей командой:
+
+```sh
+make test-db-up
+npm run test:e2e:integration
+```

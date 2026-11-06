@@ -42,6 +42,7 @@ func RunWith(ctx context.Context, dsn string, client Fetcher) error {
 	slog.Info("Worker started")
 	ticker := time.NewTicker(500 * time.Millisecond)
 	defer ticker.Stop()
+	idle := false
 	for {
 		if ctx.Err() != nil {
 			return nil
@@ -60,6 +61,10 @@ func RunWith(ctx context.Context, dsn string, client Fetcher) error {
 			continue
 		}
 		if exec == nil {
+			if !idle {
+				slog.Info("archive_idle")
+				idle = true
+			}
 			select {
 			case <-ctx.Done():
 				return nil
@@ -67,12 +72,19 @@ func RunWith(ctx context.Context, dsn string, client Fetcher) error {
 			}
 			continue
 		}
-		if err = process(ctx, db, client, *exec); err != nil && ctx.Err() == nil {
-			slog.Error("Worker publication failed", "link_id", exec.LinkID, "error", err)
-		}
+		idle = false
+		_ = process(ctx, db, client, *exec)
 	}
 }
-func process(parent context.Context, db *sql.DB, client Fetcher, e linkprocessing.Execution) error {
+func process(parent context.Context, db *sql.DB, client Fetcher, e linkprocessing.Execution) (processErr error) {
+	started := time.Now()
+	outcome := "error"
+	defer func() {
+		if processErr != nil {
+			outcome = linkprocessing.ErrorOutcome(processErr)
+		}
+		e.Stage("attempt", outcome, started)
+	}()
 
 	ctx, cancel := context.WithDeadline(parent, e.Deadline)
 	defer cancel()
@@ -90,6 +102,11 @@ func process(parent context.Context, db *sql.DB, client Fetcher, e linkprocessin
 				ok, err := linkprocessing.Renew(renewCtx, db, e)
 				stop()
 				if err != nil || !ok {
+					status := linkprocessing.ErrorOutcome(err)
+					if err == nil {
+						status = "rejected"
+					}
+					e.Log("archive_renewal", "outcome", status)
 					cancel()
 					return
 				}
@@ -97,18 +114,52 @@ func process(parent context.Context, db *sql.DB, client Fetcher, e linkprocessin
 		}
 	}()
 	defer func() { cancel(); <-heartbeatDone }()
+	stageStart := time.Now()
 	page, err := client.Fetch(ctx, e.FetchURL)
+	stageErr := err
+	if ctx.Err() != nil {
+		stageErr = ctx.Err()
+	}
+	e.Stage("html", linkprocessing.ErrorOutcome(stageErr), stageStart)
 	if ctx.Err() != nil {
 		return ctx.Err()
 	}
+	stageStart = time.Now()
 	result := pageResult(page, err)
+	extractionOutcome := "skipped"
+	if err == nil {
+		extractionOutcome = "failed"
+		if result.Document != nil {
+			extractionOutcome = "ready"
+		} else if result.Reason == "article_unavailable" {
+			extractionOutcome = "unavailable"
+		}
+	}
+	if ctx.Err() != nil {
+		extractionOutcome = linkprocessing.ErrorOutcome(ctx.Err())
+	}
+	e.Stage("extraction", extractionOutcome, stageStart)
 	if result.Title == "" {
 		if u, err := url.Parse(e.FetchURL); err == nil {
 			result.Title = u.Hostname()
 		}
 	}
 	images, _ := client.(ImageFetcher)
+	stageStart = time.Now()
 	archiveImages(ctx, images, &result)
+	mediaOutcome := "skipped"
+	if result.Document != nil {
+		mediaOutcome = "ok"
+		for _, warning := range result.Warnings {
+			if warning == "images_omitted" {
+				mediaOutcome = "partial"
+			}
+		}
+	}
+	if ctx.Err() != nil {
+		mediaOutcome = linkprocessing.ErrorOutcome(ctx.Err())
+	}
+	e.Stage("media", mediaOutcome, stageStart)
 	if ctx.Err() != nil {
 		return ctx.Err()
 	}
@@ -116,7 +167,16 @@ func process(parent context.Context, db *sql.DB, client Fetcher, e linkprocessin
 	// including time spent waiting for SQL locks. SQL fences remain authoritative.
 	commitCtx, cancelCommit := context.WithTimeout(ctx, 5*time.Second)
 	defer cancelCommit()
-	_, err = linkprocessing.Publish(commitCtx, db, e, result)
+	published, err := linkprocessing.Publish(commitCtx, db, e, result)
+	outcome = "rejected"
+	if published {
+		outcome = "failed"
+		if result.Document != nil {
+			outcome = "ready"
+		} else if result.Reason == "article_unavailable" {
+			outcome = "unavailable"
+		}
+	}
 	return err
 }
 func waitSchema(ctx context.Context, db *sql.DB) error {
