@@ -6,6 +6,7 @@ import type {
   ThreadOptions,
   TurnOptions,
   Usage,
+  ThreadEvent,
 } from "@openai/codex-sdk";
 import { z } from "zod/v3";
 import { zodToJsonSchema } from "zod-to-json-schema";
@@ -50,6 +51,7 @@ export interface TurnHooks {
   beforeTurn?: () => void;
   timeoutMs?: number;
   log?: (line: string) => void;
+  onEvent?: (event: ThreadEvent) => void | Promise<void>;
 }
 
 export async function runTurn(
@@ -73,6 +75,7 @@ export async function runTurn(
       signal: controller.signal,
     });
     for await (const event of events) {
+      await hooks.onEvent?.(event);
       if (event.type === "thread.started")
         await hooks.saveThread?.(event.thread_id);
       if (event.type === "turn.failed") throw new Error(event.error.message);

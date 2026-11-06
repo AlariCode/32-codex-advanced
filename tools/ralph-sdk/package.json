@@ -9,7 +9,8 @@
     "once": "tsx once.ts",
     "test": "tsx --test *.test.ts",
     "typecheck": "tsc --noEmit",
-    "ralph": "tsx ralph.ts"
+    "ralph": "tsx ralph.ts",
+    "phase": "tsx orchestrate.ts"
   },
   "dependencies": {
     "@openai/codex-sdk": "^0.166.0",

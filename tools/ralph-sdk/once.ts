@@ -2,11 +2,16 @@ import { mkdir, mkdtemp, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { Codex } from "@openai/codex-sdk";
+import { runtimeDirectory } from "./lib/ralph.ts";
 import { attempt } from "./lib/attempt.ts";
 import { loadIssue, parseIssueNumber, readCommand } from "./lib/io.ts";
 import { compact } from "./lib/log.ts";
 
 async function main() {
+  if (process.argv.includes("--help")) {
+    console.log("Использование: npm run once -- <номер задачи>");
+    return;
+  }
   let directory: string | undefined;
   let threadId: string | undefined;
   try {
@@ -17,9 +22,9 @@ async function main() {
       process.cwd(),
     );
     const issue = await loadIssue(number, root);
-    await mkdir(join(root, "tmp", "ralph-sdk"), { recursive: true });
+    await mkdir(join(runtimeDirectory, "artifacts"), { recursive: true });
     directory = await mkdtemp(
-      join(root, "tmp", "ralph-sdk", `issue-${number}-`),
+      join(runtimeDirectory, "artifacts", `issue-${number}-`),
     );
     console.log(
       `\n▶ #${number} ${compact(issue.title)}\nАртефакты: ${directory}`,
