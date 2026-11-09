@@ -20,7 +20,7 @@ func deletionArchive() linkprocessing.Result {
 	var data bytes.Buffer
 	_ = png.Encode(&data, image.NewGray(image.Rect(0, 0, 2, 2)))
 	id := strings.Repeat("a", 64)
-	return linkprocessing.Result{Title: "Atomic archive", Document: &linkprocessing.Document{SchemaVersion: 2, Blocks: []linkprocessing.Block{{Kind: "paragraph", Text: "An archived article."}, {Kind: "image", AssetID: id}}}, Assets: []linkprocessing.Asset{{ID: id, MIME: "image/png", Data: data.Bytes()}}}
+	return linkprocessing.Result{Title: "Atomic archive", Document: &linkprocessing.Document{SchemaVersion: 2, Blocks: []linkprocessing.Block{{Kind: "paragraph", Children: []linkprocessing.Block{{Kind: "text", Text: "An archived article."}}}, {Kind: "image", AssetID: id}}}, Assets: []linkprocessing.Asset{{ID: id, MIME: "image/png", Data: data.Bytes()}}}
 }
 
 // Wait for a database lock dependency, rather than assuming a goroutine reached
