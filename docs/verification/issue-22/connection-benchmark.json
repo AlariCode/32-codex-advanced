@@ -1,0 +1,13 @@
+{
+  "command": "go test ./backend/worker/internal/safehttp -run '^$' -bench '^BenchmarkImageConnectionSetup$' -benchtime=3x -count=1",
+  "exitCode": 0,
+  "goos": "darwin",
+  "goarch": "arm64",
+  "cpu": "Apple M6",
+  "connectionSetupDelayMS": 20,
+  "requestsPerArchive": 25,
+  "iterations": 3,
+  "withoutSessionNSPerOp": 539433972,
+  "withSessionNSPerOp": 24160958,
+  "rawLog": "tmp/issue-22-connection-benchmark.log"
+}

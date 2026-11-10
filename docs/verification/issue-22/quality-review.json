@@ -1,0 +1,18 @@
+{
+  "documentsEqualToBaseline": true,
+  "warningsEqualToBaseline": true,
+  "comparedCopies": 60,
+  "assetsMatched": 39,
+  "assetsVisuallyInspected": 39,
+  "renderedSavedImages": 39,
+  "manualReview": {
+    "sources": "all six main article source snapshots read; paragraphs/headings/lists/quotes/code/table cells/captions compared with archive; source navigation/forms/hidden playground scaffolding excluded",
+    "visual": "all 39 exported image assets inspected; existing benchmark screenshots and exported archives replayed in unchanged production renderer at 1440x1000 with all lazy images loaded and Habr details opened",
+    "limitations": [
+      "MDN introductory summary paragraph is omitted in all baseline and final copies; text_incomplete retained",
+      "Cloudflare two substantive WebP images omitted, plus two unsupported hidden SVG placeholders; images_omitted retained",
+      "Cloudflare code language guessed as CSS despite Rust content; exact code bytes preserved; same in baseline",
+      "Replay checks renderer only: authentication and private HTTP status are proven separately by live benchmark, not by mocked replay"
+    ]
+  }
+}

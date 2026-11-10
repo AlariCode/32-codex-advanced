@@ -1,4 +1,4 @@
-// Package safehttp fetches bounded HTML through a fresh IP-pinned transport.
+// Package safehttp fetches bounded content through IP-pinned transports.
 package safehttp
 
 import (
@@ -45,6 +45,58 @@ type Client struct {
 	lookup        func(context.Context, string) ([]net.IPAddr, error)
 	dial          func(context.Context, string, string) (net.Conn, error)
 	fixtureOrigin string
+	imageSession  *imageSession
+}
+
+// ImageSession scopes connection reuse to one article's sequential media pass.
+// It shares no responses, DNS answers or connections with other attempts. The
+// returned client must not be used concurrently; close must run after the pass.
+func (c *Client) ImageSession() (*Client, func()) {
+	s := &imageSession{}
+	scoped := *c
+	scoped.imageSession = s
+	return &scoped, s.close
+}
+
+type imageSession struct {
+	key       string
+	transport *http.Transport
+}
+
+func (s *imageSession) close() {
+	if s.transport != nil {
+		s.transport.CloseIdleConnections()
+		s.transport = nil
+	}
+}
+
+// Called only AFTER destination has checked every DNS answer on every request,
+// including redirects. An origin or validated IP change discards the connection.
+// HTTP/2 is disabled, so cross-origin connection coalescing is impossible.
+func (c *Client) transport(u *url.URL, address string, image bool) (*http.Transport, func()) {
+	s := c.imageSession
+	key := u.Scheme + "://" + u.Host + "\x00" + address
+	if image && s != nil && s.transport != nil && s.key == key {
+		return s.transport, func() {}
+	}
+	tr := &http.Transport{
+		Proxy: nil, DisableKeepAlives: true, MaxConnsPerHost: 1, MaxResponseHeaderBytes: 64 * 1024,
+		TLSHandshakeTimeout: 5 * time.Second, ResponseHeaderTimeout: 8 * time.Second,
+		TLSNextProto: map[string]func(string, *tls.Conn) http.RoundTripper{},
+		DialContext: func(ctx context.Context, network, _ string) (net.Conn, error) {
+			return c.dial(ctx, network, address)
+		},
+	}
+	if image && s != nil {
+		s.close()
+		tr.DisableKeepAlives = false
+		tr.MaxIdleConns = 1
+		tr.MaxIdleConnsPerHost = 1
+		tr.IdleConnTimeout = 25 * time.Second
+		s.key, s.transport = key, tr
+		return tr, func() {}
+	}
+	return tr, tr.CloseIdleConnections
 }
 
 func New() *Client {
@@ -210,11 +262,7 @@ func (c *Client) fetchBounded(parent context.Context, raw string, image bool, im
 		if err != nil {
 			return Page{}, err
 		}
-		transport := &http.Transport{
-			Proxy: nil, DisableKeepAlives: true, MaxConnsPerHost: 1, MaxResponseHeaderBytes: 64 * 1024,
-			TLSHandshakeTimeout: 5 * time.Second, ResponseHeaderTimeout: 8 * time.Second,
-			DialContext: func(ctx context.Context, network, _ string) (net.Conn, error) { return c.dial(ctx, network, address) },
-		}
+		transport, release := c.transport(current, address, image)
 		request, err := http.NewRequestWithContext(ctx, http.MethodGet, current.String(), nil)
 		if err != nil {
 			return Page{}, failure("destination_blocked")
@@ -226,7 +274,7 @@ func (c *Client) fetchBounded(parent context.Context, raw string, image bool, im
 		}
 		response, err := transport.RoundTrip(request)
 		if err != nil {
-			transport.CloseIdleConnections()
+			release()
 			var certificate *tls.CertificateVerificationError
 			if errors.As(err, &certificate) {
 				return Page{}, failure("network_error")
@@ -236,7 +284,7 @@ func (c *Client) fetchBounded(parent context.Context, raw string, image bool, im
 		if response.StatusCode >= 300 && response.StatusCode < 400 {
 			location := response.Header.Get("Location")
 			_ = response.Body.Close()
-			transport.CloseIdleConnections()
+			release()
 			if redirects == 5 {
 				return Page{}, failure("redirect_limit")
 			}
@@ -249,7 +297,7 @@ func (c *Client) fetchBounded(parent context.Context, raw string, image bool, im
 		}
 		if response.StatusCode < 200 || response.StatusCode >= 300 {
 			_ = response.Body.Close()
-			transport.CloseIdleConnections()
+			release()
 			if response.StatusCode == 429 || response.StatusCode >= 500 {
 				return Page{}, transientFailure{code: "http_error", retryAt: retryAt(response.Header.Get("Retry-After"))}
 			}
@@ -263,13 +311,13 @@ func (c *Client) fetchBounded(parent context.Context, raw string, image bool, im
 		// encoding (e.g. unsolicited br/deflate) as a complete HTML document.
 		if encoding := response.Header.Get("Content-Encoding"); encoding != "" && encoding != "identity" {
 			_ = response.Body.Close()
-			transport.CloseIdleConnections()
+			release()
 			return Page{}, failure("unsupported_content")
 		}
 		media, _, err := mime.ParseMediaType(response.Header.Get("Content-Type"))
 		if !image && (err != nil || (media != "text/html" && media != "application/xhtml+xml")) {
 			_ = response.Body.Close()
-			transport.CloseIdleConnections()
+			release()
 			return Page{}, failure("article_unavailable")
 		}
 		limit := linkprocessing.MaxHTMLBytes
@@ -281,7 +329,7 @@ func (c *Client) fetchBounded(parent context.Context, raw string, image bool, im
 		}
 		body, err := io.ReadAll(io.LimitReader(response.Body, int64(limit+1)))
 		_ = response.Body.Close()
-		transport.CloseIdleConnections()
+		release()
 		if err != nil {
 			if image {
 				return Page{HTML: body[:min(len(body), limit)]}, transientFailure{code: "network_error"}

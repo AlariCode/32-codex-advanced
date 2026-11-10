@@ -285,6 +285,18 @@ const control = createServer(async (request, response) => {
     response.end(action);
     return;
   }
+  if (request.method === "POST" && target.pathname === "/barrier/release-all") {
+    // A failed assertion must not leave the shared worker waiting on a fixture
+    // from the previous test. Keep the entries so late/reclaimed requests still
+    // pass through the same already-released barrier.
+    for (const barrier of barriers.values()) {
+      if (barrier.released) continue;
+      barrier.released = true;
+      if (!barrier.closed) barrier.release();
+    }
+    response.end("released");
+    return;
+  }
   if (request.method === "POST" && target.pathname === "/barrier/release") {
     const barrier = barriers.get(target.searchParams.get("key"));
     if (!barrier) {

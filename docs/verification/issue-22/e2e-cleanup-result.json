@@ -1,0 +1,20 @@
+{
+  "command": "npm run test:e2e:integration --prefix web -- --project=recovery --grep 'release-all unblocks' --output ../tmp/playwright/videos/issue-22-cleanup",
+  "passed": 1,
+  "failed": 0,
+  "executed": 1,
+  "incomplete": 0,
+  "exitCode": 0,
+  "results": [
+    {
+      "number": 1,
+      "passed": true,
+      "test": "[recovery] › tests/e2e/integration/concurrency.spec.ts:346:5 › release-all unblocks abandoned fixture requests and is idempotent (158ms)"
+    }
+  ],
+  "rawLog": "tmp/issue-22-e2e-cleanup.log",
+  "videoDirectory": "tmp/playwright/videos/issue-22-cleanup",
+  "nonemptyVideos": 0,
+  "browserPageUsed": false,
+  "videoApplicable": false
+}

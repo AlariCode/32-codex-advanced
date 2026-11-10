@@ -1,0 +1,9 @@
+{
+  "id": "mdn",
+  "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Introduction",
+  "fetchedAt": "2026-11-10T09:42:46.091Z",
+  "status": 200,
+  "finalURL": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Introduction",
+  "sha256": "93c233a91f2ac8176a2ad3e31ec72e621f005ee3a5bb35447fb5ac60976c6a23",
+  "bytes": 209654
+}

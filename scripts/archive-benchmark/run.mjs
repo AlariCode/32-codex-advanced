@@ -131,7 +131,7 @@ function blocks(document) {
   return all;
 }
 
-async function validate(page, id) {
+async function validate(page, id, exportAssets) {
   const response = await api(page, `/api/links/${id}/document`);
   if (response.status !== 200)
     throw new Error(`Document HTTP ${response.status}`);
@@ -151,21 +151,34 @@ async function validate(page, id) {
     // Fetch only private archived image bytes, never source URLs.
     if (!/^[a-f0-9]{64}$/.test(assetId))
       throw new Error("Invalid private asset identifier");
-    assets.push(
-      await page.evaluate(
-        async ({ id, assetId }) => {
-          const response = await fetch(`/api/links/${id}/assets/${assetId}`);
-          const bytes = await response.arrayBuffer();
-          return {
-            assetId,
-            status: response.status,
-            bytes: bytes.byteLength,
-            type: response.headers.get("content-type"),
-          };
-        },
-        { id, assetId },
-      ),
+    const { dataBase64, ...asset } = await page.evaluate(
+      async ({ id, assetId, exportAssets }) => {
+        const response = await fetch(`/api/links/${id}/assets/${assetId}`);
+        const bytes = await response.arrayBuffer();
+        let binary = "";
+        if (exportAssets) {
+          const data = new Uint8Array(bytes);
+          for (let i = 0; i < data.length; i += 32768)
+            binary += String.fromCharCode(...data.subarray(i, i + 32768));
+        }
+        return {
+          assetId,
+          status: response.status,
+          bytes: bytes.byteLength,
+          type: response.headers.get("content-type"),
+          dataBase64: exportAssets ? btoa(binary) : undefined,
+        };
+      },
+      { id, assetId, exportAssets },
     );
+    assets.push(asset);
+    // Export only the first copy, after the ready timestamp. No additional
+    // request and no change to timing, validation or the success denominator.
+    if (dataBase64 !== undefined)
+      await writeFile(
+        path.join(artifacts, assetId),
+        Buffer.from(dataBase64, "base64"),
+      );
   }
   const omitted = images.filter((b) => b.omission).length;
   const mediaComplete =
@@ -315,7 +328,7 @@ async function measure(baseURL, source, repetition) {
     const current = await api(page, `/api/links/${row.cardId}`);
     row.reason = current.body.reason;
     if (row.state === "ready") {
-      const checked = await validate(page, row.cardId);
+      const checked = await validate(page, row.cardId, repetition === 1);
       const { archive, ...metadata } = checked;
       Object.assign(row, metadata);
       if (observed.visibility !== "visible") {

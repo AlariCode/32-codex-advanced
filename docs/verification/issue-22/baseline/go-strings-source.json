@@ -1,0 +1,9 @@
+{
+  "id": "go-strings",
+  "url": "https://go.dev/blog/strings",
+  "fetchedAt": "2026-11-10T09:29:03.490Z",
+  "status": 200,
+  "finalURL": "https://go.dev/blog/strings",
+  "sha256": "4873856faafd21922df540ec607e02781a2c2b5a862acfdd79bd7ff2bfddafa6",
+  "bytes": 50063
+}

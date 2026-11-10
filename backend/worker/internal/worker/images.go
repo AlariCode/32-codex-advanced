@@ -19,6 +19,11 @@ func archiveImages(ctx context.Context, client ImageFetcher, r *linkprocessing.R
 	if r.Document == nil {
 		return
 	}
+	if c, ok := client.(*safehttp.Client); ok {
+		scoped, closeSession := c.ImageSession()
+		defer closeSession()
+		client = scoped
+	}
 	warnings := r.Warnings[:0]
 	for _, w := range r.Warnings {
 		if w != "images_pending" {

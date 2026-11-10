@@ -1,0 +1,81 @@
+{
+  "startedAt": "2026-11-10T09:28:34.598Z",
+  "measuredFrom": "server requested_at to first visible DOM ready/card observation",
+  "clocks": "API and browser on same host",
+  "platform": "darwin",
+  "release": "27.2.0",
+  "arch": "arm64",
+  "cpus": 12,
+  "cpuModel": "Apple M6",
+  "physicalMemoryBytes": 25769803776,
+  "freeMemoryBytes": 299466752,
+  "loadStart": [3.705078125, 5.88037109375, 5.859375],
+  "node": "v22.23.1",
+  "go": "go version go1.26.0 darwin/arm64",
+  "chromium": "153.0.8010.12",
+  "next": "16.3.8",
+  "readeck": "v2.1.3 (backend/worker/go.mod)",
+  "gitCommit": "6324743b2c01e8a79a8d870a184f531fd7c52c2a",
+  "dirtyFiles": "M web/next-env.d.ts\n?? docs/verification/issue-22.md",
+  "driverSHA256": "6f17d380af8f7bc0d874e6ace8bc9f0edd69e36b808332e3becb0ab41ba184e4",
+  "corpusSHA256": "3da1470ee8f4dcf394c8189332d70a092d22581a9f4f32128b8c2fb8ba82d593",
+  "apiBinarySHA256": "f175af650b082cad09fb402636013742db2f7494a86065ca32c33267830a84a7",
+  "workerBinarySHA256": "fe427d44bd1f7da28654f4eceaf583cbffac8af167ed21028114bb202ab46b0f",
+  "nextBuildID": "o9hCe4XR7LUn93DiNvSys",
+  "workerConcurrency": 1,
+  "saveConcurrency": 1,
+  "independentAccounts": true,
+  "workerGOMAXPROCS": 1,
+  "workerGOMEMLIMIT": "384MiB",
+  "resourceIsolation": "host processes; no CPU quota, no container worker firewall; normal safehttp.New with SSRF checks; test PostgreSQL in Docker",
+  "apiGOMAXPROCS": 2,
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "pollingMS": 2000,
+  "productionNextBuild": true,
+  "database": {
+    "host": "127.0.0.1",
+    "port": "15433",
+    "database": "linkbook_test",
+    "schema": "e2e_benchmark_74041ef0a9aa4cc098ca7e17a8d49717"
+  },
+  "postgres": "postgres (PostgreSQL) 18.6 (Debian 18.6-1.pgdg13+2)",
+  "network": {
+    "throttling": false,
+    "browserProxy": "none configured",
+    "workerProxy": "safehttp production configuration",
+    "publicInternet": true,
+    "httpProxyEnvironmentPresent": false,
+    "connectionType": "not instrumented",
+    "CDNCache": "uncontrolled; unchanged URLs; no cache busting"
+  },
+  "corpus": [
+    {
+      "id": "go-strings",
+      "url": "https://go.dev/blog/strings"
+    },
+    {
+      "id": "go-pipelines",
+      "url": "https://go.dev/blog/pipelines"
+    },
+    {
+      "id": "mdn",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Introduction"
+    },
+    {
+      "id": "cloudflare",
+      "url": "https://blog.cloudflare.com/pingora-open-source/"
+    },
+    {
+      "id": "habr-gc",
+      "url": "https://habr.com/ru/articles/742402/"
+    },
+    {
+      "id": "habr-avito",
+      "url": "https://habr.com/ru/companies/avito/articles/753244/"
+    }
+  ],
+  "repetitions": 10
+}

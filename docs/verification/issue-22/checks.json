@@ -1,0 +1,72 @@
+{
+  "goUnit": {
+    "exitCode": 0,
+    "log": "tmp/issue-22-unit.log"
+  },
+  "goVet": {
+    "exitCode": 0,
+    "log": "tmp/issue-22-vet.log"
+  },
+  "makeTest": {
+    "exitCode": 0,
+    "log": "tmp/issue-22-integration.log"
+  },
+  "targetedRace": {
+    "exitCode": 0,
+    "log": "tmp/issue-22-race.log"
+  },
+  "benchmarkMetrics": {
+    "exitCode": 0,
+    "passed": 4
+  },
+  "makeBuildSeparate": {
+    "exitCode": 0,
+    "log": "tmp/issue-22-build-final.log"
+  },
+  "e2eIntegration": {
+    "exitCode": 0,
+    "passed": 103,
+    "failed": 0,
+    "executed": 103,
+    "details": "e2e-fixed-results.json"
+  },
+  "baseline": {
+    "expected": 60,
+    "recorded": 60,
+    "readyWithin15s": 50,
+    "independentRecalculationMatches": true
+  },
+  "final": {
+    "expected": 60,
+    "recorded": 60,
+    "readyWithin15s": 57,
+    "required": 54,
+    "targetMet": true,
+    "independentRecalculationMatches": true
+  },
+  "overallRegressionAccepted": true,
+  "makeCheck": "not run: user instruction, external runner",
+  "ralph": "not run: user instruction",
+  "e2eIntegrationOriginal": {
+    "exitCode": 1,
+    "passed": 99,
+    "failed": 4,
+    "executed": 103,
+    "details": "e2e-results.json"
+  },
+  "e2eFixtureCleanup": {
+    "exitCode": 0,
+    "passed": 1,
+    "details": "e2e-cleanup-result.json"
+  },
+  "webLint": {
+    "exitCode": 0,
+    "log": "tmp/issue-22-e2e-fix-lint.log"
+  },
+  "webTypecheck": {
+    "exitCode": 0,
+    "log": "tmp/issue-22-e2e-fix-typecheck.log"
+  },
+  "externalMakeCheckPending": true,
+  "measuredBackendAndBenchmarkDriverUnchanged": true
+}

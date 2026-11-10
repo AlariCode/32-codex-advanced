@@ -1,0 +1,105 @@
+package worker
+
+import (
+	"context"
+	"crypto/sha256"
+	"crypto/tls"
+	"encoding/json"
+	"fmt"
+	"linkbook/worker/internal/safehttp"
+	"net/http/httptrace"
+	"os"
+	"path/filepath"
+	"sync"
+	"testing"
+	"time"
+)
+
+type profileFetch struct {
+	client                        *safehttp.Client
+	mu                            sync.Mutex
+	Requests, Connections, Reused int
+	NetworkMS, ConnectMS, TLSMS   float64
+}
+
+func (p *profileFetch) FetchImage(ctx context.Context, s string) ([]byte, error) {
+	return p.FetchImageBudget(ctx, s, 5*1024*1024)
+}
+func (p *profileFetch) FetchImageBudget(ctx context.Context, s string, n int) ([]byte, error) {
+	var connect, handshake time.Time
+	trace := &httptrace.ClientTrace{
+		ConnectStart: func(_, _ string) { p.mu.Lock(); connect = time.Now(); p.mu.Unlock() },
+		ConnectDone: func(_, _ string, _ error) {
+			p.mu.Lock()
+			p.ConnectMS += float64(time.Since(connect)) / float64(time.Millisecond)
+			p.mu.Unlock()
+		},
+		TLSHandshakeStart: func() { p.mu.Lock(); handshake = time.Now(); p.mu.Unlock() },
+		TLSHandshakeDone: func(_ tls.ConnectionState, _ error) {
+			p.mu.Lock()
+			p.TLSMS += float64(time.Since(handshake)) / float64(time.Millisecond)
+			p.mu.Unlock()
+		},
+		GotConn: func(i httptrace.GotConnInfo) {
+			p.mu.Lock()
+			if i.Reused {
+				p.Reused++
+			} else {
+				p.Connections++
+			}
+			p.mu.Unlock()
+		},
+	}
+	start := time.Now()
+	data, err := p.client.FetchImageBudget(httptrace.WithClientTrace(ctx, trace), s, n)
+	p.mu.Lock()
+	p.Requests++
+	p.NetworkMS += float64(time.Since(start)) / float64(time.Millisecond)
+	p.mu.Unlock()
+	return data, err
+}
+func TestIssue22Profile(t *testing.T) {
+	dir := os.Getenv("ISSUE22_PROFILE_INPUT")
+	if dir == "" {
+		t.Skip("explicit frozen corpus profiling only")
+	}
+	mode := os.Getenv("ISSUE22_PROFILE_MODE")
+	files, err := filepath.Glob(filepath.Join(dir, "*-source.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, file := range files {
+		var meta struct {
+			ID, URL string
+			Status  int
+		}
+		raw, _ := os.ReadFile(file)
+		if err := json.Unmarshal(raw, &meta); err != nil {
+			t.Fatal(err)
+		}
+		if meta.Status != 200 {
+			t.Fatal("source snapshot unavailable", meta.ID)
+		}
+		html, err := os.ReadFile(filepath.Join(dir, meta.ID+"-source.html"))
+		if err != nil {
+			t.Fatal(err)
+		}
+		ctx, cancel := context.WithTimeout(t.Context(), 120*time.Second)
+		r := pageResult(safehttp.Page{HTML: html, FinalURL: meta.URL}, nil)
+		p := &profileFetch{client: safehttp.New()}
+		if mode == "after" || mode == "after-repeat" {
+			scoped, closeSession := p.client.ImageSession()
+			p.client = scoped
+			defer closeSession()
+		}
+		start := time.Now()
+		archiveImages(ctx, p, &r)
+		wall := float64(time.Since(start)) / float64(time.Millisecond)
+		cancel()
+		entry := map[string]any{"article": meta.ID, "mode": mode, "wall_ms": wall, "requests": p.Requests, "connections": p.Connections, "reused": p.Reused, "network_ms": p.NetworkMS, "connect_ms": p.ConnectMS, "tls_ms": p.TLSMS, "assets": len(r.Assets), "warnings": r.Warnings}
+		doc, _ := json.Marshal(r.Document)
+		entry["document_sha256"] = fmt.Sprintf("%x", sha256.Sum256(doc))
+		out, _ := json.Marshal(entry)
+		fmt.Println("PROFILE " + string(out))
+	}
+}

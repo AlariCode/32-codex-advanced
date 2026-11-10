@@ -1,0 +1,555 @@
+{
+  "command": "npm run test:e2e:integration",
+  "passed": 99,
+  "failed": 4,
+  "executed": 103,
+  "incomplete": 0,
+  "exitCode": 1,
+  "failures": [
+    {
+      "test": "delete during html",
+      "location": "web/tests/e2e/integration/concurrency.spec.ts:131",
+      "expected": 404,
+      "received": 401
+    },
+    {
+      "test": "delete during media",
+      "location": "web/tests/e2e/integration/concurrency.spec.ts:94",
+      "expected": "barrier hits=1",
+      "received": "0; poll timeout"
+    },
+    {
+      "test": "SIGKILL during deferred COMMIT",
+      "location": "web/tests/e2e/integration/concurrency.spec.ts:155",
+      "expected": "publicationBlocked=true",
+      "received": "false; poll timeout"
+    },
+    {
+      "test": "complete API and worker outage",
+      "location": "web/tests/e2e/integration/concurrency.spec.ts:310",
+      "expected": 200,
+      "received": 401
+    }
+  ],
+  "results": [
+    {
+      "number": 1,
+      "passed": true,
+      "test": "[mobile] › tests/e2e/integration/archive.spec.ts:37:5 › real queue archives complete text and reader survives origin shutdown (5.1s)"
+    },
+    {
+      "number": 2,
+      "passed": true,
+      "test": "[mobile] › tests/e2e/integration/archive.spec.ts:121:5 › worker errors refresh automatically and blocked redirect never contacts sink (13.1s)"
+    },
+    {
+      "number": 3,
+      "passed": true,
+      "test": "[mobile] › tests/e2e/integration/archive.spec.ts:156:5 › document access is private and expired session hides reader (3.1s)"
+    },
+    {
+      "number": 4,
+      "passed": true,
+      "test": "[mobile] › tests/e2e/integration/archive.spec.ts:208:5 › formatted archive preserves structure and safe links after origin shutdown (3.0s)"
+    },
+    {
+      "number": 5,
+      "passed": true,
+      "test": "[mobile] › tests/e2e/integration/delete.spec.ts:42:5 › real archive deletion cascades media and closes another tab reader on return (4.3s)"
+    },
+    {
+      "number": 6,
+      "passed": true,
+      "test": "[mobile] › tests/e2e/integration/delete.spec.ts:106:5 › real DELETE commits while response is lost and metadata reconciliation confirms absence (499ms)"
+    },
+    {
+      "number": 7,
+      "passed": true,
+      "test": "[mobile] › tests/e2e/integration/images.spec.ts:47:5 › private image bytes survive origin shutdown without article subrequests or active payload (3.3s)"
+    },
+    {
+      "number": 8,
+      "passed": true,
+      "test": "[mobile] › tests/e2e/integration/images.spec.ts:137:7 › partial illustrated archive: single (2.7s)"
+    },
+    {
+      "number": 9,
+      "passed": true,
+      "test": "[mobile] › tests/e2e/integration/images.spec.ts:137:7 › partial illustrated archive: total (3.1s)"
+    },
+    {
+      "number": 10,
+      "passed": true,
+      "test": "[mobile] › tests/e2e/integration/images.spec.ts:137:7 › partial illustrated archive: count (2.8s)"
+    },
+    {
+      "number": 11,
+      "passed": true,
+      "test": "[mobile] › tests/e2e/integration/images.spec.ts:137:7 › partial illustrated archive: invalid (2.8s)"
+    },
+    {
+      "number": 12,
+      "passed": true,
+      "test": "[mobile] › tests/e2e/integration/images.spec.ts:164:7 › relative/lazy/srcset and checked base: candidates (3.0s)"
+    },
+    {
+      "number": 13,
+      "passed": true,
+      "test": "[mobile] › tests/e2e/integration/images.spec.ts:164:7 › relative/lazy/srcset and checked base: unsafe-base (2.8s)"
+    },
+    {
+      "number": 14,
+      "passed": true,
+      "test": "[mobile] › tests/e2e/integration/images.spec.ts:215:7 › partial article explains actual loss: partial-html (2.7s)"
+    },
+    {
+      "number": 15,
+      "passed": true,
+      "test": "[mobile] › tests/e2e/integration/images.spec.ts:215:7 › partial article explains actual loss: text-loss (2.8s)"
+    },
+    {
+      "number": 16,
+      "passed": true,
+      "test": "[mobile] › tests/e2e/integration/images.spec.ts:234:5 › oversized empty page remains unavailable rather than a failed or ready article (2.7s)"
+    },
+    {
+      "number": 17,
+      "passed": true,
+      "test": "[mobile] › tests/e2e/integration/phase3.spec.ts:29:5 › real committed POST lost before response is reconciled after reload with one job and generation (4.8s)"
+    },
+    {
+      "number": 18,
+      "passed": true,
+      "test": "[mobile] › tests/e2e/integration/phase3.spec.ts:74:5 › real session expiry while polling returns to library and processing survives (5.2s)"
+    },
+    {
+      "number": 19,
+      "passed": true,
+      "test": "[mobile] › tests/e2e/integration/phase3.spec.ts:102:5 › real reader return rechecks ownership and Back never reveals former account drafts or article (5.2s)"
+    },
+    {
+      "number": 20,
+      "passed": true,
+      "test": "[mobile] › tests/e2e/integration/phase3.spec.ts:153:5 › real list and reader recover after interrupted network without losing content or input (5.1s)"
+    },
+    {
+      "number": 21,
+      "passed": true,
+      "test": "[mobile] › tests/e2e/integration/phase3.spec.ts:197:5 › return after login to an absent article shows a library exit (353ms)"
+    },
+    {
+      "number": 22,
+      "passed": true,
+      "test": "[mobile] › tests/e2e/integration/phase3.spec.ts:216:5 › session expiring during a private image request hides the reader and returns after login (2.9s)"
+    },
+    {
+      "number": 23,
+      "passed": true,
+      "test": "[mobile] › tests/e2e/integration/registration.spec.ts:2:5 › registration authorizes immediately and opens library without a second login (297ms)"
+    },
+    {
+      "number": 24,
+      "passed": true,
+      "test": "[mobile] › tests/e2e/integration/retry.spec.ts:22:7 › homepage source correction retries the same card through API and worker (4.7s)"
+    },
+    {
+      "number": 25,
+      "passed": true,
+      "test": "[mobile] › tests/e2e/integration/retry.spec.ts:22:7 › pdf source correction retries the same card through API and worker (4.7s)"
+    },
+    {
+      "number": 26,
+      "passed": true,
+      "test": "[mobile] › tests/e2e/integration/retry.spec.ts:22:7 › video source correction retries the same card through API and worker (4.7s)"
+    },
+    {
+      "number": 27,
+      "passed": true,
+      "test": "[mobile] › tests/e2e/integration/retry.spec.ts:22:7 › login source correction retries the same card through API and worker (4.8s)"
+    },
+    {
+      "number": 28,
+      "passed": true,
+      "test": "[mobile] › tests/e2e/integration/retry.spec.ts:22:7 › paywall source correction retries the same card through API and worker (4.8s)"
+    },
+    {
+      "number": 29,
+      "passed": true,
+      "test": "[mobile] › tests/e2e/integration/retry.spec.ts:22:7 › js-only source correction retries the same card through API and worker (4.8s)"
+    },
+    {
+      "number": 30,
+      "passed": true,
+      "test": "[mobile] › tests/e2e/integration/retry.spec.ts:22:7 › network source correction retries the same card through API and worker (14.9s)"
+    },
+    {
+      "number": 31,
+      "passed": true,
+      "test": "[mobile] › tests/e2e/integration/retry.spec.ts:130:5 › lost real retry response can be confirmed before intentionally retrying its failed result (12.6s)"
+    },
+    {
+      "number": 32,
+      "passed": true,
+      "test": "[tablet] › tests/e2e/integration/archive.spec.ts:37:5 › real queue archives complete text and reader survives origin shutdown (5.0s)"
+    },
+    {
+      "number": 33,
+      "passed": true,
+      "test": "[tablet] › tests/e2e/integration/archive.spec.ts:121:5 › worker errors refresh automatically and blocked redirect never contacts sink (13.1s)"
+    },
+    {
+      "number": 34,
+      "passed": true,
+      "test": "[tablet] › tests/e2e/integration/archive.spec.ts:156:5 › document access is private and expired session hides reader (3.1s)"
+    },
+    {
+      "number": 35,
+      "passed": true,
+      "test": "[tablet] › tests/e2e/integration/archive.spec.ts:208:5 › formatted archive preserves structure and safe links after origin shutdown (3.0s)"
+    },
+    {
+      "number": 36,
+      "passed": true,
+      "test": "[tablet] › tests/e2e/integration/delete.spec.ts:42:5 › real archive deletion cascades media and closes another tab reader on return (4.3s)"
+    },
+    {
+      "number": 37,
+      "passed": true,
+      "test": "[tablet] › tests/e2e/integration/delete.spec.ts:106:5 › real DELETE commits while response is lost and metadata reconciliation confirms absence (414ms)"
+    },
+    {
+      "number": 38,
+      "passed": true,
+      "test": "[tablet] › tests/e2e/integration/images.spec.ts:47:5 › private image bytes survive origin shutdown without article subrequests or active payload (3.3s)"
+    },
+    {
+      "number": 39,
+      "passed": true,
+      "test": "[tablet] › tests/e2e/integration/images.spec.ts:137:7 › partial illustrated archive: single (2.8s)"
+    },
+    {
+      "number": 40,
+      "passed": true,
+      "test": "[tablet] › tests/e2e/integration/images.spec.ts:137:7 › partial illustrated archive: total (2.9s)"
+    },
+    {
+      "number": 41,
+      "passed": true,
+      "test": "[tablet] › tests/e2e/integration/images.spec.ts:137:7 › partial illustrated archive: count (2.8s)"
+    },
+    {
+      "number": 42,
+      "passed": true,
+      "test": "[tablet] › tests/e2e/integration/images.spec.ts:137:7 › partial illustrated archive: invalid (2.8s)"
+    },
+    {
+      "number": 43,
+      "passed": true,
+      "test": "[tablet] › tests/e2e/integration/images.spec.ts:164:7 › relative/lazy/srcset and checked base: candidates (3.0s)"
+    },
+    {
+      "number": 44,
+      "passed": true,
+      "test": "[tablet] › tests/e2e/integration/images.spec.ts:164:7 › relative/lazy/srcset and checked base: unsafe-base (2.8s)"
+    },
+    {
+      "number": 45,
+      "passed": true,
+      "test": "[tablet] › tests/e2e/integration/images.spec.ts:215:7 › partial article explains actual loss: partial-html (2.7s)"
+    },
+    {
+      "number": 46,
+      "passed": true,
+      "test": "[tablet] › tests/e2e/integration/images.spec.ts:215:7 › partial article explains actual loss: text-loss (2.8s)"
+    },
+    {
+      "number": 47,
+      "passed": true,
+      "test": "[tablet] › tests/e2e/integration/images.spec.ts:234:5 › oversized empty page remains unavailable rather than a failed or ready article (2.7s)"
+    },
+    {
+      "number": 48,
+      "passed": true,
+      "test": "[tablet] › tests/e2e/integration/phase3.spec.ts:29:5 › real committed POST lost before response is reconciled after reload with one job and generation (4.8s)"
+    },
+    {
+      "number": 49,
+      "passed": true,
+      "test": "[tablet] › tests/e2e/integration/phase3.spec.ts:74:5 › real session expiry while polling returns to library and processing survives (5.2s)"
+    },
+    {
+      "number": 50,
+      "passed": true,
+      "test": "[tablet] › tests/e2e/integration/phase3.spec.ts:102:5 › real reader return rechecks ownership and Back never reveals former account drafts or article (5.2s)"
+    },
+    {
+      "number": 51,
+      "passed": true,
+      "test": "[tablet] › tests/e2e/integration/phase3.spec.ts:153:5 › real list and reader recover after interrupted network without losing content or input (5.0s)"
+    },
+    {
+      "number": 52,
+      "passed": true,
+      "test": "[tablet] › tests/e2e/integration/phase3.spec.ts:197:5 › return after login to an absent article shows a library exit (351ms)"
+    },
+    {
+      "number": 53,
+      "passed": true,
+      "test": "[tablet] › tests/e2e/integration/phase3.spec.ts:216:5 › session expiring during a private image request hides the reader and returns after login (2.9s)"
+    },
+    {
+      "number": 54,
+      "passed": true,
+      "test": "[tablet] › tests/e2e/integration/registration.spec.ts:2:5 › registration authorizes immediately and opens library without a second login (236ms)"
+    },
+    {
+      "number": 55,
+      "passed": true,
+      "test": "[tablet] › tests/e2e/integration/retry.spec.ts:22:7 › homepage source correction retries the same card through API and worker (4.8s)"
+    },
+    {
+      "number": 56,
+      "passed": true,
+      "test": "[tablet] › tests/e2e/integration/retry.spec.ts:22:7 › pdf source correction retries the same card through API and worker (4.8s)"
+    },
+    {
+      "number": 57,
+      "passed": true,
+      "test": "[tablet] › tests/e2e/integration/retry.spec.ts:22:7 › video source correction retries the same card through API and worker (4.8s)"
+    },
+    {
+      "number": 58,
+      "passed": true,
+      "test": "[tablet] › tests/e2e/integration/retry.spec.ts:22:7 › login source correction retries the same card through API and worker (4.8s)"
+    },
+    {
+      "number": 59,
+      "passed": true,
+      "test": "[tablet] › tests/e2e/integration/retry.spec.ts:22:7 › paywall source correction retries the same card through API and worker (4.8s)"
+    },
+    {
+      "number": 60,
+      "passed": true,
+      "test": "[tablet] › tests/e2e/integration/retry.spec.ts:22:7 › js-only source correction retries the same card through API and worker (4.8s)"
+    },
+    {
+      "number": 61,
+      "passed": true,
+      "test": "[tablet] › tests/e2e/integration/retry.spec.ts:22:7 › network source correction retries the same card through API and worker (14.9s)"
+    },
+    {
+      "number": 62,
+      "passed": true,
+      "test": "[tablet] › tests/e2e/integration/retry.spec.ts:130:5 › lost real retry response can be confirmed before intentionally retrying its failed result (12.6s)"
+    },
+    {
+      "number": 63,
+      "passed": true,
+      "test": "[desktop] › tests/e2e/integration/archive.spec.ts:37:5 › real queue archives complete text and reader survives origin shutdown (5.0s)"
+    },
+    {
+      "number": 64,
+      "passed": true,
+      "test": "[desktop] › tests/e2e/integration/archive.spec.ts:121:5 › worker errors refresh automatically and blocked redirect never contacts sink (13.2s)"
+    },
+    {
+      "number": 65,
+      "passed": true,
+      "test": "[desktop] › tests/e2e/integration/archive.spec.ts:156:5 › document access is private and expired session hides reader (3.1s)"
+    },
+    {
+      "number": 66,
+      "passed": true,
+      "test": "[desktop] › tests/e2e/integration/archive.spec.ts:208:5 › formatted archive preserves structure and safe links after origin shutdown (3.0s)"
+    },
+    {
+      "number": 67,
+      "passed": true,
+      "test": "[desktop] › tests/e2e/integration/delete.spec.ts:42:5 › real archive deletion cascades media and closes another tab reader on return (4.3s)"
+    },
+    {
+      "number": 68,
+      "passed": true,
+      "test": "[desktop] › tests/e2e/integration/delete.spec.ts:106:5 › real DELETE commits while response is lost and metadata reconciliation confirms absence (465ms)"
+    },
+    {
+      "number": 69,
+      "passed": true,
+      "test": "[desktop] › tests/e2e/integration/images.spec.ts:47:5 › private image bytes survive origin shutdown without article subrequests or active payload (3.4s)"
+    },
+    {
+      "number": 70,
+      "passed": true,
+      "test": "[desktop] › tests/e2e/integration/images.spec.ts:137:7 › partial illustrated archive: single (2.8s)"
+    },
+    {
+      "number": 71,
+      "passed": true,
+      "test": "[desktop] › tests/e2e/integration/images.spec.ts:137:7 › partial illustrated archive: total (3.0s)"
+    },
+    {
+      "number": 72,
+      "passed": true,
+      "test": "[desktop] › tests/e2e/integration/images.spec.ts:137:7 › partial illustrated archive: count (2.8s)"
+    },
+    {
+      "number": 73,
+      "passed": true,
+      "test": "[desktop] › tests/e2e/integration/images.spec.ts:137:7 › partial illustrated archive: invalid (2.8s)"
+    },
+    {
+      "number": 74,
+      "passed": true,
+      "test": "[desktop] › tests/e2e/integration/images.spec.ts:164:7 › relative/lazy/srcset and checked base: candidates (3.0s)"
+    },
+    {
+      "number": 75,
+      "passed": true,
+      "test": "[desktop] › tests/e2e/integration/images.spec.ts:164:7 › relative/lazy/srcset and checked base: unsafe-base (2.9s)"
+    },
+    {
+      "number": 76,
+      "passed": true,
+      "test": "[desktop] › tests/e2e/integration/images.spec.ts:215:7 › partial article explains actual loss: partial-html (2.8s)"
+    },
+    {
+      "number": 77,
+      "passed": true,
+      "test": "[desktop] › tests/e2e/integration/images.spec.ts:215:7 › partial article explains actual loss: text-loss (2.8s)"
+    },
+    {
+      "number": 78,
+      "passed": true,
+      "test": "[desktop] › tests/e2e/integration/images.spec.ts:234:5 › oversized empty page remains unavailable rather than a failed or ready article (2.7s)"
+    },
+    {
+      "number": 79,
+      "passed": true,
+      "test": "[desktop] › tests/e2e/integration/phase3.spec.ts:29:5 › real committed POST lost before response is reconciled after reload with one job and generation (4.8s)"
+    },
+    {
+      "number": 80,
+      "passed": true,
+      "test": "[desktop] › tests/e2e/integration/phase3.spec.ts:74:5 › real session expiry while polling returns to library and processing survives (5.2s)"
+    },
+    {
+      "number": 81,
+      "passed": true,
+      "test": "[desktop] › tests/e2e/integration/phase3.spec.ts:102:5 › real reader return rechecks ownership and Back never reveals former account drafts or article (5.3s)"
+    },
+    {
+      "number": 82,
+      "passed": true,
+      "test": "[desktop] › tests/e2e/integration/phase3.spec.ts:153:5 › real list and reader recover after interrupted network without losing content or input (5.1s)"
+    },
+    {
+      "number": 83,
+      "passed": true,
+      "test": "[desktop] › tests/e2e/integration/phase3.spec.ts:197:5 › return after login to an absent article shows a library exit (373ms)"
+    },
+    {
+      "number": 84,
+      "passed": true,
+      "test": "[desktop] › tests/e2e/integration/phase3.spec.ts:216:5 › session expiring during a private image request hides the reader and returns after login (2.9s)"
+    },
+    {
+      "number": 85,
+      "passed": true,
+      "test": "[desktop] › tests/e2e/integration/registration.spec.ts:2:5 › registration authorizes immediately and opens library without a second login (309ms)"
+    },
+    {
+      "number": 86,
+      "passed": true,
+      "test": "[desktop] › tests/e2e/integration/retry.spec.ts:22:7 › homepage source correction retries the same card through API and worker (4.8s)"
+    },
+    {
+      "number": 87,
+      "passed": true,
+      "test": "[desktop] › tests/e2e/integration/retry.spec.ts:22:7 › pdf source correction retries the same card through API and worker (4.8s)"
+    },
+    {
+      "number": 88,
+      "passed": true,
+      "test": "[desktop] › tests/e2e/integration/retry.spec.ts:22:7 › video source correction retries the same card through API and worker (4.8s)"
+    },
+    {
+      "number": 89,
+      "passed": true,
+      "test": "[desktop] › tests/e2e/integration/retry.spec.ts:22:7 › login source correction retries the same card through API and worker (4.9s)"
+    },
+    {
+      "number": 90,
+      "passed": true,
+      "test": "[desktop] › tests/e2e/integration/retry.spec.ts:22:7 › paywall source correction retries the same card through API and worker (4.8s)"
+    },
+    {
+      "number": 91,
+      "passed": true,
+      "test": "[desktop] › tests/e2e/integration/retry.spec.ts:22:7 › js-only source correction retries the same card through API and worker (4.7s)"
+    },
+    {
+      "number": 92,
+      "passed": true,
+      "test": "[desktop] › tests/e2e/integration/retry.spec.ts:22:7 › network source correction retries the same card through API and worker (14.9s)"
+    },
+    {
+      "number": 93,
+      "passed": true,
+      "test": "[desktop] › tests/e2e/integration/retry.spec.ts:130:5 › lost real retry response can be confirmed before intentionally retrying its failed result (10.6s)"
+    },
+    {
+      "number": 94,
+      "passed": false,
+      "test": "[recovery] › tests/e2e/integration/concurrency.spec.ts:85:7 › delete during html; a second worker saves the same URL without resurrecting the stopped execution (3.3s)"
+    },
+    {
+      "number": 95,
+      "passed": false,
+      "test": "[recovery] › tests/e2e/integration/concurrency.spec.ts:85:7 › delete during media; a second worker saves the same URL without resurrecting the stopped execution (5.4s)"
+    },
+    {
+      "number": 96,
+      "passed": false,
+      "test": "[recovery] › tests/e2e/integration/concurrency.spec.ts:140:5 › SIGKILL during deferred COMMIT leaves one atomic archive and preserves the deadline (4.5s)"
+    },
+    {
+      "number": 97,
+      "passed": true,
+      "test": "[recovery] › tests/e2e/integration/concurrency.spec.ts:197:5 › SIGKILL after confirmed COMMIT keeps one complete archive and DELETE removes it (4.8s)"
+    },
+    {
+      "number": 98,
+      "passed": true,
+      "test": "[recovery] › tests/e2e/integration/concurrency.spec.ts:228:5 › retry from a second tab races DELETE without reviving the card (5.1s)"
+    },
+    {
+      "number": 99,
+      "passed": false,
+      "test": "[recovery] › tests/e2e/integration/concurrency.spec.ts:277:5 › complete API and worker outage expires queued and claimed jobs on the original 120 second deadline (2.1m)"
+    },
+    {
+      "number": 100,
+      "passed": true,
+      "test": "[recovery] › tests/e2e/integration/recovery.spec.ts:48:5 › real 30/120 second deadline includes slow fetch and survives reload (2.0m)"
+    },
+    {
+      "number": 101,
+      "passed": true,
+      "test": "[recovery] › tests/e2e/integration/recovery.spec.ts:91:5 › queued job expires while worker is stopped; late worker cannot publish (2.1m)"
+    },
+    {
+      "number": 102,
+      "passed": true,
+      "test": "[recovery] › tests/e2e/integration/recovery.spec.ts:118:5 › Retry-After crosses 30s; closing page and expired session do not cancel committed work (38.7s)"
+    },
+    {
+      "number": 103,
+      "passed": true,
+      "test": "[recovery] › tests/e2e/integration/recovery.spec.ts:161:5 › killed worker is reclaimed after its original lease and page returns ready (52.6s)"
+    }
+  ],
+  "nonemptyVideos": 117,
+  "videoDirectory": "tmp/playwright/videos/integration",
+  "rawLog": "tmp/issue-22-e2e-live.log",
+  "note": "Historical first run retained unchanged in its outcomes. Root causes subsequently established and fixed; see e2e-diagnosis.json and e2e-fixed-results.json."
+}

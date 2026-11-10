@@ -69,12 +69,26 @@ async function metadata(page: Page, id: string) {
   }, id);
 }
 
+// Chromium sends Secure cookies on the trusted loopback origin. Playwright's
+// APIRequestContext does not send them over HTTP, even when page.request shares
+// its cookie jar. Exercise private routes in the authenticated browser instead.
+async function browserStatus(page: Page, path: string) {
+  return page.evaluate(async (path) => {
+    const response = await fetch(path, {
+      cache: "no-store",
+      credentials: "same-origin",
+    });
+    return response.status;
+  }, path);
+}
+
 test.beforeEach(async ({ request }) => {
   await command(request, "/worker2/off");
   await command(request, "/worker/on");
 });
 test.afterEach(async ({ request }) => {
   await command(request, "/worker2/off");
+  await command(request, "/barrier/release-all");
   await command(request, "/worker/resume");
   await command(request, "/publication/release");
   await command(request, "/api/on");
@@ -127,7 +141,7 @@ for (const stage of ["html", "media"]) {
     expect((await metadata(page, old.link.id)).status).toBe(404);
     for (const suffix of ["/document", "/assets/" + "a".repeat(64)]) {
       expect(
-        (await page.request.get(`/api/links/${old.link.id}${suffix}`)).status(),
+        await browserStatus(page, `/api/links/${old.link.id}${suffix}`),
       ).toBe(404);
     }
     await command(
@@ -302,7 +316,7 @@ test("complete API and worker outage expires queued and claimed jobs on the orig
   await expect
     .poll(async () => {
       try {
-        return (await page.request.get("/api/users/me")).status();
+        return await browserStatus(page, "/api/users/me");
       } catch {
         return 0;
       }
@@ -326,5 +340,34 @@ test("complete API and worker outage expires queued and claimed jobs on the orig
       assets: 0,
       executions: attempt === claimed ? 1 : 0,
     });
+  }
+});
+
+test("release-all unblocks abandoned fixture requests and is idempotent", async ({
+  request,
+}) => {
+  const keys = ["html", "media"].map(
+    (stage) => `/barrier/${stage}/${crypto.randomUUID()}`,
+  );
+  const pending = keys.map((key) => request.get(fixture + key));
+  try {
+    for (const key of keys) await entered(request, key);
+    await command(request, "/barrier/release-all");
+    await command(request, "/barrier/release-all");
+    for (const response of await Promise.all(pending)) {
+      expect(response.status()).toBe(200);
+      expect((await response.body()).length).toBeGreaterThan(0);
+    }
+    // Reclaimed/late requests must not create another closed gate for a key
+    // already released by teardown.
+    for (const key of keys) {
+      expect((await request.get(fixture + key)).status()).toBe(200);
+      const state = (await (await request.get(control + "/stats")).json())
+        .barriers[key];
+      expect(state).toMatchObject({ hits: 2, released: true });
+    }
+  } finally {
+    await command(request, "/barrier/release-all");
+    await Promise.allSettled(pending);
   }
 });

@@ -1,0 +1,109 @@
+{
+  "baselineCommit": "6324743b2c01e8a79a8d870a184f531fd7c52c2a",
+  "baselineIsolatedCheckout": "tmp/issue-22-e2e-baseline",
+  "baselineCommand": "npm run test:e2e:integration --prefix tmp/issue-22-e2e-baseline/web -- --project=recovery --grep 'delete during html'",
+  "baselineExitCode": 1,
+  "baselineReproducedFailure": "404 expected, 401 received at concurrency.spec.ts:131",
+  "baselineNetworkEvidence": [
+    {
+      "requestContext": "browser",
+      "route": "metadata",
+      "status": 404,
+      "cookieHeaderPresent": true
+    },
+    {
+      "requestContext": "APIRequestContext",
+      "route": "document",
+      "status": 401,
+      "cookieHeaderPresent": false
+    }
+  ],
+  "baselineBarrierEvidence": [
+    {
+      "unreleasedOpenBarriers": 1,
+      "barriers": [
+        {
+          "hits": 2,
+          "released": true,
+          "closed": true
+        },
+        {
+          "hits": 1,
+          "released": false,
+          "closed": false
+        }
+      ]
+    }
+  ],
+  "rawBaselineLog": "tmp/issue-22-e2e-baseline-auth.log",
+  "cause": "APIRequestContext omits Secure cookie on plain HTTP loopback; Chromium sends it. Failed assertion prevented releasing drain barrier; afterEach did not release fixture barriers.",
+  "fix": "Private status requests run inside the authenticated browser; afterEach releases pending fixture barriers without weakening cookie policy, fences or expected statuses.",
+  "originalRunCascadeEvents": [
+    {
+      "time": "2026-11-10T12:53:49.674235+03:00",
+      "level": "INFO",
+      "msg": "archive_claim",
+      "job_id": "8750100e-3c40-4766-b74a-2794a41206f7",
+      "link_id": "6794c944-2909-4fff-b3df-2eebac02c3db",
+      "generation": 1,
+      "execution": 1,
+      "reclaimed": false,
+      "queue_age_seconds": 0.284929,
+      "deadline_at": "2026-11-10T12:55:49.387347+03:00",
+      "role": "unreleased HTML drain from first failed test"
+    },
+    {
+      "time": "2026-11-10T12:53:56.170388+03:00",
+      "level": "INFO",
+      "msg": "archive_claim",
+      "job_id": "8efbfac2-4d1f-4248-98a0-9ddafa65b4fd",
+      "link_id": "761cc1bf-16b4-45ec-9729-ec0492491c81",
+      "generation": 1,
+      "execution": 1,
+      "reclaimed": false,
+      "queue_age_seconds": 5.663309,
+      "deadline_at": "2026-11-10T12:55:50.50604+03:00",
+      "role": "media test queued behind drain"
+    },
+    {
+      "time": "2026-11-10T12:54:04.171931+03:00",
+      "level": "INFO",
+      "msg": "archive_stage",
+      "job_id": "8efbfac2-4d1f-4248-98a0-9ddafa65b4fd",
+      "link_id": "761cc1bf-16b4-45ec-9729-ec0492491c81",
+      "generation": 1,
+      "execution": 1,
+      "stage": "media",
+      "outcome": "partial",
+      "duration_ms": 8000.894708,
+      "role": "media test queued behind drain"
+    },
+    {
+      "time": "2026-11-10T12:54:04.186461+03:00",
+      "level": "INFO",
+      "msg": "archive_claim",
+      "job_id": "3207005c-985d-4330-9e48-810931fe2128",
+      "link_id": "6cc8f823-98eb-479e-94ab-7cb92576197d",
+      "generation": 1,
+      "execution": 1,
+      "reclaimed": false,
+      "queue_age_seconds": 8.054661,
+      "deadline_at": "2026-11-10T12:55:56.130252+03:00",
+      "role": "COMMIT test queued behind media request"
+    },
+    {
+      "time": "2026-11-10T12:54:04.192199+03:00",
+      "level": "INFO",
+      "msg": "archive_stage",
+      "job_id": "3207005c-985d-4330-9e48-810931fe2128",
+      "link_id": "6cc8f823-98eb-479e-94ab-7cb92576197d",
+      "generation": 1,
+      "execution": 1,
+      "stage": "media",
+      "outcome": "ok",
+      "duration_ms": 4.266584,
+      "role": "COMMIT test queued behind media request"
+    }
+  ],
+  "cascadeExplanation": "The failed HTML assertion left the drain request open. The media scenario was not claimed until the next test killed that worker (queue age 5.663s). Its unreleased media request then consumed the 8s response-header timeout; the COMMIT scenario was claimed only after queueing 8.055s, beyond its 5s publication-block poll. The failures therefore cascaded from fixture state rather than a publication fence change."
+}
