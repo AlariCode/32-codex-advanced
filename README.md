@@ -484,3 +484,12 @@ stored_bytes=0` подтверждает отказ старому исполн�
 make test-db-up
 npm run test:e2e:integration
 ```
+
+### Восстановление архива из резервной копии
+
+`make test-db-up` и `npm run test:archive:restore` проверяют настоящий
+`pg_dump`/`pg_restore` на отдельной тестовой PostgreSQL: вход владельца и чтение
+восстановленного документа с изображениями после отключения оригинала и удаления
+исходной схемы, а также отказ чужой/отсутствующей сессии. Видео сохраняется в
+`tmp/playwright/videos/backup-restore/`. Условия совместимости, порядок остановки,
+защита рабочей БД и cleanup описаны в [процедуре](docs/operations/archive-backup-restore.md).

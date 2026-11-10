@@ -1,3 +1,4 @@
+import { archiveRestore } from "./archive-restore.mjs";
 import { articleFixture } from "./article-fixtures.mjs";
 import { imageFixture } from "./image-fixtures.mjs";
 import { spawn } from "node:child_process";
@@ -21,6 +22,8 @@ const children = [];
 let stopping = false;
 let created = false;
 const expectedStops = new WeakSet();
+let archive;
+let restored = false;
 let worker;
 let workerEnv;
 let secondWorker;
@@ -136,6 +139,24 @@ async function fixtureOn() {
       }
       return;
     }
+    if (request.url.startsWith("/archive-fixture/") && archive) {
+      response.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+      response.end(
+        imageHTML.replace(
+          "@@IMAGES@@",
+          "<p><strong>Backup strong marker</strong> and <em>Backup emphasis marker</em>.</p>" +
+            "<blockquote><p>Backup quote marker</p></blockquote>" +
+            "<ul><li>Backup list marker</li></ul><pre><code>backup_code = 42</code></pre>" +
+            ["png", "jpeg", "gif"]
+              .map(
+                (codec, i) =>
+                  `<figure><img src="http://127.0.0.1:39876/image-bytes/${codec}" alt="Backup image ${i + 1}"><figcaption>Backup caption ${i + 1}</figcaption></figure>`,
+              )
+              .join(""),
+        ),
+      );
+      return;
+    }
     if (articleFixture(request, response)) return;
     if (imageFixture(request, response)) return;
     if (request.url.startsWith("/formatting/")) {
@@ -204,6 +225,38 @@ const control = createServer(async (request, response) => {
   if (request.method === "POST" && request.url === "/on") {
     await fixtureOn();
     response.end("on");
+    return;
+  }
+  if (
+    request.method === "POST" &&
+    request.url === "/archive/restore" &&
+    archive
+  ) {
+    if (restored) {
+      response.writeHead(409);
+      response.end("already restored");
+      return;
+    }
+    restored = true;
+    try {
+      // Quiesce all writers before taking the PostgreSQL snapshot.
+      await kill(worker);
+      await kill(api);
+      await close(fixture);
+      const restoredURL = await archive.restore();
+      // The original archive is gone: fallback to the source cannot pass.
+      await run(resolve(artifacts, "integration-db"), ["drop", schema]);
+      created = false;
+      api = start(resolve(artifacts, "api"), [], {
+        ...workerEnv,
+        DATABASE_URL: restoredURL,
+      });
+      response.end("restored");
+    } catch (error) {
+      console.error(error);
+      response.writeHead(500);
+      response.end("restore failed");
+    }
     return;
   }
   const target = new URL(request.url, "http://control");
@@ -393,11 +446,21 @@ async function stop(code = 0) {
     await run(resolve(artifacts, "integration-db"), ["drop", schema]).catch(
       () => {},
     );
+  if (archive) {
+    try {
+      await archive.cleanup();
+    } catch (error) {
+      console.error("Restore database cleanup failed", error);
+      code = 1;
+    }
+  }
   process.exit(code);
 }
 process.on("SIGTERM", () => void stop());
 process.on("SIGINT", () => void stop());
 try {
+  if (process.env.ARCHIVE_RESTORE === "1")
+    archive = await archiveRestore(root, schema, database);
   await Promise.all(
     [
       ["api", "./backend/api/cmd/api"],

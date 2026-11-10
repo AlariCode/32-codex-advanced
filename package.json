@@ -16,7 +16,8 @@
     "test:e2e": "npm run test:e2e --prefix web",
     "test:e2e:integration": "npm run test:e2e:integration --prefix web",
     "benchmark:archive": "node scripts/archive-benchmark/run.mjs",
-    "benchmark:recalculate": "node scripts/archive-benchmark/recalculate.mjs"
+    "benchmark:recalculate": "node scripts/archive-benchmark/recalculate.mjs",
+    "test:archive:restore": "npm run test:archive:restore --prefix web"
   },
   "devDependencies": {
     "lefthook": "^2.1.17",
