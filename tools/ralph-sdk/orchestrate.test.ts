@@ -83,7 +83,8 @@ async function fixture(
 const base = process.env.FIXTURE_BASE;
 if (process.argv[3] === 'view') console.log(JSON.stringify(JSON.parse(fs.readFileSync(base+'/issues.json'))[process.argv[4]]));
 else fs.appendFileSync(base+'/comments.jsonl', JSON.stringify(process.argv.slice(2))+'\\n');`,
-    npm: `require('node:fs').mkdirSync(require('node:path').join(process.cwd(), process.argv.includes('--prefix') ? 'web/node_modules' : 'node_modules'), {recursive:true});`,
+    npm: `if (process.env.FIXTURE_FAIL_PREPARE) process.exit(1);
+require('node:fs').mkdirSync(require('node:path').join(process.cwd(), process.argv.includes('--prefix') ? 'web/node_modules' : 'node_modules'), {recursive:true});`,
     make: `const fs = require('node:fs');
 const number = Number(process.cwd().match(/wt-(\\d+)$/)[1]);
 fs.appendFileSync(process.env.FIXTURE_BASE+'/checks.jsonl', JSON.stringify({number,start:true})+'\\n');
@@ -221,6 +222,108 @@ test("конфликт rebase прерывается; независимая з�
     const path = join(f.base, "repo-wt-21");
     assert.equal(await f.git(["branch", "--show-current"], path), "ralph/21");
     assert.equal(await f.git(["status", "--porcelain"], path), "");
+  } finally {
+    await f.clean();
+  }
+});
+
+test("фаза сливает в текущую ветку и сохраняет базу при повторном запуске", async () => {
+  const f = await fixture({ 21: [], 22: [21] });
+  try {
+    const mainHead = await f.git(["rev-parse", "main"]);
+    await f.git(["switch", "-c", "feature/phase"]);
+    await writeFile(join(f.root, "feature.txt"), "base change");
+    await f.git(["add", "."]);
+    await f.git(["commit", "-qm", "feature base"]);
+    const result = await f.run();
+    assert.equal(result.code, 0, result.stderr + result.stdout);
+    assert.equal(await f.git(["branch", "--show-current"]), "feature/phase");
+    assert.equal(await f.git(["rev-parse", "main"]), mainHead);
+    assert.equal(await readFile(join(f.root, "task-22.txt"), "utf8"), "22");
+    const journal = JSON.parse(
+      await readFile(join(f.runtime, "phase.json"), "utf8"),
+    );
+    assert.equal(journal.baseBranch, "feature/phase");
+    assert.deepEqual(journal.merged, [21, 22]);
+    assert.equal((await f.run()).code, 0);
+    await f.git(["switch", "main"]);
+    const mismatch = await f.run();
+    assert.equal(mismatch.code, 1);
+    assert.match(
+      mismatch.stderr,
+      /Журнал фазы относится к ветке feature\/phase/,
+    );
+    assert.equal(await f.git(["rev-parse", "main"]), mainHead);
+  } finally {
+    await f.clean();
+  }
+});
+
+test("новый worktree создаётся от текущей базы", async () => {
+  const f = await fixture({ 21: [] });
+  try {
+    await f.git(["worktree", "remove", join(f.base, "repo-wt-21")]);
+    await f.git(["branch", "-D", "ralph/21"]);
+    await rm(join(f.runtime, "result-21.json"));
+    await f.git(["switch", "-c", "feature/new-base"]);
+    await writeFile(join(f.root, "feature.txt"), "base change");
+    await f.git(["add", "."]);
+    await f.git(["commit", "-qm", "feature base"]);
+    const baseHead = await f.git(["rev-parse", "HEAD"]);
+    // Stop during preparation, before any model invocation.
+    assert.equal((await f.run({ FIXTURE_FAIL_PREPARE: "1" })).code, 1);
+    assert.equal(await f.git(["rev-parse", "ralph/21"]), baseHead);
+    assert.equal(
+      await readFile(join(f.base, "repo-wt-21", "feature.txt"), "utf8"),
+      "base change",
+    );
+  } finally {
+    await f.clean();
+  }
+});
+
+test("восстановление после ff работает на ветке без main", async () => {
+  const f = await fixture({ 21: [] });
+  try {
+    await f.git(["branch", "-m", "release"]);
+    await f.git(["merge", "--ff-only", "ralph/21"]);
+    const result = await f.run();
+    assert.equal(result.code, 0, result.stderr + result.stdout);
+    assert.equal(await f.git(["branch", "--list", "ralph/21"]), "");
+    await assert.rejects(readFile(join(f.base, "checks.jsonl")), {
+      code: "ENOENT",
+    });
+  } finally {
+    await f.clean();
+  }
+});
+
+test("detached HEAD, грязная копия и чужой старый журнал отклоняются до запуска", async () => {
+  const f = await fixture({ 21: [] });
+  try {
+    await f.git(["switch", "--detach"]);
+    assert.match((await f.run()).stderr, /detached HEAD/);
+    await f.git(["switch", "-c", "feature/phase"]);
+    await writeFile(join(f.root, "dirty.txt"), "dirty");
+    assert.match((await f.run()).stderr, /должна быть чистой/);
+    await rm(join(f.root, "dirty.txt"));
+    await writeFile(
+      join(f.runtime, "phase.json"),
+      JSON.stringify({ merged: [21], tasks: {} }),
+    );
+    assert.match((await f.run()).stderr, /Журнал фазы относится к ветке main/);
+    assert.equal(
+      await f.git([
+        "branch",
+        "--list",
+        "--format=%(refname:short)",
+        "ralph/21",
+      ]),
+      "ralph/21",
+    );
+    await assert.rejects(readFile(join(f.base, "checks.jsonl")), {
+      code: "ENOENT",
+    });
   } finally {
     await f.clean();
   }

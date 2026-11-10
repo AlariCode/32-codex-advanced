@@ -26,6 +26,7 @@ import { buildWaves, dependencies } from "./lib/waves.ts";
 import { compact } from "./lib/log.ts";
 
 interface Journal {
+  baseBranch?: string;
   merged: number[];
   // Checkpoint before merging: restarting must not run the agent twice.
   tasks: Record<string, RalphResult>;
@@ -68,13 +69,20 @@ async function saveJournal(journal: Journal) {
   );
   await rename(`${journalPath}.tmp`, journalPath);
 }
-async function assertMain(root: string) {
-  if ((await readCommand("git", ["branch", "--show-current"], root)) !== "main")
-    throw new Error("Основная копия должна быть на main");
+async function assertBase(root: string, baseBranch: string) {
+  if (!baseBranch)
+    throw new Error(
+      "Основная копия должна быть на ветке (detached HEAD не поддерживается)",
+    );
+  if (
+    (await readCommand("git", ["branch", "--show-current"], root)) !==
+    baseBranch
+  )
+    throw new Error(`Основная копия должна быть на ветке ${baseBranch}`);
   if (await readCommand("git", ["status", "--porcelain"], root))
     throw new Error("Основная копия должна быть чистой");
 }
-async function worktree(root: string, number: number) {
+async function worktree(root: string, number: number, baseBranch: string) {
   const path = join(dirname(root), `${basename(root)}-wt-${number}`);
   const branch = `ralph/${number}`;
   const list = await readCommand(
@@ -108,7 +116,7 @@ async function worktree(root: string, number: number) {
         "add",
         ...(hasBranch ? [] : ["-b", branch]),
         path,
-        hasBranch ? branch : "main",
+        hasBranch ? branch : baseBranch,
       ],
       root,
     );
@@ -172,14 +180,27 @@ export async function main(args = process.argv.slice(2)) {
     ["rev-parse", "--show-toplevel"],
     dirname(runtimeDirectory),
   );
-  if (!dryRun) await assertMain(root);
+  const baseBranch = await readCommand(
+    "git",
+    ["branch", "--show-current"],
+    root,
+  );
+  if (!dryRun) await assertBase(root, baseBranch);
   const parallel = positiveEnv("PHASE_PARALLEL", 3);
   const maxTokens = positiveEnv("PHASE_MAX_TOKENS", 9_000_000);
   const journal = await readJson<Journal>(journalPath, {
+    baseBranch,
     merged: [],
     tasks: {},
   });
   journal.tasks ??= {};
+  // Journals created before baseBranch was recorded always belonged to main.
+  const journalBase = journal.baseBranch ?? "main";
+  if (journalBase !== baseBranch)
+    throw new Error(
+      `Журнал фазы относится к ветке ${journalBase}, текущая ветка — ${baseBranch || "detached HEAD"}. Для продолжения переключитесь на ${journalBase}; для новой фазы архивируйте .ralph/ и повторите запуск.`,
+    );
+  journal.baseBranch = baseBranch;
   const load = async (n: number) =>
     issueSchema
       .extend({ state: z.enum(["OPEN", "CLOSED"]) })
@@ -223,6 +244,7 @@ export async function main(args = process.argv.slice(2)) {
   if (dryRun) return;
 
   await mkdir(join(runtimeDirectory, "logs"), { recursive: true });
+  await saveJournal(journal);
   const rows: Row[] = numbers.map((number) => ({
     number,
     stage: "ожидает",
@@ -276,9 +298,9 @@ export async function main(args = process.argv.slice(2)) {
     branch: string,
     result: RalphResult,
   ) {
-    await assertMain(root);
-    await stage(row, "rebase", "▶ git rebase main");
-    const rebase = await command("git", ["rebase", "main"], path);
+    await assertBase(root, baseBranch);
+    await stage(row, "rebase", `▶ git rebase ${baseBranch}`);
+    const rebase = await command("git", ["rebase", baseBranch], path);
     if (rebase.code !== 0) {
       const abort = await command("git", ["rebase", "--abort"], path);
       throw new Error(
@@ -301,7 +323,7 @@ export async function main(args = process.argv.slice(2)) {
     result.commit = await readCommand("git", ["rev-parse", "HEAD"], path);
     journal.tasks[row.number] = result;
     await saveJournal(journal);
-    await assertMain(root);
+    await assertBase(root, baseBranch);
     await readCommand("git", ["merge", "--ff-only", branch], root);
     await cleanup(row.number, path, branch);
   }
@@ -353,7 +375,7 @@ export async function main(args = process.argv.slice(2)) {
         (
           await command(
             "git",
-            ["merge-base", "--is-ancestor", branch, "main"],
+            ["merge-base", "--is-ancestor", branch, baseBranch],
             root,
           )
         ).code === 0;
@@ -363,7 +385,7 @@ export async function main(args = process.argv.slice(2)) {
         (
           await command(
             "git",
-            ["merge-base", "--is-ancestor", result.commit, "main"],
+            ["merge-base", "--is-ancestor", result.commit, baseBranch],
             root,
           )
         ).code === 0
@@ -379,9 +401,9 @@ export async function main(args = process.argv.slice(2)) {
         row.outcome = "слита";
         return;
       }
-      await assertMain(root);
+      await assertBase(root, baseBranch);
       await stage(row, "подготовка", "▶ git worktree / npm ci");
-      ({ path } = await worktree(root, row.number));
+      ({ path } = await worktree(root, row.number, baseBranch));
       if (
         result?.commit &&
         (
@@ -408,7 +430,7 @@ export async function main(args = process.argv.slice(2)) {
         row.outcome = "остановлена";
         throw new Error(outcome.reason ?? "Ralph остановился");
       }
-      // Only this queue mutates main and the phase journal.
+      // Only this queue mutates the base branch and the phase journal.
       const queued = mergeQueue.then(async () => {
         journal.tasks[row.number] = outcome;
         await saveJournal(journal);
