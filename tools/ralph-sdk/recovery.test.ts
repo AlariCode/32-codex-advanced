@@ -299,3 +299,33 @@ test("невалидное продолжение и настройки не з�
     await f.clean();
   }
 });
+
+test("превышение бюджета сохраняет завершённый отчёт и продолжает с ревью без повторения worker", async () => {
+  const f = await fixture();
+  try {
+    process.env.RALPH_MAX_TOKENS = "2";
+    const outcome = await f.run();
+    assert.match(outcome.reason!, /Превышен бюджет токенов/);
+    const saved = await f.state();
+    assert.equal(saved.tokens, 3);
+    assert.equal(saved.resumeStage, "review");
+    assert.equal(saved.report.summary, "Done");
+    assert.equal(f.calls.length, 1);
+    assert.equal(
+      (await readFile(join(f.stateDirectory, "checks"), "utf8")).trim(),
+      "check",
+    );
+    saved.maxTokens = 100;
+    await writeFile(
+      join(f.stateDirectory, "state-42.json"),
+      JSON.stringify(saved),
+    );
+    process.env.RALPH_MAX_TOKENS = "100";
+    f.reviews([[]]);
+    assert.equal((await f.run(1)).status, "committed");
+    assert.equal(f.calls.length, 2);
+    assert.notEqual(f.calls[1].id, saved.workerThreadId);
+  } finally {
+    await f.clean();
+  }
+});

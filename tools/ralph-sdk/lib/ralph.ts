@@ -202,10 +202,6 @@ export async function ralph(
       state.tokens += usage.input_tokens + usage.output_tokens;
       await emit();
       await save();
-      if (state.tokens > maxTokens)
-        throw new Error(
-          `Превышен бюджет токенов: ${state.tokens}/${maxTokens}`,
-        );
     },
   };
   try {
@@ -214,6 +210,10 @@ export async function ralph(
     await save();
     const issue = await loadIssue(number, root);
     while (state.stage !== "comment") {
+      if (state.tokens > maxTokens)
+        throw new Error(
+          `Превышен бюджет токенов: ${state.tokens}/${maxTokens}`,
+        );
       stage = state.stage;
       await emit();
       if (state.stage === "attempt" || state.stage === "fix") {
@@ -337,6 +337,12 @@ export async function ralph(
         state.stage = "comment";
         await save();
       }
+      // Preserve the completed response and next stage before enforcing usage.
+      // beforeTurn still prevents every subsequent model call above the limit.
+      if (state.tokens > maxTokens)
+        throw new Error(
+          `Превышен бюджет токенов: ${state.tokens}/${maxTokens}`,
+        );
     }
   } catch (error) {
     if (state.stage !== "comment") state.resumeStage = state.stage;
