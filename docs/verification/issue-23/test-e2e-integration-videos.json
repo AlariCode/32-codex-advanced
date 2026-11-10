@@ -1,0 +1,2555 @@
+[
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/archive-real-queue-archive-a0cfd-er-survives-origin-shutdown-mobile/video.webm",
+    "exists": true,
+    "bytes": 307965,
+    "sha256": "faa33648982fc0cc68adb8ae110222a5575ffa11dd87f40ca6559534eb4a6213",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 368,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "6.240000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/archive-worker-errors-refr-4aabf-edirect-never-contacts-sink-mobile/video.webm",
+    "exists": true,
+    "bytes": 371985,
+    "sha256": "467c0d1e8922d44da2394c322f604ab848a4c1d823da1a23a5c5d9ef9bc1e985",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 368,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "15.000000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/archive-document-access-is-3afa2-xpired-session-hides-reader-mobile/video.webm",
+    "exists": true,
+    "bytes": 195674,
+    "sha256": "549ae3253090ac8acb837e63acf56102a707bd08205b9c1ce93daccf3ad3d193",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 368,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "4.160000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/archive-formatted-archive--2de31-links-after-origin-shutdown-mobile/video-1.webm",
+    "exists": true,
+    "bytes": 4068,
+    "sha256": "b4091c18df04b81b318b950c77951102fb19e75e1d8b94a2e5480cf4621be312",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 368,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "1.000000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/archive-formatted-archive--2de31-links-after-origin-shutdown-mobile/video.webm",
+    "exists": true,
+    "bytes": 264110,
+    "sha256": "5a1dbce7239a20f0069f7e6b445a27351276bb49e43e3ca40f57e34999ac7dcf",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 368,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "4.160000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/archive-real-queue-archive-a0cfd-er-survives-origin-shutdown-tablet/video.webm",
+    "exists": true,
+    "bytes": 363880,
+    "sha256": "9b1addffe6fb6ee87c40f88bf681fa2aa23a3f5f861d607c51f8275e084cb16b",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 600,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "5.760000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/archive-worker-errors-refr-4aabf-edirect-never-contacts-sink-tablet/video.webm",
+    "exists": true,
+    "bytes": 431278,
+    "sha256": "129229d7ed0f5335b30bf014ff836056e0172fcdc996f40942af539795d4ed4b",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 600,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "14.880000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/archive-document-access-is-3afa2-xpired-session-hides-reader-tablet/video.webm",
+    "exists": true,
+    "bytes": 245314,
+    "sha256": "0c579a30fa413a25ff8b28ba1f6264123682058ad9eef7be07f7029899aac7aa",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 600,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "3.920000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/archive-formatted-archive--2de31-links-after-origin-shutdown-tablet/video-1.webm",
+    "exists": true,
+    "bytes": 2201,
+    "sha256": "0ad61ca88611ee6a324d6db864cfd9e7581940ab6ad18bd1114ff282da3983e0",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 600,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "1.000000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/archive-formatted-archive--2de31-links-after-origin-shutdown-tablet/video.webm",
+    "exists": true,
+    "bytes": 319249,
+    "sha256": "203be75031580f1b2d925e910f36d6da54ca51db7192a12e18c504c95db692db",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 600,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "3.840000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/archive-real-queue-archive-a0cfd-er-survives-origin-shutdown-desktop/video.webm",
+    "exists": true,
+    "bytes": 250980,
+    "sha256": "1af2ead44d5ecbfd8cc55bd58b8577e7e83e92f664bcad80abd1b180812972d0",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "5.920000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/archive-worker-errors-refr-4aabf-edirect-never-contacts-sink-desktop/video.webm",
+    "exists": true,
+    "bytes": 356794,
+    "sha256": "3187e50304f10ae88309c4321ad5927a980cb207e1d8fab7e2aebb7d1a7d3f7b",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "14.880000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/archive-document-access-is-3afa2-xpired-session-hides-reader-desktop/video.webm",
+    "exists": true,
+    "bytes": 142511,
+    "sha256": "96732263af6e10249e08911d1edcb611b93f5c88cf32bb089612d79bdaa5ca42",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "3.960000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/archive-formatted-archive--2de31-links-after-origin-shutdown-desktop/video-1.webm",
+    "exists": true,
+    "bytes": 2050,
+    "sha256": "bbb2be8554f4d5e3cb29876f06f73debba068ddb6247d7be686da769d18cc310",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "1.000000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/archive-formatted-archive--2de31-links-after-origin-shutdown-desktop/video.webm",
+    "exists": true,
+    "bytes": 194520,
+    "sha256": "9ee8bf9d045bb3df8c625f99d6114e6049b9bc106b4fd3ebd211eeeeaa6d4a1b",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "3.840000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/delete-real-archive-deleti-690b4-nother-tab-reader-on-return-mobile/video-1.webm",
+    "exists": true,
+    "bytes": 36459,
+    "sha256": "7f88781f7f191b7e521c06480198c65c41ff5d657a955dd684a9111bbf99fc4d",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 368,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "1.320000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/delete-real-archive-deleti-690b4-nother-tab-reader-on-return-mobile/video.webm",
+    "exists": true,
+    "bytes": 292484,
+    "sha256": "5a2362257c9cc491cd5f9eef371d95b41f42bb536143351e580129038bae49cc",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 368,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "6.360000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/delete-real-DELETE-commits-014ae-nciliation-confirms-absence-mobile/video.webm",
+    "exists": true,
+    "bytes": 103300,
+    "sha256": "d20e3d7574f0fbc1a39f2b5740709303a8aa1ab6989556ad94d696072cbf4351",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 368,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "1.440000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/delete-real-archive-deleti-690b4-nother-tab-reader-on-return-tablet/video-1.webm",
+    "exists": true,
+    "bytes": 35542,
+    "sha256": "e87ef38a7c80e70887d185b0d85eb16a9e117b3c3c3bc6b5258b23c8c55ed553",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 600,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "1.200000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/delete-real-archive-deleti-690b4-nother-tab-reader-on-return-tablet/video.webm",
+    "exists": true,
+    "bytes": 249142,
+    "sha256": "2a12c11e33ff577bdce8dfd222a4ea6787ce4b40a82c41bd6bbab3d7a1eff949",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 600,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "6.120000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/delete-real-DELETE-commits-014ae-nciliation-confirms-absence-tablet/video.webm",
+    "exists": true,
+    "bytes": 81136,
+    "sha256": "aa3419d43ce5e1a5a3fdc008ec742fa03a156712eb79372ad6bca02bbee8abcb",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 600,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "1.520000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/delete-real-archive-deleti-690b4-nother-tab-reader-on-return-desktop/video-1.webm",
+    "exists": true,
+    "bytes": 24736,
+    "sha256": "5b009332735cb47786cb1b2caa1ee9b103bd8325b8d3ae4ab232e7ae2aad7d9e",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "1.280000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/delete-real-archive-deleti-690b4-nother-tab-reader-on-return-desktop/video.webm",
+    "exists": true,
+    "bytes": 195873,
+    "sha256": "f7f11c50aa2965468b2730892af5403ae2229fb25ea5e7d24927487fec420494",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "6.120000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/delete-real-DELETE-commits-014ae-nciliation-confirms-absence-desktop/video.webm",
+    "exists": true,
+    "bytes": 30896,
+    "sha256": "001f2e7760e58e461e87532b004c62247ad48d53b9284f05646b36930fa91480",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "1.360000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/images-private-image-bytes-5449e-brequests-or-active-payload-mobile/video.webm",
+    "exists": true,
+    "bytes": 313832,
+    "sha256": "fabf5f3881233cdc0dc26974411556eb6fbfee5de62e054439097db65b0df475",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 368,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "4.480000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/images-partial-illustrated-archive-single-mobile/video.webm",
+    "exists": true,
+    "bytes": 212270,
+    "sha256": "9dcad90ef66736fa0628e86a15cd23f692252decb52ad75493d71315f53dc7dd",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 368,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "3.760000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/images-partial-illustrated-archive-total-mobile/video.webm",
+    "exists": true,
+    "bytes": 165916,
+    "sha256": "b0c28bf976af0b3b5affd7e38238531c063c2338b74b9359da59f6209bd9794b",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 368,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "4.080000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/images-partial-illustrated-archive-count-mobile/video.webm",
+    "exists": true,
+    "bytes": 175784,
+    "sha256": "9f9074a8e4cac9485b0dadf43ca8d300b20b69d38341f00ccb93f291a347d6dd",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 368,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "3.760000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/images-partial-illustrated-archive-invalid-mobile/video.webm",
+    "exists": true,
+    "bytes": 222957,
+    "sha256": "5615ff46d1d85206b4f08f068556615daa5a038f67b75b472c38d07f0df0d24a",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 368,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "3.720000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/images-relative-lazy-srcset-and-checked-base-candidates-mobile/video.webm",
+    "exists": true,
+    "bytes": 289813,
+    "sha256": "ac5240a119f33d42e3e8d68d8c539ef9bf7724997aa9a9a84cf53e8cd9570c27",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 368,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "4.040000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/images-relative-lazy-srcset-and-checked-base-unsafe-base-mobile/video.webm",
+    "exists": true,
+    "bytes": 261130,
+    "sha256": "88f12289b5778d361c00ff0d0f839dc0853153b6d2222e61fc83101e0e973134",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 368,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "3.840000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/images-partial-article-explains-actual-loss-partial-html-mobile/video.webm",
+    "exists": true,
+    "bytes": 211763,
+    "sha256": "b12cd543be68202cd21832a4596a6f39ec3cc60c142e4c0e3b3d4aae9b0c24cd",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 368,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "3.760000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/images-partial-article-explains-actual-loss-text-loss-mobile/video.webm",
+    "exists": true,
+    "bytes": 222619,
+    "sha256": "0cd042f2494511e180f4749980acf3b8e4fa8e326ca23b43756d7d67c8c429eb",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 368,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "3.720000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/images-oversized-empty-pag-598b9-n-a-failed-or-ready-article-mobile/video.webm",
+    "exists": true,
+    "bytes": 145378,
+    "sha256": "0c9074fa390ea4d8486b764f9409fad7d51df111134ee120ea08357d5a147b50",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 368,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "4.160000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/images-private-image-bytes-5449e-brequests-or-active-payload-tablet/video.webm",
+    "exists": true,
+    "bytes": 423320,
+    "sha256": "e13a78d4b965bb627fb349b01697c24bf979511f1608f6e8ad4b8b1fd8c98f56",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 600,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "4.560000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/images-partial-illustrated-archive-single-tablet/video.webm",
+    "exists": true,
+    "bytes": 257834,
+    "sha256": "676ce986b7a8e7b0a7a999b42c43e5c6e7f69f381df4dbe9c80ed98b77cf0fc2",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 600,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "3.680000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/images-partial-illustrated-archive-total-tablet/video.webm",
+    "exists": true,
+    "bytes": 215367,
+    "sha256": "fe59dc7f819da211242190129fa89231daa69580c95c899efc12ea1c6c1a5628",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 600,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "3.800000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/images-partial-illustrated-archive-count-tablet/video.webm",
+    "exists": true,
+    "bytes": 213212,
+    "sha256": "2cf77075297f8494dd21104f755ee9c28cf509aca55774927a0f217d132927d3",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 600,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "3.680000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/images-partial-illustrated-archive-invalid-tablet/video.webm",
+    "exists": true,
+    "bytes": 243817,
+    "sha256": "686242a27c38f85433fddd96ba9ef7b6464c1f093d9c3b76b9364d5f320f67ab",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 600,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "3.640000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/images-relative-lazy-srcset-and-checked-base-candidates-tablet/video.webm",
+    "exists": true,
+    "bytes": 309938,
+    "sha256": "2335b89078c639dbecf7478bfd23fcff07997e67e4b6bc15a697f900d1291761",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 600,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "3.800000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/images-relative-lazy-srcset-and-checked-base-unsafe-base-tablet/video.webm",
+    "exists": true,
+    "bytes": 290065,
+    "sha256": "09544ec5520cd2b9d31b3816b6c65eca389f20d8c393d4551b6b602a323a760c",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 600,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "3.640000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/images-partial-article-explains-actual-loss-partial-html-tablet/video.webm",
+    "exists": true,
+    "bytes": 281416,
+    "sha256": "80fbeb3b8244bb56b3ff6060d36cdc9f9a71787f8783d03b880a78034743275b",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 600,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "3.600000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/images-partial-article-explains-actual-loss-text-loss-tablet/video.webm",
+    "exists": true,
+    "bytes": 193183,
+    "sha256": "623270d178faa6a6077639d40c6a3908e07f96ebeef112d5d39c8fb861a253ce",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 600,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "3.600000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/images-oversized-empty-pag-598b9-n-a-failed-or-ready-article-tablet/video.webm",
+    "exists": true,
+    "bytes": 160104,
+    "sha256": "97eb77e46865a335aa6b04576d7d33e689a7c8957a8615e4f32555f609a239d6",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 600,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "4.080000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/images-private-image-bytes-5449e-brequests-or-active-payload-desktop/video.webm",
+    "exists": true,
+    "bytes": 286125,
+    "sha256": "9106f5f508e67118f558b0fb0b49e0027881d2329a99e0cf91a46331174e836a",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "4.120000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/images-partial-illustrated-archive-single-desktop/video.webm",
+    "exists": true,
+    "bytes": 169712,
+    "sha256": "363d0d1a3128ea131c5da90ad5a298bfbee6a809df859decc56a46e1717a2418",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "3.640000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/images-partial-illustrated-archive-total-desktop/video.webm",
+    "exists": true,
+    "bytes": 138767,
+    "sha256": "529533960b6472b8aa581b79fb2644179a6f79ef1e90508db2f6600fe6f80524",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "3.760000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/images-partial-illustrated-archive-count-desktop/video.webm",
+    "exists": true,
+    "bytes": 167852,
+    "sha256": "7b35f1214c73ec84678337052b0dd8af645ad1120ca65b240d782b12f2b72935",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "3.640000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/images-partial-illustrated-archive-invalid-desktop/video.webm",
+    "exists": true,
+    "bytes": 153050,
+    "sha256": "f531ef9acfb13fc574716a00690f52a95f7b86900d648a8dcbae8e78cd1ff5da",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "3.720000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/images-relative-lazy-srcset-and-checked-base-candidates-desktop/video.webm",
+    "exists": true,
+    "bytes": 181277,
+    "sha256": "f50b8cbf3f7c2723785ae0dfc146c2af28fbf609263737bf785d7ef22de38d7e",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "3.880000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/images-relative-lazy-srcset-and-checked-base-unsafe-base-desktop/video.webm",
+    "exists": true,
+    "bytes": 177465,
+    "sha256": "191fc7ec07f57571a71818b7ce57b030eda229c6210ccd698bc318fd62a6b9ff",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "3.640000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/images-partial-article-explains-actual-loss-partial-html-desktop/video.webm",
+    "exists": true,
+    "bytes": 111518,
+    "sha256": "d748fbcc3258cfa4d1f11d5e18e1c4b074e95305bdad053f7282cb31d8efe09f",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "3.640000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/images-partial-article-explains-actual-loss-text-loss-desktop/video.webm",
+    "exists": true,
+    "bytes": 128340,
+    "sha256": "cfa4dceb119b582eb92db932e4739217b928c7d8e458bcbd1e5cc1bfd1ad2233",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "3.640000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/images-oversized-empty-pag-598b9-n-a-failed-or-ready-article-desktop/video.webm",
+    "exists": true,
+    "bytes": 115675,
+    "sha256": "66e4eb886cc0d00e015f319a28448682cb50ede5c3450dd802efb9dbf17f6e73",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "4.560000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/phase3-real-committed-POST-e74d7-with-one-job-and-generation-mobile/video.webm",
+    "exists": true,
+    "bytes": 211804,
+    "sha256": "0c0adadb80a723531a3d4fca623bfa287c163100d5f741f61c104834174cb25c",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 368,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "6.320000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/phase3-real-session-expiry-8ed0e-ary-and-processing-survives-mobile/video.webm",
+    "exists": true,
+    "bytes": 245292,
+    "sha256": "ac490b85b036c48c535cdfe946dee08ce7adcac14cca21f95c46b413a124c892",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 368,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "7.080000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/phase3-real-reader-return--ee9da-r-account-drafts-or-article-mobile/video.webm",
+    "exists": true,
+    "bytes": 302931,
+    "sha256": "9fa6dae2944d4c9dc6fb50443622110f89337b1f919ca2c509b03bde495a1909",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 368,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "6.320000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/phase3-real-list-and-reade-18dad-out-losing-content-or-input-mobile/video.webm",
+    "exists": true,
+    "bytes": 342042,
+    "sha256": "9e4ea3a82632bdc271486de955debdc03b746672b5325b443cb96f909868c2d6",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 368,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "6.000000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/phase3-return-after-login--0d10d-rticle-shows-a-library-exit-mobile/video.webm",
+    "exists": true,
+    "bytes": 70935,
+    "sha256": "ce9a4841cd930a2c8b85a771673f6d6f8621875aa71dcfddd311e1adfb8b4cf7",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 368,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "1.320000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/phase3-session-expiring-du-3a8ce-der-and-returns-after-login-mobile/video.webm",
+    "exists": true,
+    "bytes": 242143,
+    "sha256": "229dfeebf7a80089d1c5f372bcc74dda642ae71774cbc65ca5e387032d3178a2",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 368,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "3.880000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/phase3-real-committed-POST-e74d7-with-one-job-and-generation-tablet/video.webm",
+    "exists": true,
+    "bytes": 239037,
+    "sha256": "994a594cf60e3dc1c2f11c5a63c962d312f4024547f505fb1185d764c77d5181",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 600,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "6.240000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/phase3-real-session-expiry-8ed0e-ary-and-processing-survives-tablet/video.webm",
+    "exists": true,
+    "bytes": 253899,
+    "sha256": "db99abe225170f71c107acbe8e3578f57034ce86c554760a48728afd8670838c",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 600,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "6.640000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/phase3-real-reader-return--ee9da-r-account-drafts-or-article-tablet/video.webm",
+    "exists": true,
+    "bytes": 351708,
+    "sha256": "ebfa99c578c5e4ef1a60cf0bafa36ec8df5afbd2988cdc103861765dcc4cd17e",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 600,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "6.080000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/phase3-real-list-and-reade-18dad-out-losing-content-or-input-tablet/video.webm",
+    "exists": true,
+    "bytes": 397817,
+    "sha256": "d2bd6d4d6a5404e8c34b2015822541b67d8de3b5dac4395b32aa4937712344ae",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 600,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "5.880000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/phase3-return-after-login--0d10d-rticle-shows-a-library-exit-tablet/video.webm",
+    "exists": true,
+    "bytes": 28002,
+    "sha256": "ed6a345bb8fcc0219e788cfbcceb5a9bbde62a47b1781a04036d8f943b0707b7",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 600,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "1.200000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/phase3-session-expiring-du-3a8ce-der-and-returns-after-login-tablet/video.webm",
+    "exists": true,
+    "bytes": 300989,
+    "sha256": "e7b7466332cc5a7e56073d42746cf8b43d43500d91ac40e56b912c47da4f607c",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 600,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "3.720000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/phase3-real-committed-POST-e74d7-with-one-job-and-generation-desktop/video.webm",
+    "exists": true,
+    "bytes": 137807,
+    "sha256": "7e0ffff49a4d418e530649d0ac00274ee0ab04d8303e21096a077245ec997cae",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "6.840000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/phase3-real-session-expiry-8ed0e-ary-and-processing-survives-desktop/video.webm",
+    "exists": true,
+    "bytes": 198398,
+    "sha256": "7c2369dfcf8c8db498372ee673aff554ea35ee45e62d4c8fc6618a8cd65a156b",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "7.080000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/phase3-real-reader-return--ee9da-r-account-drafts-or-article-desktop/video.webm",
+    "exists": true,
+    "bytes": 229869,
+    "sha256": "e351899202bca75114f49243958416983afbec178b0eaadb936ea5b9488d4645",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "6.200000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/phase3-real-list-and-reade-18dad-out-losing-content-or-input-desktop/video.webm",
+    "exists": true,
+    "bytes": 229797,
+    "sha256": "f20e4b8c1a57979b0b5891bfcf6598bf3f3afb39fe0e459282de70c60fc6252e",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "5.960000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/phase3-return-after-login--0d10d-rticle-shows-a-library-exit-desktop/video.webm",
+    "exists": true,
+    "bytes": 20215,
+    "sha256": "ef1665ad99a4bb7220a9b4a22b83f5a587b80ef24b87780ad5f9e6ef21690994",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "1.160000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/phase3-session-expiring-du-3a8ce-der-and-returns-after-login-desktop/video.webm",
+    "exists": true,
+    "bytes": 193806,
+    "sha256": "f62f704d769138847f4f329805dc3c8628adefb49f4a4bc2282057bd31583e80",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "3.720000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/registration-registration--d80e6-rary-without-a-second-login-mobile/video.webm",
+    "exists": true,
+    "bytes": 53745,
+    "sha256": "29c9e6bfbb275e4512483cba31aacfffb91e6a4a062d9d556119a22877858d34",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 368,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "1.160000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/registration-registration--d80e6-rary-without-a-second-login-tablet/video.webm",
+    "exists": true,
+    "bytes": 85086,
+    "sha256": "9877b2dc9d170bfa662b21927074ccde67ad0aac157302b89473d8fc9421fffb",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 600,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "1.120000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/registration-registration--d80e6-rary-without-a-second-login-desktop/video.webm",
+    "exists": true,
+    "bytes": 62668,
+    "sha256": "7f1d2b90b999b147804635678ba80f607019b018c4a0016731ade84a5702df81",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "1.160000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/retry-homepage-source-corr-42119-card-through-API-and-worker-mobile/video.webm",
+    "exists": true,
+    "bytes": 401045,
+    "sha256": "3b314402c033420529afdfb4bb794dab5ea120a05de2e8a07eae371ae45e9fae",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 368,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "6.080000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/retry-pdf-source-correctio-f7222-card-through-API-and-worker-mobile/video.webm",
+    "exists": true,
+    "bytes": 389515,
+    "sha256": "68d9b5d5258002fe6ea63a72ba872c8f283c4afc7d958b2d41e8680ce778537f",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 368,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "6.120000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/retry-video-source-correct-21caa-card-through-API-and-worker-mobile/video.webm",
+    "exists": true,
+    "bytes": 350956,
+    "sha256": "eae8f964878dc24b2ff53534880f5f3d87ab91182f1431d63e21a2cbb1111e0d",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 368,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "6.120000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/retry-login-source-correct-d6146-card-through-API-and-worker-mobile/video.webm",
+    "exists": true,
+    "bytes": 397882,
+    "sha256": "3bb3ff495832e379c2c7400a65848190d4614548a3e6e7d25f75c6d7000cb487",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 368,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "6.080000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/retry-paywall-source-corre-e723d-card-through-API-and-worker-mobile/video.webm",
+    "exists": true,
+    "bytes": 398390,
+    "sha256": "1fb645259998b689945f563635a6edd91771da4def782607f0aeb30fa803a08e",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 368,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "6.000000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/retry-js-only-source-corre-dfaf5-card-through-API-and-worker-mobile/video.webm",
+    "exists": true,
+    "bytes": 433102,
+    "sha256": "1bee44f52b89626372a15c1666289a943e95be65b52dccdb0a3cc6d6dd530581",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 368,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "6.080000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/retry-network-source-corre-5fe88-card-through-API-and-worker-mobile/video.webm",
+    "exists": true,
+    "bytes": 570160,
+    "sha256": "056cb71720760c4c5f80b60e6278ecad2270fabaa7db3b1787f5af172dc45295",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 368,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "16.600000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/retry-lost-real-retry-resp-8e477--retrying-its-failed-result-mobile/video.webm",
+    "exists": true,
+    "bytes": 459864,
+    "sha256": "e72d5ec4c8479ddfb38f013e00758da91a3e20284df52d9f82024f06be1d3412",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 368,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "13.560000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/retry-homepage-source-corr-42119-card-through-API-and-worker-tablet/video.webm",
+    "exists": true,
+    "bytes": 566521,
+    "sha256": "6686ea0de309012b8ad6c09793c2470953d0f7766740c4b81e8f3e0f9e31da0a",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 600,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "5.600000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/retry-pdf-source-correctio-f7222-card-through-API-and-worker-tablet/video.webm",
+    "exists": true,
+    "bytes": 480589,
+    "sha256": "f0d18a4eb5ddf57b42ece2b22730189dc06b159625b59535e5ea524ae6302372",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 600,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "5.600000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/retry-video-source-correct-21caa-card-through-API-and-worker-tablet/video.webm",
+    "exists": true,
+    "bytes": 471843,
+    "sha256": "442b9faf2a05b62fd9c63ec667d1975fb0f2f08924cd00af33ac4b1d22188a95",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 600,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "5.640000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/retry-login-source-correct-d6146-card-through-API-and-worker-tablet/video.webm",
+    "exists": true,
+    "bytes": 559508,
+    "sha256": "74c744245ad05a4cfef559de11ea36ba11d843ed1877260670e224d8fa9e1b8e",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 600,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "5.600000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/retry-paywall-source-corre-e723d-card-through-API-and-worker-tablet/video.webm",
+    "exists": true,
+    "bytes": 563993,
+    "sha256": "5f9d8fd4650a736f1f43918033feadc7d667c104c8589b5ad59a807ae7c8d1cf",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 600,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "5.600000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/retry-js-only-source-corre-dfaf5-card-through-API-and-worker-tablet/video.webm",
+    "exists": true,
+    "bytes": 464147,
+    "sha256": "b008f7b0390685a24c87ec815deabf251537aff2acfaee28b9438a5f90753b5a",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 600,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "5.280000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/retry-network-source-corre-5fe88-card-through-API-and-worker-tablet/video.webm",
+    "exists": true,
+    "bytes": 717193,
+    "sha256": "a9a7605f6f9adf10eb250159584053daea56e3de2ace6cf213fddac54e9336e5",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 600,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "15.760000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/retry-lost-real-retry-resp-8e477--retrying-its-failed-result-tablet/video.webm",
+    "exists": true,
+    "bytes": 412830,
+    "sha256": "27358afffa93e1c0119469b04d31e065fe2ae78fb11a5a31f142dd078cbf379d",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 600,
+          "height": 800
+        }
+      ],
+      "format": {
+        "duration": "13.520000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/retry-homepage-source-corr-42119-card-through-API-and-worker-desktop/video.webm",
+    "exists": true,
+    "bytes": 387133,
+    "sha256": "fce7334ebf17439c4db892cae32ed6722f4cdc8f05b089c4aeb857c2055044b9",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "5.600000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/retry-pdf-source-correctio-f7222-card-through-API-and-worker-desktop/video.webm",
+    "exists": true,
+    "bytes": 338579,
+    "sha256": "2c44a528effc04f02dc78809b7b9ac3e11a02da73955eef9491c6832cd02612f",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "5.640000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/retry-video-source-correct-21caa-card-through-API-and-worker-desktop/video.webm",
+    "exists": true,
+    "bytes": 355390,
+    "sha256": "b1f7e4b6de2a18075b1f264f2146b8f46b4c93ce3aeba5cc6edad86c4775d31f",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "5.560000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/retry-login-source-correct-d6146-card-through-API-and-worker-desktop/video.webm",
+    "exists": true,
+    "bytes": 381393,
+    "sha256": "6874067b58c7435face1adcd855baa7d355b01edbc2284814cacae384cbb476d",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "5.600000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/retry-paywall-source-corre-e723d-card-through-API-and-worker-desktop/video.webm",
+    "exists": true,
+    "bytes": 342708,
+    "sha256": "ac48be035b2ebf89b8bd8fec3547f248392d5ab040d09ac6e0c1d6c977cdc1f9",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "5.640000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/retry-js-only-source-corre-dfaf5-card-through-API-and-worker-desktop/video.webm",
+    "exists": true,
+    "bytes": 336710,
+    "sha256": "8d26b402682fed574617ce8fd76a8adfddb1fb0b13c7d19fef7290eb3ae7f8ec",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "5.640000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/retry-network-source-corre-5fe88-card-through-API-and-worker-desktop/video.webm",
+    "exists": true,
+    "bytes": 551599,
+    "sha256": "9f3c62a6603d14a5f8e0ff5c59423219a998b7d8143ce0f0ad047f7053a1026b",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "15.720000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/retry-lost-real-retry-resp-8e477--retrying-its-failed-result-desktop/video.webm",
+    "exists": true,
+    "bytes": 277436,
+    "sha256": "e70b5ca34082d20b4e76fa093fd6d947a0c35882d672340cabe059cefb7b1c9b",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "13.880000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/concurrency-delete-during--cd7fc-cting-the-stopped-execution-recovery/video.webm",
+    "exists": true,
+    "bytes": 133077,
+    "sha256": "0034e48dd47b2179065ce48a15ef830d638f91b53c650347d4d6dd870012cb55",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "3.600000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/concurrency-delete-during--cda99-cting-the-stopped-execution-recovery/video.webm",
+    "exists": true,
+    "bytes": 127150,
+    "sha256": "efe61f05678e574c4ed1463bee3423f3ffd8f5412eaf0f94dbb6b6b04c37c713",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "3.640000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/concurrency-SIGKILL-during-61b47--and-preserves-the-deadline-recovery/video.webm",
+    "exists": true,
+    "bytes": 87424,
+    "sha256": "13eac083f1d4892e7d43ec5b70c9adeb280aabee9e51e5796eff81307a6a2023",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "4.120000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/concurrency-SIGKILL-after--51793-chive-and-DELETE-removes-it-recovery/video.webm",
+    "exists": true,
+    "bytes": 105073,
+    "sha256": "c6d506a7c10f3ac51d098dc02c1b7ab3785864c657b5d2f2864240bfe8cdba55",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "3.600000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/concurrency-retry-from-a-s-f5dc7-E-without-reviving-the-card-recovery/video-1.webm",
+    "exists": true,
+    "bytes": 13323,
+    "sha256": "c4aa87d1c29cf33c4bbb61636eb00ba9b757a33813af81acfe462d52cd05d68f",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "1.160000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/concurrency-retry-from-a-s-f5dc7-E-without-reviving-the-card-recovery/video.webm",
+    "exists": true,
+    "bytes": 153759,
+    "sha256": "21647df078b19763b0dbc07bb511965a4f3808073be42aa3acb912505b75606c",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "5.720000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/concurrency-complete-API-a-6d889-riginal-120-second-deadline-recovery/video.webm",
+    "exists": true,
+    "bytes": 2141433,
+    "sha256": "1c9e2541fe22efe9783da2b60262b4677652676f67b2da26ff47a85adcbf634b",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "123.760000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/recovery-real-30-120-secon-de2ba-w-fetch-and-survives-reload-recovery/video.webm",
+    "exists": true,
+    "bytes": 1646567,
+    "sha256": "c64a6a70fe0517a8b2d830ae492289f3a9790d6e33db8c6b39db405055afce88",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "123.320000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/recovery-queued-job-expire-7b729--late-worker-cannot-publish-recovery/video.webm",
+    "exists": true,
+    "bytes": 1680027,
+    "sha256": "7e9183a015ae3069ca9b08452a5673580ab7402df69846a5b920ee721d2c9b73",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "126.480000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/recovery-Retry-After-cross-e9e9d-o-not-cancel-committed-work-recovery/video-1.webm",
+    "exists": true,
+    "bytes": 62109,
+    "sha256": "ff79c14b46d03b416f5a6387a660cf76e7e0c62f2e7d57ccd584b5d83f293f9f",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "1.120000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/recovery-Retry-After-cross-e9e9d-o-not-cancel-committed-work-recovery/video.webm",
+    "exists": true,
+    "bytes": 500856,
+    "sha256": "00f5d7200c3e5bc53f90a214054573603f79356ce36ff96d77aa36eb22cc9c5d",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "32.560000"
+      }
+    }
+  },
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/integration/recovery-killed-worker-is--4a1b5-ease-and-page-returns-ready-recovery/video.webm",
+    "exists": true,
+    "bytes": 759979,
+    "sha256": "ca707ea81c82d2405a64f73cf2ae679f8254e18089a707e59ecc7eb2dbc463e2",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "53.480000"
+      }
+    }
+  }
+]

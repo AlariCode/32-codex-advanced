@@ -1,0 +1,151 @@
+[
+  {
+    "command": ["make", "test"],
+    "actualArgv": ["make", "test"],
+    "startedAt": "2026-11-10T10:40:02.056069+00:00",
+    "endedAt": "2026-11-10T10:41:39.993169+00:00",
+    "exitCode": 0,
+    "log": "tmp/issue-23/make-test.log",
+    "logSHA256": "6f63517cbf5dfa96beca36179a4a8e5599d25aaead7479ac2af64d0456488b2c",
+    "tail": "docker compose -f compose.test.yaml up -d --wait postgres-test\n Container linkbook-tests-postgres-test-1 Running \n Container linkbook-tests-postgres-test-1 Waiting \n Container linkbook-tests-postgres-test-1 Healthy \ngo test -tags=integration ./backend/api/... ./backend/worker/... ./backend/migrations/... ./backend/linkprocessing/... -count=1\n?   \tlinkbook/api/cmd/api\t[no test files]\n?   \tlinkbook/api/cmd/integration-db\t[no test files]\n?   \tlinkbook/api/docs\t[no test files]\nok  \tlinkbook/api/internal/database\t0.816s\nok  \tlinkbook/api/internal/httpapi\t7.340s\nok  \tlinkbook/api/internal/link\t0.362s\n?   \tlinkbook/api/internal/user\t[no test files]\n?   \tlinkbook/worker/cmd/integration-worker\t[no test files]\n?   \tlinkbook/worker/cmd/worker\t[no test files]\nok  \tlinkbook/worker/internal/extract\t0.402s\nok  \tlinkbook/worker/internal/safehttp\t18.987s\nok  \tlinkbook/worker/internal/worker\t95.696s\n?   \tlinkbook/migrations\t[no test files]\nok  \tlinkbook/linkprocessing\t0.556s\n"
+  },
+  {
+    "command": [
+      "go",
+      "vet",
+      "./backend/api/...",
+      "./backend/worker/...",
+      "./backend/migrations/...",
+      "./backend/linkprocessing/..."
+    ],
+    "actualArgv": [
+      "go",
+      "vet",
+      "./backend/api/...",
+      "./backend/worker/...",
+      "./backend/migrations/...",
+      "./backend/linkprocessing/..."
+    ],
+    "startedAt": "2026-11-10T10:41:39.994452+00:00",
+    "endedAt": "2026-11-10T10:41:40.327653+00:00",
+    "exitCode": 0,
+    "log": "tmp/issue-23/go-vet-._backend_api_....log",
+    "logSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tail": ""
+  },
+  {
+    "command": ["node", "--test", "scripts/archive-benchmark/metrics.test.mjs"],
+    "actualArgv": [
+      "node",
+      "--test",
+      "scripts/archive-benchmark/metrics.test.mjs"
+    ],
+    "startedAt": "2026-11-10T10:41:40.328013+00:00",
+    "endedAt": "2026-11-10T10:41:40.386483+00:00",
+    "exitCode": 0,
+    "log": "tmp/issue-23/node---test-scripts_archive-benchmark_metrics.test.mjs.log",
+    "logSHA256": "e4356ae840fe5b44414c014b6c64694625c0ca498082952472710421735968bc",
+    "tail": "TAP version 13\n# Subtest: server-to-DOM timing includes queue, work and polling; exact 15s boundary\nok 1 - server-to-DOM timing includes queue, work and polling; exact 15s boundary\n  ---\n  duration_ms: 0.883625\n  type: 'test'\n  ...\n# Subtest: duplicates, failed, unavailable, invalid documents and pending media are not success\nok 2 - duplicates, failed, unavailable, invalid documents and pending media are not success\n  ---\n  duration_ms: 0.061334\n  type: 'test'\n  ...\n# Subtest: 54 fast results need a complete cohort of 60 new saves and independent accounts\nok 3 - 54 fast results need a complete cohort of 60 new saves and independent accounts\n  ---\n  duration_ms: 0.24125\n  type: 'test'\n  ...\n# Subtest: aggregation is independently reproducible and rejects modified corpus/accounts/times\nok 4 - aggregation is independently reproducible and rejects modified corpus/accounts/times\n  ---\n  duration_ms: 0.359667\n  type: 'test'\n  ...\n1..4\n# tests 4\n# suites 0\n# pass 4\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 31.573541\n"
+  },
+  {
+    "command": ["npm", "run", "test:e2e"],
+    "actualArgv": [
+      "npm",
+      "run",
+      "test:e2e",
+      "--",
+      "--",
+      "--reporter=list,json"
+    ],
+    "startedAt": "2026-11-10T10:41:44.077367+00:00",
+    "endedAt": "2026-11-10T10:44:46.334987+00:00",
+    "exitCode": 0,
+    "log": "tmp/issue-23/npm-run-test-e2e.log",
+    "logSHA256": "42626466c8fdc57bce1b2decc9f85b5f1c11ba6b564f14452463a4f57da032b6",
+    "tail": ".spec.ts:45:5 \u203a small mobile and both sides of the breakpoint have no overflow (279ms)\n  \u2713  302 [desktop] \u203a tests/e2e/registration.spec.ts:63:5 \u203a obvious email typos are rejected locally and can be corrected (574ms)\n  \u2713  303 [desktop] \u203a tests/e2e/registration.spec.ts:100:5 \u203a supported email forms reach the API and preserve the password (499ms)\n  \u2713  304 [desktop] \u203a tests/e2e/registration.spec.ts:129:5 \u203a successful submission shows loading then opens the authenticated library (347ms)\n  \u2713  305 [desktop] \u203a tests/e2e/retry.spec.ts:20:5 \u203a lost retry response retains error and replays original generation (368ms)\n  \u2713  306 [desktop] \u203a tests/e2e/retry.spec.ts:52:5 \u203a late polling and card HTTP responses cannot replace retry or stop its polling (4.6s)\n  \u2713  307 [desktop] \u203a tests/e2e/retry.spec.ts:120:5 \u203a retry restarts the waiting clock and only the server declares timeout (1.1s)\n  \u2713  308 [desktop] \u203a tests/e2e/retry.spec.ts:158:7 \u203a confirming failed after a lost response allows an intentional new retry (438ms)\n  \u2713  309 [desktop] \u203a tests/e2e/retry.spec.ts:158:7 \u203a confirming unavailable after a lost response allows an intentional new retry (373ms)\n  \u2713  310 [desktop] \u203a tests/e2e/retry.spec.ts:203:5 \u203a opening an unconfirmed processing retry resumes automatic polling (2.2s)\n  \u2713  311 [desktop] \u203a tests/e2e/session-refresh.spec.ts:58:5 \u203a initial session check never offers guest navigation before its result (194ms)\n  \u2713  312 [desktop] \u203a tests/e2e/session-refresh.spec.ts:81:5 \u203a focus rechecks session without remounting cards, resetting input or cancelling a save (305ms)\n  \u2713  313 [desktop] \u203a tests/e2e/session-refresh.spec.ts:138:5 \u203a expired session on focus still clears private content (265ms)\n  \u2713  314 [desktop] \u203a tests/e2e/session-refresh.spec.ts:151:5 \u203a account change on focus replaces the previous owner's library (240ms)\n  \u2713  315 [desktop] \u203a tests/e2e/session-refresh.spec.ts:170:7 \u203a reader focus preserves the article until revalidation: success (233ms)\n  \u2713  316 [desktop] \u203a tests/e2e/session-refresh.spec.ts:170:7 \u203a reader focus preserves the article until revalidation: network (225ms)\n  \u2713  317 [desktop] \u203a tests/e2e/session-refresh.spec.ts:170:7 \u203a reader focus preserves the article until revalidation: unauthorized (260ms)\n  \u2713  318 [desktop] \u203a tests/e2e/waiting.spec.ts:3:5 \u203a server age survives reload and browser clock skew; offline never invents timeout (1.2s)\n\n  318 passed (3.0m)\n"
+  },
+  {
+    "command": ["sh", "scripts/check-worker-egress.sh"],
+    "actualArgv": ["sh", "scripts/check-worker-egress.sh"],
+    "startedAt": "2026-11-10T10:42:29.235519+00:00",
+    "endedAt": "2026-11-10T10:48:41.218650+00:00",
+    "exitCode": 0,
+    "log": "tmp/issue-23/sh-scripts_check-worker-egress.sh.log",
+    "logSHA256": "523172c5b2bbb4e2a59b00e1dcb24f9fb16a1d6c79a5486df3319393c2d167a5",
+    "tail": "PASS: private/loopback/metadata TCP blocked by deployment firewall; worker uid 65532, no capabilities\n"
+  },
+  {
+    "command": ["npm", "run", "test:e2e:integration"],
+    "actualArgv": [
+      "npm",
+      "run",
+      "test:e2e:integration",
+      "--",
+      "--",
+      "--reporter=list,json"
+    ],
+    "startedAt": "2026-11-10T10:44:46.336972+00:00",
+    "endedAt": "2026-11-10T10:59:53.310790+00:00",
+    "exitCode": 0,
+    "log": "tmp/issue-23/npm-run-test-e2e-integration.log",
+    "logSHA256": "a55c64ed63c029db7b1b1cc9ff463bfd8aecf3149dc6d0d775691b31c92b81d9",
+    "tail": "14:01:00.352543+03:00\"}\n[WebServer] {\"time\":\"2026-11-10T13:59:01.278793+03:00\",\"level\":\"INFO\",\"msg\":\"Worker started\"}\n[WebServer] {\"time\":\"2026-11-10T13:59:01.286453+03:00\",\"level\":\"INFO\",\"msg\":\"archive_idle\"}\n[WebServer] {\"time\":\"2026-11-10T13:59:46.282735+03:00\",\"level\":\"INFO\",\"msg\":\"archive_claim\",\"job_id\":\"784f4945-ca39-46b7-86e9-08c2f23a8677\",\"link_id\":\"6b43e44a-37b1-42f8-9dcc-97506f3aade3\",\"generation\":1,\"execution\":2,\"reclaimed\":true,\"queue_age_seconds\":45.928273,\"deadline_at\":\"2026-11-10T14:01:00.352543+03:00\"}\n[WebServer] {\"time\":\"2026-11-10T13:59:50.286401+03:00\",\"level\":\"INFO\",\"msg\":\"archive_stage\",\"job_id\":\"784f4945-ca39-46b7-86e9-08c2f23a8677\",\"link_id\":\"6b43e44a-37b1-42f8-9dcc-97506f3aade3\",\"generation\":1,\"execution\":2,\"stage\":\"html\",\"outcome\":\"ok\",\"duration_ms\":4003.48925}\n[WebServer] {\"time\":\"2026-11-10T13:59:50.288274+03:00\",\"level\":\"INFO\",\"msg\":\"archive_stage\",\"job_id\":\"784f4945-ca39-46b7-86e9-08c2f23a8677\",\"link_id\":\"6b43e44a-37b1-42f8-9dcc-97506f3aade3\",\"generation\":1,\"execution\":2,\"stage\":\"extraction\",\"outcome\":\"ready\",\"duration_ms\":1.803083}\n[WebServer] {\"time\":\"2026-11-10T13:59:50.2883+03:00\",\"level\":\"INFO\",\"msg\":\"archive_stage\",\"job_id\":\"784f4945-ca39-46b7-86e9-08c2f23a8677\",\"link_id\":\"6b43e44a-37b1-42f8-9dcc-97506f3aade3\",\"generation\":1,\"execution\":2,\"stage\":\"media\",\"outcome\":\"ok\",\"duration_ms\":0.002459}\n[WebServer] {\"time\":\"2026-11-10T13:59:50.305017+03:00\",\"level\":\"INFO\",\"msg\":\"archive_publication\",\"job_id\":\"784f4945-ca39-46b7-86e9-08c2f23a8677\",\"link_id\":\"6b43e44a-37b1-42f8-9dcc-97506f3aade3\",\"generation\":1,\"execution\":2,\"outcome\":\"ready\",\"duration_ms\":16.684833,\"document_bytes\":2615,\"media_bytes\":0,\"stored_bytes\":2615}\n[WebServer] {\"time\":\"2026-11-10T13:59:50.305106+03:00\",\"level\":\"INFO\",\"msg\":\"archive_stage\",\"job_id\":\"784f4945-ca39-46b7-86e9-08c2f23a8677\",\"link_id\":\"6b43e44a-37b1-42f8-9dcc-97506f3aade3\",\"generation\":1,\"execution\":2,\"stage\":\"attempt\",\"outcome\":\"ready\",\"duration_ms\":4022.24325}\n[WebServer] {\"time\":\"2026-11-10T13:59:50.306055+03:00\",\"level\":\"INFO\",\"msg\":\"archive_idle\"}\n  \u2713  104 [recovery] \u203a tests/e2e/integration/recovery.spec.ts:161:5 \u203a killed worker is reclaimed after its original lease and page returns ready (52.6s)\n\n  Slow test file: [recovery] \u203a tests/e2e/integration/recovery.spec.ts (5.7m)\n  Consider running tests from slow files in parallel. See: https://playwright.dev/docs/test-parallel\n  104 passed (15.1m)\n"
+  },
+  {
+    "command": ["npm", "run", "test:archive:restore"],
+    "actualArgv": [
+      "npm",
+      "run",
+      "test:archive:restore",
+      "--",
+      "--",
+      "--reporter=list,json"
+    ],
+    "startedAt": "2026-11-10T10:59:53.312022+00:00",
+    "endedAt": "2026-11-10T11:00:07.621047+00:00",
+    "exitCode": 1,
+    "log": "tmp/issue-23/npm-run-test-archive-restore.log",
+    "logSHA256": "1c7eca18d9ed92ac57b2ed0dae7ec8c94153dc2ff140fbb1e27401d0dbb9c733",
+    "tail": "ing:    \"\"\n    Timeout: 5000ms\n\n    Call log:\n      - Expect \"toContainText\" getByRole('article', { name: '\u0421\u043e\u0445\u0440\u0430\u043d\u0451\u043d\u043d\u0430\u044f \u0441\u0442\u0430\u0442\u044c\u044f', exact: true }).locator('pre code') with timeout 5000ms\n      - waiting for getByRole('article', { name: '\u0421\u043e\u0445\u0440\u0430\u043d\u0451\u043d\u043d\u0430\u044f \u0441\u0442\u0430\u0442\u044c\u044f', exact: true }).locator('pre code')\n        14 \u00d7 locator resolved to <code></code>\n           - unexpected value \"\"\n\n\n      146 |     );\n      147 |     await expect(article.locator(\"li\")).toContainText(\"Backup list marker\");\n    > 148 |     await expect(article.locator(\"pre code\")).toContainText(\"backup_code = 42\");\n          |                                               ^\n      149 |     await expect(article.locator(\"figcaption\")).toHaveText(\n      150 |       [1, 2, 3].map((i) => `Backup caption ${i}`),\n      151 |     );\n        at /Users/alaricode/Documents/1 - Code/4 - Tutorials/32-codex-advanced-wt-23/web/tests/e2e/backup/restore.spec.ts:148:47\n\n    attachment #1: screenshot (image/png) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n    ../tmp/playwright/videos/backup-restore/restore-dump-restores-a-pr-8470e-after-destroying-the-source-archive-restore/test-failed-1.png\n    \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\n    attachment #2: video (video/webm) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n    ../tmp/playwright/videos/backup-restore/restore-dump-restores-a-pr-8470e-after-destroying-the-source-archive-restore/video.webm\n    \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\n    Error Context: ../tmp/playwright/videos/backup-restore/restore-dump-restores-a-pr-8470e-after-destroying-the-source-archive-restore/error-context.md\n\n    attachment #4: trace (application/zip) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n    ../tmp/playwright/videos/backup-restore/restore-dump-restores-a-pr-8470e-after-destroying-the-source-archive-restore/trace.zip\n    Usage:\n\n        npx playwright show-trace ../tmp/playwright/videos/backup-restore/restore-dump-restores-a-pr-8470e-after-destroying-the-source-archive-restore/trace.zip\n\n    \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\n  1 failed\n    [archive-restore] \u203a tests/e2e/backup/restore.spec.ts:48:5 \u203a dump restores a private readable archive after destroying the source \n"
+  },
+  {
+    "command": ["make", "build"],
+    "actualArgv": ["make", "build"],
+    "startedAt": "2026-11-10T11:00:07.621716+00:00",
+    "endedAt": "2026-11-10T11:00:09.900816+00:00",
+    "exitCode": 0,
+    "log": "tmp/issue-23/make-build.log",
+    "logSHA256": "c31c73873b7e4d1e104cdfc6dcedf53e07c9df955e75f38562a21038d5162f41",
+    "tail": "mkdir -p bin\ngo build -o bin/api ./backend/api/cmd/api\ngo build -o bin/worker ./backend/worker/cmd/worker\nnpm run build\n\n> build\n> npm run build --prefix web\n\n\n> @linkbook/web@0.1.0 build\n> next build\n\n\u25b2 Next.js 16.3.8 (Turbopack)\n\u26a0 Warning: Next.js inferred your workspace root, but it may not be correct.\n We detected multiple lockfiles and selected the directory of /Users/alaricode/Documents/1 - Code/4 - Tutorials/32-codex-advanced-wt-23/package-lock.json as the root directory.\n To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.\n   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.\n Detected additional lockfiles: \n   * /Users/alaricode/Documents/1 - Code/4 - Tutorials/32-codex-advanced-wt-23/web/package-lock.json\n\n\u2713 Running next.config.ts took 9ms\n\n  Creating an optimized production build ...\n\u2713 Compiled successfully in 116ms\n  Running TypeScript ...\n  Finished TypeScript in 563ms ...\n  Collecting page data using 7 workers ...\n  Generating static pages using 7 workers (0/5) ...\n  Generating static pages using 7 workers (1/5) \n  Generating static pages using 7 workers (2/5) \n  Generating static pages using 7 workers (3/5) \n\u2713 Generating static pages using 7 workers (5/5) in 177ms\n  Finalizing page optimization ...\n\nRoute (app)\n\u250c \u25cb /\n\u251c \u25cb /_not-found\n\u251c \u0192 /links/[id]\n\u251c \u25cb /login\n\u2514 \u25cb /register\n\n\n\u25cb  (Static)   prerendered as static content\n\u0192  (Dynamic)  server-rendered on demand\n\n"
+  },
+  {
+    "command": ["make", "openapi"],
+    "actualArgv": ["make", "openapi"],
+    "startedAt": "2026-11-10T11:00:09.902143+00:00",
+    "endedAt": "2026-11-10T11:00:13.503046+00:00",
+    "exitCode": 0,
+    "log": "tmp/issue-23/make-openapi.log",
+    "logSHA256": "1800ade89ac938cea7d8084d7b059819dfda5b390c5f5f56877802a09e55a651",
+    "tail": "bash scripts/sync-openapi.sh\n2026/11/10 14:00:12 Generate swagger docs....\n2026/11/10 14:00:12 Generate general API Info, search dir:.\n2026/11/10 14:00:12 warning: failed to get package name in dir: ., error: execute go list command, exit status 1, stdout:, stderr:no Go files in /Users/alaricode/Documents/1 - Code/4 - Tutorials/32-codex-advanced-wt-23/backend/api\n2026/11/10 14:00:12 Generate general API Info, search dir:../linkprocessing\n2026/11/10 14:00:12 Generating httpapi.errorResponse\n2026/11/10 14:00:12 Generating user.User\n2026/11/10 14:00:12 Generating httpapi.saveLinkRequest\n2026/11/10 14:00:12 Generating httpapi.saveLinkResponse\n2026/11/10 14:00:12 Generating link.Card\n2026/11/10 14:00:12 Generating link.Page\n2026/11/10 14:00:12 Generating httpapi.loginRequestBody\n2026/11/10 14:00:12 Generating link.DocumentResponse\n2026/11/10 14:00:12 Generating linkprocessing.Document\n2026/11/10 14:00:12 Generating linkprocessing.Block\n2026/11/10 14:00:12 Skipping 'linkprocessing.Block', recursion detected.\n2026/11/10 14:00:12 Generating httpapi.registerRequest\n2026/11/10 14:00:12 Generating httpapi.retryLinkRequest\n2026/11/10 14:00:12 Generating httpapi.retryLinkResponse\n2026/11/10 14:00:12 Generating httpapi.healthResponse\n2026/11/10 14:00:12 create docs.go at docs/docs.go\n2026/11/10 14:00:12 create swagger.json at docs/swagger.json\n2026/11/10 14:00:12 create swagger.yaml at docs/swagger.yaml\n\n   \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 DEPRECATED \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n   \u2502                                                      \u2502\n   \u2502   This package is deprecated.                        \u2502\n   \u2502                                                      \u2502\n   \u2502   Use `npx @redocly/cli build-docs <api>` instead.   \u2502\n   \u2502                                                      \u2502\n   \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\n\n[ReDoc Compatibility mode]: Converting OpenAPI 2.0 to OpenAPI 3.0\nPrerendering docs\n\n\ud83c\udf89 bundled successfully in: docs/swagger.html (1190 KiB) [\u23f1 0.081s]\n"
+  },
+  {
+    "command": ["npm", "run", "lint", "--prefix", "web"],
+    "actualArgv": ["npm", "run", "lint", "--prefix", "web"],
+    "startedAt": "2026-11-10T11:00:13.503616+00:00",
+    "endedAt": "2026-11-10T11:00:15.603222+00:00",
+    "exitCode": 0,
+    "log": "tmp/issue-23/npm-run-lint.log",
+    "logSHA256": "e6e614628167ab2549f6090221a46280a7292c8ab625b98623fb2dd7c309bd17",
+    "tail": "\n> @linkbook/web@0.1.0 lint\n> eslint .\n\n"
+  },
+  {
+    "command": ["npm", "run", "typecheck", "--prefix", "web"],
+    "actualArgv": ["npm", "run", "typecheck", "--prefix", "web"],
+    "startedAt": "2026-11-10T11:00:15.603837+00:00",
+    "endedAt": "2026-11-10T11:00:16.674625+00:00",
+    "exitCode": 0,
+    "log": "tmp/issue-23/npm-run-typecheck.log",
+    "logSHA256": "9e58413dd7795c86dfd9d914a11f2a35da5a2d725a23d9a4769a1097a0bc882a",
+    "tail": "\n> @linkbook/web@0.1.0 typecheck\n> tsc --noEmit\n\n"
+  }
+]

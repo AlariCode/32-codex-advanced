@@ -1,0 +1,284 @@
+[
+  {
+    "article": "go-strings",
+    "stages": {
+      "queue": {
+        "count": 10,
+        "min_ms": 43.574,
+        "median_ms": 301.046,
+        "p90_ms": 343.729,
+        "max_ms": 350.671
+      },
+      "html": {
+        "count": 10,
+        "min_ms": 412.117917,
+        "median_ms": 536.970896,
+        "p90_ms": 618.1255,
+        "max_ms": 1619.134583
+      },
+      "extraction": {
+        "count": 10,
+        "min_ms": 4.586542,
+        "median_ms": 6.8156665,
+        "p90_ms": 7.275416,
+        "max_ms": 9.766708
+      },
+      "media": {
+        "count": 10,
+        "min_ms": 0.003541,
+        "median_ms": 0.007063,
+        "p90_ms": 0.010791,
+        "max_ms": 0.01325
+      },
+      "publication": {
+        "count": 10,
+        "min_ms": 3.5125,
+        "median_ms": 6.6275414999999995,
+        "p90_ms": 9.846708,
+        "max_ms": 18.161
+      },
+      "attempt": {
+        "count": 10,
+        "min_ms": 426.03125,
+        "median_ms": 551.3353745,
+        "p90_ms": 630.411042,
+        "max_ms": 1628.356542
+      }
+    }
+  },
+  {
+    "article": "go-pipelines",
+    "stages": {
+      "queue": {
+        "count": 10,
+        "min_ms": 173.88799999999998,
+        "median_ms": 329.098,
+        "p90_ms": 472.406,
+        "max_ms": 481.428
+      },
+      "html": {
+        "count": 10,
+        "min_ms": 416.335292,
+        "median_ms": 435.864167,
+        "p90_ms": 459.464041,
+        "max_ms": 484.296
+      },
+      "extraction": {
+        "count": 10,
+        "min_ms": 6.86025,
+        "median_ms": 9.337917000000001,
+        "p90_ms": 11.564958,
+        "max_ms": 12.155625
+      },
+      "media": {
+        "count": 10,
+        "min_ms": 0.006792,
+        "median_ms": 0.0093335,
+        "p90_ms": 0.013625,
+        "max_ms": 0.019917
+      },
+      "publication": {
+        "count": 10,
+        "min_ms": 3.516792,
+        "median_ms": 6.2625625,
+        "p90_ms": 8.986875,
+        "max_ms": 20.496541
+      },
+      "attempt": {
+        "count": 10,
+        "min_ms": 431.809083,
+        "median_ms": 450.3281875,
+        "p90_ms": 480.814125,
+        "max_ms": 502.157416
+      }
+    }
+  },
+  {
+    "article": "mdn",
+    "stages": {
+      "queue": {
+        "count": 10,
+        "min_ms": 59.753,
+        "median_ms": 193.55349999999999,
+        "p90_ms": 407.18100000000004,
+        "max_ms": 461.352
+      },
+      "html": {
+        "count": 10,
+        "min_ms": 183.993667,
+        "median_ms": 209.9402705,
+        "p90_ms": 266.499167,
+        "max_ms": 532.517375
+      },
+      "extraction": {
+        "count": 10,
+        "min_ms": 6.616958,
+        "median_ms": 12.162146,
+        "p90_ms": 14.970375,
+        "max_ms": 15.998708
+      },
+      "media": {
+        "count": 10,
+        "min_ms": 357.218125,
+        "median_ms": 401.566146,
+        "p90_ms": 440.3765,
+        "max_ms": 659.97275
+      },
+      "publication": {
+        "count": 10,
+        "min_ms": 18.257292,
+        "median_ms": 23.9155205,
+        "p90_ms": 26.109166,
+        "max_ms": 31.536958
+      },
+      "attempt": {
+        "count": 10,
+        "min_ms": 584.781709,
+        "median_ms": 653.1244795,
+        "p90_ms": 702.099208,
+        "max_ms": 1237.214584
+      }
+    }
+  },
+  {
+    "article": "cloudflare",
+    "stages": {
+      "queue": {
+        "count": 10,
+        "min_ms": 80.016,
+        "median_ms": 238.96249999999998,
+        "p90_ms": 467.431,
+        "max_ms": 485.734
+      },
+      "html": {
+        "count": 10,
+        "min_ms": 211.590125,
+        "median_ms": 230.2735,
+        "p90_ms": 241.683583,
+        "max_ms": 285.942541
+      },
+      "extraction": {
+        "count": 10,
+        "min_ms": 14.079625,
+        "median_ms": 16.4275205,
+        "p90_ms": 20.455167,
+        "max_ms": 21.203875
+      },
+      "media": {
+        "count": 10,
+        "min_ms": 1011.620666,
+        "median_ms": 1071.4419165,
+        "p90_ms": 1276.940958,
+        "max_ms": 1312.900417
+      },
+      "publication": {
+        "count": 10,
+        "min_ms": 2.765208,
+        "median_ms": 5.9178745,
+        "p90_ms": 9.639167,
+        "max_ms": 13.535
+      },
+      "attempt": {
+        "count": 10,
+        "min_ms": 1247.47525,
+        "median_ms": 1353.6624585,
+        "p90_ms": 1544.742792,
+        "max_ms": 1567.656959
+      }
+    }
+  },
+  {
+    "article": "habr-gc",
+    "stages": {
+      "queue": {
+        "count": 10,
+        "min_ms": 32.529,
+        "median_ms": 269.4525,
+        "p90_ms": 438.337,
+        "max_ms": 486.701
+      },
+      "html": {
+        "count": 10,
+        "min_ms": 532.329041,
+        "median_ms": 574.556146,
+        "p90_ms": 690.578458,
+        "max_ms": 983.964459
+      },
+      "extraction": {
+        "count": 10,
+        "min_ms": 8.007541,
+        "median_ms": 20.245188,
+        "p90_ms": 24.309167,
+        "max_ms": 24.464375
+      },
+      "media": {
+        "count": 10,
+        "min_ms": 2366.319917,
+        "median_ms": 3169.6008125,
+        "p90_ms": 3858.14525,
+        "max_ms": 4131.987833
+      },
+      "publication": {
+        "count": 10,
+        "min_ms": 104.715625,
+        "median_ms": 142.9173755,
+        "p90_ms": 154.944792,
+        "max_ms": 163.203917
+      },
+      "attempt": {
+        "count": 10,
+        "min_ms": 3129.045208,
+        "median_ms": 4067.895896,
+        "p90_ms": 4569.08625,
+        "max_ms": 4855.003583
+      }
+    }
+  },
+  {
+    "article": "habr-avito",
+    "stages": {
+      "queue": {
+        "count": 10,
+        "min_ms": 57.772999999999996,
+        "median_ms": 311.98699999999997,
+        "p90_ms": 461.6,
+        "max_ms": 488.468
+      },
+      "html": {
+        "count": 10,
+        "min_ms": 545.397542,
+        "median_ms": 571.082396,
+        "p90_ms": 809.916708,
+        "max_ms": 1254.172333
+      },
+      "extraction": {
+        "count": 10,
+        "min_ms": 14.38525,
+        "median_ms": 19.523521,
+        "p90_ms": 22.789333,
+        "max_ms": 25.116167
+      },
+      "media": {
+        "count": 10,
+        "min_ms": 6282.359458,
+        "median_ms": 8953.3485,
+        "p90_ms": 12100.694834,
+        "max_ms": 31732.785083
+      },
+      "publication": {
+        "count": 10,
+        "min_ms": 313.140125,
+        "median_ms": 345.9011665,
+        "p90_ms": 423.555959,
+        "max_ms": 429.487709
+      },
+      "attempt": {
+        "count": 10,
+        "min_ms": 7200.70225,
+        "median_ms": 10245.445770999999,
+        "p90_ms": 13158.162709,
+        "max_ms": 32794.1045
+      }
+    }
+  }
+]

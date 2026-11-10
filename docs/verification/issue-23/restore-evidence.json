@@ -1,0 +1,193 @@
+{
+  "status": "FAILED",
+  "test": "npm run test:archive:restore",
+  "reached": [
+    "owner save and ready via real worker",
+    "three source PNG/JPEG/GIF byte comparisons passed before backup",
+    "quiesced worker/API, original socket closed",
+    "pg_dump/pg_restore, original schema dropped, restored API started without worker",
+    "fresh owner login, same public owner ID",
+    "full restored API document equals before; identical document bodies in trace",
+    "restored reader at 375x812: text equality, strong/em/quote/list assertions passed"
+  ],
+  "failedAssertion": {
+    "viewport": [375, 812],
+    "selector": "article pre code",
+    "expectedSubstring": "backup_code = 42",
+    "actualText": "",
+    "timeoutMS": 5000
+  },
+  "documentResponses": [
+    {
+      "time": "2026-11-10T11:00:00.676Z",
+      "status": 200,
+      "path": "/api/links/9ffb9585-f682-4f34-a5b0-5c6c003b786b/document",
+      "bytes": 2659,
+      "sha256": "077141a1042d07334998738ba694090a6c43e0287824ead847d7b8d806f77283"
+    },
+    {
+      "time": "2026-11-10T11:00:00.753Z",
+      "status": 200,
+      "path": "/api/links/9ffb9585-f682-4f34-a5b0-5c6c003b786b/document",
+      "bytes": 2659,
+      "sha256": "077141a1042d07334998738ba694090a6c43e0287824ead847d7b8d806f77283"
+    },
+    {
+      "time": "2026-11-10T11:00:01.622Z",
+      "status": 200,
+      "path": "/api/links/9ffb9585-f682-4f34-a5b0-5c6c003b786b/document",
+      "bytes": 2659,
+      "sha256": "077141a1042d07334998738ba694090a6c43e0287824ead847d7b8d806f77283"
+    },
+    {
+      "time": "2026-11-10T11:00:01.667Z",
+      "status": 200,
+      "path": "/api/links/9ffb9585-f682-4f34-a5b0-5c6c003b786b/document",
+      "bytes": 2659,
+      "sha256": "077141a1042d07334998738ba694090a6c43e0287824ead847d7b8d806f77283"
+    }
+  ],
+  "documentResponsesIdentical": true,
+  "archivedCodeBlocks": [
+    {
+      "kind": "code",
+      "text": "backup_code = 42"
+    }
+  ],
+  "assetResponsesObservedInTrace": [
+    {
+      "time": "2026-11-10T11:00:00.777Z",
+      "status": 200,
+      "path": "/api/links/9ffb9585-f682-4f34-a5b0-5c6c003b786b/assets/90c0a30c6f459448d9b4ce958721b591c181f826a3ef33c5186278eaa3162ed2",
+      "bytes": 1429,
+      "sha256": "734bac59a1afd411f6d0b15cf98eda87c241b0d947800e8a78fe36df3f3466b9"
+    },
+    {
+      "time": "2026-11-10T11:00:00.777Z",
+      "status": 200,
+      "path": "/api/links/9ffb9585-f682-4f34-a5b0-5c6c003b786b/assets/410cb0e9edb4dffd4721a1b02a826ccf7133b1585b36398fde2f6d37575cc739",
+      "bytes": 5646,
+      "sha256": "29f798759e6618c4efee5bb67df6b68956cb31e68d8a94a8a6a512823de3146f"
+    },
+    {
+      "time": "2026-11-10T11:00:00.777Z",
+      "status": 200,
+      "path": "/api/links/9ffb9585-f682-4f34-a5b0-5c6c003b786b/assets/41da1fa9cabf61b41cba6ecb4d8c39a6fe9bba3cf1065fd338c415a07fcdc3e7",
+      "bytes": 1403,
+      "sha256": "110c0abe568069c4bb5bc2f4045742e04eb4eefdf57dcc32249cf31bace28804"
+    },
+    {
+      "time": "2026-11-10T11:00:00.814Z",
+      "status": 200,
+      "path": "/api/links/9ffb9585-f682-4f34-a5b0-5c6c003b786b/assets/90c0a30c6f459448d9b4ce958721b591c181f826a3ef33c5186278eaa3162ed2",
+      "bytes": 1429,
+      "sha256": "734bac59a1afd411f6d0b15cf98eda87c241b0d947800e8a78fe36df3f3466b9"
+    },
+    {
+      "time": "2026-11-10T11:00:00.826Z",
+      "status": 200,
+      "path": "/api/links/9ffb9585-f682-4f34-a5b0-5c6c003b786b/assets/410cb0e9edb4dffd4721a1b02a826ccf7133b1585b36398fde2f6d37575cc739",
+      "bytes": 5646,
+      "sha256": "29f798759e6618c4efee5bb67df6b68956cb31e68d8a94a8a6a512823de3146f"
+    },
+    {
+      "time": "2026-11-10T11:00:00.845Z",
+      "status": 200,
+      "path": "/api/links/9ffb9585-f682-4f34-a5b0-5c6c003b786b/assets/41da1fa9cabf61b41cba6ecb4d8c39a6fe9bba3cf1065fd338c415a07fcdc3e7",
+      "bytes": 1403,
+      "sha256": "110c0abe568069c4bb5bc2f4045742e04eb4eefdf57dcc32249cf31bace28804"
+    },
+    {
+      "time": "2026-11-10T11:00:01.679Z",
+      "status": 200,
+      "path": "/api/links/9ffb9585-f682-4f34-a5b0-5c6c003b786b/assets/90c0a30c6f459448d9b4ce958721b591c181f826a3ef33c5186278eaa3162ed2",
+      "bytes": 1429,
+      "sha256": "734bac59a1afd411f6d0b15cf98eda87c241b0d947800e8a78fe36df3f3466b9"
+    },
+    {
+      "time": "2026-11-10T11:00:01.679Z",
+      "status": 200,
+      "path": "/api/links/9ffb9585-f682-4f34-a5b0-5c6c003b786b/assets/41da1fa9cabf61b41cba6ecb4d8c39a6fe9bba3cf1065fd338c415a07fcdc3e7",
+      "bytes": 1403,
+      "sha256": "110c0abe568069c4bb5bc2f4045742e04eb4eefdf57dcc32249cf31bace28804"
+    },
+    {
+      "time": "2026-11-10T11:00:01.679Z",
+      "status": 200,
+      "path": "/api/links/9ffb9585-f682-4f34-a5b0-5c6c003b786b/assets/410cb0e9edb4dffd4721a1b02a826ccf7133b1585b36398fde2f6d37575cc739",
+      "bytes": 5646,
+      "sha256": "29f798759e6618c4efee5bb67df6b68956cb31e68d8a94a8a6a512823de3146f"
+    }
+  ],
+  "notReached": [
+    "restored image checksum assertions and captions after code assertion",
+    "restored reader at 768x1024 and 1440x900",
+    "restored outsider 404 and anonymous 401 assertions",
+    "final checksums.json (written only after full success)"
+  ],
+  "dump": {
+    "path": "tmp/backup-restore/e2e_63551_1794308393884/archive.dump",
+    "bytes": 30702,
+    "sha256": "e7350e3268254c958132ba311d1c49198492fd8ea2187d406878de2e63321034",
+    "mode": "0o600",
+    "directoryMode": "0o700"
+  },
+  "artifacts": [
+    {
+      "path": "tmp/playwright/videos/backup-restore/.last-run.json",
+      "bytes": 96,
+      "sha256": "43b1a819199eb7d7c192b20ec0909fe59197e137967bf2fa57f8f9337fd99ffc"
+    },
+    {
+      "path": "tmp/playwright/videos/backup-restore/restore-dump-restores-a-pr-8470e-after-destroying-the-source-archive-restore/error-context.md",
+      "bytes": 10757,
+      "sha256": "3e34342865b8e5001430d5bba9eda1cf01c0890afddee54660a689782bf3baef"
+    },
+    {
+      "path": "tmp/playwright/videos/backup-restore/restore-dump-restores-a-pr-8470e-after-destroying-the-source-archive-restore/test-failed-1.png",
+      "bytes": 53941,
+      "sha256": "b2e299afeba5d46203fe7af8770081bd32fc96f7472b937bdc61770af1f687c5"
+    },
+    {
+      "path": "tmp/playwright/videos/backup-restore/restore-dump-restores-a-pr-8470e-after-destroying-the-source-archive-restore/trace.zip",
+      "bytes": 958296,
+      "sha256": "abb6a861d0818076c54dee776062e8aeb13bdc241afc954c7527479d3c9257f9"
+    },
+    {
+      "path": "tmp/playwright/videos/backup-restore/restore-dump-restores-a-pr-8470e-after-destroying-the-source-archive-restore/video.webm",
+      "bytes": 283929,
+      "sha256": "5c67e5420eec7d26366f4b59bb70f1a5212ab0d216967780da979807948bed66"
+    }
+  ],
+  "cleanup": {
+    "log": "tmp/issue-23/restore-cleanup.log",
+    "originalSchemaCount": 0,
+    "remainingArchiveRestoreDatabases": []
+  },
+  "diagnosis": {
+    "classification": "renderer loses code already present in restored document; no evidence of backup byte loss",
+    "source": "web/src/_pages/reader/ui/code-block.tsx",
+    "probe": {
+      "input": "backup_code = 42",
+      "languages": [
+        "css",
+        "javascript",
+        "typescript",
+        "xml",
+        "json",
+        "bash",
+        "python",
+        "go",
+        "sql"
+      ],
+      "result": {
+        "type": "root",
+        "children": [],
+        "data": {
+          "relevance": 0
+        }
+      }
+    },
+    "explanation": "highlightAuto returns a truthy root with empty children and relevance=0; CodeBlock renders empty tokens instead of original text. No product fix made."
+  }
+}

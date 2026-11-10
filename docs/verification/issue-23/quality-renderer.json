@@ -1,0 +1,242 @@
+[
+  {
+    "article": "go-strings",
+    "images": [],
+    "renderedTextCharacters": 13965,
+    "detailsOpened": 0,
+    "note": "Replay of exported document and exact archived bytes in unchanged production renderer; original private HTTP status checked by live benchmark."
+  },
+  {
+    "article": "go-pipelines",
+    "images": [],
+    "renderedTextCharacters": 21724,
+    "detailsOpened": 0,
+    "note": "Replay of exported document and exact archived bytes in unchanged production renderer; original private HTTP status checked by live benchmark."
+  },
+  {
+    "article": "mdn",
+    "images": [
+      {
+        "src": "/api/links/1919bbe2-2099-4eb0-936e-7fd48713ceb9/assets/66724e874920b595267141bb98f6aca048086ec490ba1d24a6869a561393cce7",
+        "width": 2784,
+        "height": 1824
+      }
+    ],
+    "renderedTextCharacters": 10480,
+    "detailsOpened": 0,
+    "note": "Replay of exported document and exact archived bytes in unchanged production renderer; original private HTTP status checked by live benchmark."
+  },
+  {
+    "article": "cloudflare",
+    "images": [],
+    "renderedTextCharacters": 10279,
+    "detailsOpened": 0,
+    "note": "Replay of exported document and exact archived bytes in unchanged production renderer; original private HTTP status checked by live benchmark."
+  },
+  {
+    "article": "habr-gc",
+    "images": [
+      {
+        "src": "/api/links/1d53335f-2707-4a9d-a204-3c5ce62231f7/assets/6be8d39c6dad780884fff6ad0931cecbe44a80860f905004f3e67ac8ca38b618",
+        "width": 1320,
+        "height": 408
+      },
+      {
+        "src": "/api/links/1d53335f-2707-4a9d-a204-3c5ce62231f7/assets/1b6ae95554684f0b4aa642e6d71745f3e3a324df82ee44c7a9e33c7c5f55f343",
+        "width": 1280,
+        "height": 445
+      },
+      {
+        "src": "/api/links/1d53335f-2707-4a9d-a204-3c5ce62231f7/assets/68d9449aedc2dd31977f496dadd4e833905173f6366356fec15f3834f7c1312c",
+        "width": 1280,
+        "height": 391
+      },
+      {
+        "src": "/api/links/1d53335f-2707-4a9d-a204-3c5ce62231f7/assets/59ed5a6ad37fb59261f251f1f3590856b9ee221e279a9c88d5473628be8ea33b",
+        "width": 1346,
+        "height": 460
+      },
+      {
+        "src": "/api/links/1d53335f-2707-4a9d-a204-3c5ce62231f7/assets/84bcc7932a80f046c62d09390cb478e2341bc87d742a3c3e7a5aee5f8252dc55",
+        "width": 1560,
+        "height": 426
+      },
+      {
+        "src": "/api/links/1d53335f-2707-4a9d-a204-3c5ce62231f7/assets/89bbe0ffb98f6270fc1aefbf69d69779549a0de69ea3736b2ddf3be195add175",
+        "width": 1560,
+        "height": 228
+      },
+      {
+        "src": "/api/links/1d53335f-2707-4a9d-a204-3c5ce62231f7/assets/f4de4a9ef4f5d742b604707f24a4f1cdffcf725e59b33414c91dcf7ca2af1df0",
+        "width": 1560,
+        "height": 277
+      },
+      {
+        "src": "/api/links/1d53335f-2707-4a9d-a204-3c5ce62231f7/assets/8f86678ef8e716cc8432d3491f59296119743a12a8e933b9d420000202429580",
+        "width": 1560,
+        "height": 234
+      },
+      {
+        "src": "/api/links/1d53335f-2707-4a9d-a204-3c5ce62231f7/assets/cff75067bfa9b40765e2ad06cc6194830c702111e591ce2fa9e77fff934c5fc7",
+        "width": 1560,
+        "height": 253
+      },
+      {
+        "src": "/api/links/1d53335f-2707-4a9d-a204-3c5ce62231f7/assets/7c4ccd14f3e12c95a5515fb747dd4599c75a44d4ca5f92eab1c83e16714d42f4",
+        "width": 1560,
+        "height": 187
+      },
+      {
+        "src": "/api/links/1d53335f-2707-4a9d-a204-3c5ce62231f7/assets/315841036c1084edf17fac2a29027b89324178803c91bf2b71063031e3797f37",
+        "width": 1294,
+        "height": 462
+      },
+      {
+        "src": "/api/links/1d53335f-2707-4a9d-a204-3c5ce62231f7/assets/ca90cf3d6c480c5b459cc67ad95acbbf9435c664716008b1183be1046e092658",
+        "width": 1348,
+        "height": 550
+      },
+      {
+        "src": "/api/links/1d53335f-2707-4a9d-a204-3c5ce62231f7/assets/b1cb33be53559e95d21210f8239abfd92e777cfd18ad0911be021f50ae28ea3c",
+        "width": 1560,
+        "height": 262
+      }
+    ],
+    "renderedTextCharacters": 18658,
+    "detailsOpened": 2,
+    "note": "Replay of exported document and exact archived bytes in unchanged production renderer; original private HTTP status checked by live benchmark."
+  },
+  {
+    "article": "habr-avito",
+    "images": [
+      {
+        "src": "/api/links/3f98cc80-ae70-4c4c-98ad-93a571276281/assets/5b7684b96175f75079bbc6042d3d38065c8d50af5fc303ae18cffc9179a36b1f",
+        "width": 1560,
+        "height": 877
+      },
+      {
+        "src": "/api/links/3f98cc80-ae70-4c4c-98ad-93a571276281/assets/91934dc8b07387543d2a43dd2dffeda45754b279c272666f4ae94ecbaaf7517f",
+        "width": 1560,
+        "height": 461
+      },
+      {
+        "src": "/api/links/3f98cc80-ae70-4c4c-98ad-93a571276281/assets/3ab860a271e0bd2a30f447c8ced4e57ae2afcf5d0044aeb445e5c0a48e1281c2",
+        "width": 1560,
+        "height": 465
+      },
+      {
+        "src": "/api/links/3f98cc80-ae70-4c4c-98ad-93a571276281/assets/e81a73687008c82ea761b3da06e3c40331aa2a86d167b7bbad1f703727c3f584",
+        "width": 1560,
+        "height": 453
+      },
+      {
+        "src": "/api/links/3f98cc80-ae70-4c4c-98ad-93a571276281/assets/a6dba7cf38a472acbf22f9febf3a0ea47cb4902ddbaeac8fe1813918ead09ec4",
+        "width": 1560,
+        "height": 476
+      },
+      {
+        "src": "/api/links/3f98cc80-ae70-4c4c-98ad-93a571276281/assets/60a70bf4c59b85840050707088b3d79d192c18e52613476ade7863cae528974a",
+        "width": 1560,
+        "height": 478
+      },
+      {
+        "src": "/api/links/3f98cc80-ae70-4c4c-98ad-93a571276281/assets/5453a8edbed1d8b67eef9532a474ab3690839852c11309dbfcce98093fc6d38b",
+        "width": 1560,
+        "height": 397
+      },
+      {
+        "src": "/api/links/3f98cc80-ae70-4c4c-98ad-93a571276281/assets/0b4b69784f8431f7d19ac8d4a8c449d8667ae34d6823ef34a22ac1fcb007827f",
+        "width": 924,
+        "height": 1132
+      },
+      {
+        "src": "/api/links/3f98cc80-ae70-4c4c-98ad-93a571276281/assets/3dc611f1847ec4c0c1b5b1091279328aa7f5c5aaf962e2e2eb8093c7f52f61d4",
+        "width": 934,
+        "height": 1120
+      },
+      {
+        "src": "/api/links/3f98cc80-ae70-4c4c-98ad-93a571276281/assets/70cf1205e8c5800d4d40a84f439e34323d4bdc6b61ee42441a7ab8991f0ffd9b",
+        "width": 914,
+        "height": 1120
+      },
+      {
+        "src": "/api/links/3f98cc80-ae70-4c4c-98ad-93a571276281/assets/68a507a5bd173a77b9255ba3291bf9416fd4d843f2cab0f53d7fc0bdae228fd2",
+        "width": 902,
+        "height": 1112
+      },
+      {
+        "src": "/api/links/3f98cc80-ae70-4c4c-98ad-93a571276281/assets/eb0d44bd6c5079e0fbad47811fa20cdfcc576bc11329d2b308a9a72308ae4da6",
+        "width": 904,
+        "height": 1110
+      },
+      {
+        "src": "/api/links/3f98cc80-ae70-4c4c-98ad-93a571276281/assets/049ddf95b1924d51e23be549261ab6e5cdc52ea609ef0c358732dbf4e17a727c",
+        "width": 908,
+        "height": 1122
+      },
+      {
+        "src": "/api/links/3f98cc80-ae70-4c4c-98ad-93a571276281/assets/3732a39b9499612f64f7edad6083759a9ff67939467bbac735271b14f4aced56",
+        "width": 1000,
+        "height": 1242
+      },
+      {
+        "src": "/api/links/3f98cc80-ae70-4c4c-98ad-93a571276281/assets/1ebfaad40366788f77444b2e97dbcbfa88b9f1eb9adaaa577393caa1a486a915",
+        "width": 1020,
+        "height": 1262
+      },
+      {
+        "src": "/api/links/3f98cc80-ae70-4c4c-98ad-93a571276281/assets/7e5aa26e41221b0657d896e11cb316276e091c5ee842bdc3c6963047488716a4",
+        "width": 862,
+        "height": 1146
+      },
+      {
+        "src": "/api/links/3f98cc80-ae70-4c4c-98ad-93a571276281/assets/2f7ba2e7b5287c155789eb979cbd74ecda5618911b2824d4e29ae9f2d8f6ccbd",
+        "width": 876,
+        "height": 1168
+      },
+      {
+        "src": "/api/links/3f98cc80-ae70-4c4c-98ad-93a571276281/assets/75210744947f2218a6dc4eaf4d911876e2b5d54cd6aac6311c56e0dd762cc66c",
+        "width": 1068,
+        "height": 1266
+      },
+      {
+        "src": "/api/links/3f98cc80-ae70-4c4c-98ad-93a571276281/assets/2db1689042e02c7ac71709cb47a7deb6b4bc414456a0ae87c74ce60adc9bad4d",
+        "width": 928,
+        "height": 1174
+      },
+      {
+        "src": "/api/links/3f98cc80-ae70-4c4c-98ad-93a571276281/assets/f299b7a175eb2e65e1e65b040f2bd103e5ae8436bdaf55cb3d8b77c59222fdab",
+        "width": 938,
+        "height": 1134
+      },
+      {
+        "src": "/api/links/3f98cc80-ae70-4c4c-98ad-93a571276281/assets/63ae16a6e6a2b89ed62cfc9700d9afddeaae103838ac41ff18115bfc17062ae4",
+        "width": 932,
+        "height": 1152
+      },
+      {
+        "src": "/api/links/3f98cc80-ae70-4c4c-98ad-93a571276281/assets/d08a908b8e6a8ea5507f34e389942a90e85e82fabd9f2ac6d3c6e0e414e4a8b4",
+        "width": 1560,
+        "height": 723
+      },
+      {
+        "src": "/api/links/3f98cc80-ae70-4c4c-98ad-93a571276281/assets/d936e09573cbe4425f4275505a0f9eb0479bc2f86a642d60e65963d7614c0398",
+        "width": 1560,
+        "height": 711
+      },
+      {
+        "src": "/api/links/3f98cc80-ae70-4c4c-98ad-93a571276281/assets/7dcd0a95bfafed4fcee32dcceacb2d073d3aa615dd9f31eb0a9a2d98d2d90519",
+        "width": 310,
+        "height": 766
+      },
+      {
+        "src": "/api/links/3f98cc80-ae70-4c4c-98ad-93a571276281/assets/0d81716b30da1e6eadc8a67eae620ff466aa59f77eee041da27b526ba07fbb6f",
+        "width": 1560,
+        "height": 1039
+      }
+    ],
+    "renderedTextCharacters": 11954,
+    "detailsOpened": 0,
+    "note": "Replay of exported document and exact archived bytes in unchanged production renderer; original private HTTP status checked by live benchmark."
+  }
+]

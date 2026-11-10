@@ -1,0 +1,25 @@
+[
+  {
+    "name": "video",
+    "contentType": "video/webm",
+    "path": "tmp/playwright/videos/backup-restore/restore-dump-restores-a-pr-8470e-after-destroying-the-source-archive-restore/video.webm",
+    "exists": true,
+    "bytes": 283929,
+    "sha256": "5c67e5420eec7d26366f4b59bb70f1a5212ab0d216967780da979807948bed66",
+    "probeExitCode": 0,
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "vp8",
+          "width": 800,
+          "height": 500
+        }
+      ],
+      "format": {
+        "duration": "10.600000"
+      }
+    }
+  }
+]

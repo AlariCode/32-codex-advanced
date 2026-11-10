@@ -61,6 +61,10 @@ URL API/worker из `TEST_DATABASE_URL`. В режиме backup допускае
 
 Видео успешного прогона, снимки трёх разрешений и `checksums.json` находятся
 в `tmp/playwright/videos/backup-restore/`. Dump имеет права 0600, каталог 0700.
+Приватные API-проверки тест выполняет через same-origin `fetch` в браузере:
+Chromium отправляет Secure-cookie на HTTP loopback, а Playwright
+`APIRequestContext` её там не отправляет. Проверки статусов 200/401/404,
+заголовков и исходных байтов media сохраняются; атрибуты cookie не ослабляются.
 Весь `tmp/` исключён из Git. Dump, traces и видео содержат приватные данные;
 хранить их только в доверенном окружении и удалить после проверки.
 

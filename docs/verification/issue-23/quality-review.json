@@ -1,0 +1,167 @@
+{
+  "reviewedAt": "2026-11-10T11:03:39.860290+00:00",
+  "corpusSourcesRead": 6,
+  "copiesCompared": 60,
+  "method": "Read all six source main bodies in full, compared ordered paragraphs/headings/lists/quotes/cells/captions and exact code with all ten archives using issue-22/quality.mjs; inspected all 39 exported images in contact sheets and loaded all in real production renderer using issue-22/renderer.mjs; reviewed reader layouts and Habr Avito tail. Excludes source menus/forms/hidden playground scaffolding. Automated equality aids manual review, does not prove semantic completeness.",
+  "assetsMatchedToSource": 39,
+  "assetsVisuallyInspected": 39,
+  "rendererDecodedAssets": 39,
+  "articles": [
+    {
+      "article": "go-strings",
+      "copiesReviewed": 10,
+      "documentVariants": 1,
+      "warningVariants": 1,
+      "relatedPostPaths": [],
+      "navigationPaths": [],
+      "documentSHA256": [
+        "8a1665bb9f9df6d89be49303a8c3731e49ae0fffe02c347ea8f3ce3cb7aafed3",
+        "8a1665bb9f9df6d89be49303a8c3731e49ae0fffe02c347ea8f3ce3cb7aafed3",
+        "8a1665bb9f9df6d89be49303a8c3731e49ae0fffe02c347ea8f3ce3cb7aafed3",
+        "8a1665bb9f9df6d89be49303a8c3731e49ae0fffe02c347ea8f3ce3cb7aafed3",
+        "8a1665bb9f9df6d89be49303a8c3731e49ae0fffe02c347ea8f3ce3cb7aafed3",
+        "8a1665bb9f9df6d89be49303a8c3731e49ae0fffe02c347ea8f3ce3cb7aafed3",
+        "8a1665bb9f9df6d89be49303a8c3731e49ae0fffe02c347ea8f3ce3cb7aafed3",
+        "8a1665bb9f9df6d89be49303a8c3731e49ae0fffe02c347ea8f3ce3cb7aafed3",
+        "8a1665bb9f9df6d89be49303a8c3731e49ae0fffe02c347ea8f3ce3cb7aafed3",
+        "8a1665bb9f9df6d89be49303a8c3731e49ae0fffe02c347ea8f3ce3cb7aafed3"
+      ]
+    },
+    {
+      "article": "go-pipelines",
+      "copiesReviewed": 10,
+      "documentVariants": 1,
+      "warningVariants": 1,
+      "relatedPostPaths": [],
+      "navigationPaths": [],
+      "documentSHA256": [
+        "35f7daa233b9dfe292058bdd50539b99bf00b6f24537bbad12d359bdb8b3034f",
+        "35f7daa233b9dfe292058bdd50539b99bf00b6f24537bbad12d359bdb8b3034f",
+        "35f7daa233b9dfe292058bdd50539b99bf00b6f24537bbad12d359bdb8b3034f",
+        "35f7daa233b9dfe292058bdd50539b99bf00b6f24537bbad12d359bdb8b3034f",
+        "35f7daa233b9dfe292058bdd50539b99bf00b6f24537bbad12d359bdb8b3034f",
+        "35f7daa233b9dfe292058bdd50539b99bf00b6f24537bbad12d359bdb8b3034f",
+        "35f7daa233b9dfe292058bdd50539b99bf00b6f24537bbad12d359bdb8b3034f",
+        "35f7daa233b9dfe292058bdd50539b99bf00b6f24537bbad12d359bdb8b3034f",
+        "35f7daa233b9dfe292058bdd50539b99bf00b6f24537bbad12d359bdb8b3034f",
+        "35f7daa233b9dfe292058bdd50539b99bf00b6f24537bbad12d359bdb8b3034f"
+      ]
+    },
+    {
+      "article": "mdn",
+      "copiesReviewed": 10,
+      "documentVariants": 1,
+      "warningVariants": 1,
+      "relatedPostPaths": [],
+      "navigationPaths": ["blocks[50]"],
+      "documentSHA256": [
+        "f215d773c5a634c754546cfde336b0fb1d6f18548656e1ff5178bb3c8e05a830",
+        "f215d773c5a634c754546cfde336b0fb1d6f18548656e1ff5178bb3c8e05a830",
+        "f215d773c5a634c754546cfde336b0fb1d6f18548656e1ff5178bb3c8e05a830",
+        "f215d773c5a634c754546cfde336b0fb1d6f18548656e1ff5178bb3c8e05a830",
+        "f215d773c5a634c754546cfde336b0fb1d6f18548656e1ff5178bb3c8e05a830",
+        "f215d773c5a634c754546cfde336b0fb1d6f18548656e1ff5178bb3c8e05a830",
+        "f215d773c5a634c754546cfde336b0fb1d6f18548656e1ff5178bb3c8e05a830",
+        "f215d773c5a634c754546cfde336b0fb1d6f18548656e1ff5178bb3c8e05a830",
+        "f215d773c5a634c754546cfde336b0fb1d6f18548656e1ff5178bb3c8e05a830",
+        "f215d773c5a634c754546cfde336b0fb1d6f18548656e1ff5178bb3c8e05a830"
+      ]
+    },
+    {
+      "article": "cloudflare",
+      "copiesReviewed": 10,
+      "documentVariants": 1,
+      "warningVariants": 1,
+      "relatedPostPaths": [],
+      "navigationPaths": [],
+      "documentSHA256": [
+        "e2091048989d80364b13b020d582a4c5dc74aafb6e931e7a6040eb0673aa2b3c",
+        "e2091048989d80364b13b020d582a4c5dc74aafb6e931e7a6040eb0673aa2b3c",
+        "e2091048989d80364b13b020d582a4c5dc74aafb6e931e7a6040eb0673aa2b3c",
+        "e2091048989d80364b13b020d582a4c5dc74aafb6e931e7a6040eb0673aa2b3c",
+        "e2091048989d80364b13b020d582a4c5dc74aafb6e931e7a6040eb0673aa2b3c",
+        "e2091048989d80364b13b020d582a4c5dc74aafb6e931e7a6040eb0673aa2b3c",
+        "e2091048989d80364b13b020d582a4c5dc74aafb6e931e7a6040eb0673aa2b3c",
+        "e2091048989d80364b13b020d582a4c5dc74aafb6e931e7a6040eb0673aa2b3c",
+        "e2091048989d80364b13b020d582a4c5dc74aafb6e931e7a6040eb0673aa2b3c",
+        "e2091048989d80364b13b020d582a4c5dc74aafb6e931e7a6040eb0673aa2b3c"
+      ]
+    },
+    {
+      "article": "habr-gc",
+      "copiesReviewed": 10,
+      "documentVariants": 1,
+      "warningVariants": 1,
+      "relatedPostPaths": [],
+      "navigationPaths": [],
+      "documentSHA256": [
+        "a26f9e9c652ac8a5646371cadbe0bff0a37af3a3ed76447bbd865865589937fa",
+        "a26f9e9c652ac8a5646371cadbe0bff0a37af3a3ed76447bbd865865589937fa",
+        "a26f9e9c652ac8a5646371cadbe0bff0a37af3a3ed76447bbd865865589937fa",
+        "a26f9e9c652ac8a5646371cadbe0bff0a37af3a3ed76447bbd865865589937fa",
+        "a26f9e9c652ac8a5646371cadbe0bff0a37af3a3ed76447bbd865865589937fa",
+        "a26f9e9c652ac8a5646371cadbe0bff0a37af3a3ed76447bbd865865589937fa",
+        "a26f9e9c652ac8a5646371cadbe0bff0a37af3a3ed76447bbd865865589937fa",
+        "a26f9e9c652ac8a5646371cadbe0bff0a37af3a3ed76447bbd865865589937fa",
+        "a26f9e9c652ac8a5646371cadbe0bff0a37af3a3ed76447bbd865865589937fa",
+        "a26f9e9c652ac8a5646371cadbe0bff0a37af3a3ed76447bbd865865589937fa"
+      ]
+    },
+    {
+      "article": "habr-avito",
+      "copiesReviewed": 10,
+      "documentVariants": 1,
+      "warningVariants": 1,
+      "relatedPostPaths": ["blocks[111].children[0].children[0]"],
+      "navigationPaths": [],
+      "documentSHA256": [
+        "951297dd84db8a0f135c1300f8ea845ba058b0e6db22b98d4f1b1a51b1d8cacb",
+        "951297dd84db8a0f135c1300f8ea845ba058b0e6db22b98d4f1b1a51b1d8cacb",
+        "951297dd84db8a0f135c1300f8ea845ba058b0e6db22b98d4f1b1a51b1d8cacb",
+        "951297dd84db8a0f135c1300f8ea845ba058b0e6db22b98d4f1b1a51b1d8cacb",
+        "951297dd84db8a0f135c1300f8ea845ba058b0e6db22b98d4f1b1a51b1d8cacb",
+        "951297dd84db8a0f135c1300f8ea845ba058b0e6db22b98d4f1b1a51b1d8cacb",
+        "951297dd84db8a0f135c1300f8ea845ba058b0e6db22b98d4f1b1a51b1d8cacb",
+        "951297dd84db8a0f135c1300f8ea845ba058b0e6db22b98d4f1b1a51b1d8cacb",
+        "951297dd84db8a0f135c1300f8ea845ba058b0e6db22b98d4f1b1a51b1d8cacb",
+        "951297dd84db8a0f135c1300f8ea845ba058b0e6db22b98d4f1b1a51b1d8cacb"
+      ]
+    }
+  ],
+  "blockers": [
+    {
+      "id": "K01",
+      "requirement": "PRD cleaned reader without extraneous page content; benchmark method excludes related posts",
+      "articles": ["mdn", "habr-gc", "habr-avito"],
+      "observed": "MDN retains a Previous/Next navigation list at the end of its document; Habr extraction includes difficulty/read-time/view-count/type metadata; Habr Avito also contains a related previous-publication link at document.blocks[111]. Production renderer confirms these remain visible.",
+      "occurrences": "all 10 copies of each affected article; 10/10 MDN copies contain Previous/Next and 10/10 Avito copies contain related block",
+      "status": "OPEN: no extraction fix or recheck in this task; feature completion blocked."
+    }
+  ],
+  "acceptedPartialResults": [
+    {
+      "article": "mdn",
+      "loss": "introductory summary paragraph missing in all 10 copies; text_incomplete visible; remaining 27 paragraphs, headings, lists, code, cells and image preserved",
+      "decision": "Q03 permits warned partial text"
+    },
+    {
+      "article": "cloudflare",
+      "loss": "two substantive WebP image positions image_invalid; two unsupported hidden SVG placeholders; images_omitted visible; main prose and all code preserved",
+      "decision": "Q03 permits warned missing media"
+    }
+  ],
+  "otherFindings": [
+    "Cloudflare Rust code is guessed as CSS in some blocks; exact code bytes preserved. Cosmetic highlighting defect remains.",
+    "Habr images_omitted warning remains despite all 13/25 main image positions archived. Conservative warnings do not prove missing main content.",
+    "Habr original title repeats inside document in addition to reader title.",
+    "Source snapshots fetched separately after ten attempts; mutable source equality with actual worker response cannot be assumed. Current sources and ten document variants were checked."
+  ],
+  "openQualityFindings": [
+    {
+      "id": "K03",
+      "articles": ["mdn", "cloudflare"],
+      "status": "OPEN",
+      "observed": "MDN introductory paragraph and two substantive Cloudflare images missing in all 10 copies; warnings present. Q03 partial-result behavior passes, full content fidelity is not confirmed."
+    }
+  ]
+}

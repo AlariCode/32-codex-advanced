@@ -5,6 +5,38 @@ import { readFile, writeFile } from "node:fs/promises";
 const origin = "http://127.0.0.1:3200";
 const fixture = "http://127.0.0.1:39876";
 const password = "RestoreArchive42!";
+
+// Chromium sends Secure cookies on loopback HTTP; APIRequestContext does not.
+// Keep private assertions on the same authenticated browser/proxy path as UI.
+async function browserRequest(
+  page: Page,
+  path: string,
+  init?: { method: string; headers: Record<string, string>; body: string },
+) {
+  const response = await page.evaluate(
+    async ({ path, init }) => {
+      const result = await fetch(path, {
+        ...init,
+        credentials: "same-origin",
+        cache: "no-store",
+      });
+      return {
+        status: result.status,
+        headers: Object.fromEntries(result.headers),
+        bytes: Array.from(new Uint8Array(await result.arrayBuffer())),
+      };
+    },
+    { path, init },
+  );
+  const body = Buffer.from(response.bytes);
+  return {
+    status: () => response.status,
+    headers: () => response.headers,
+    body: async () => body,
+    json: async () => JSON.parse(body.toString("utf8")),
+  };
+}
+
 async function login(page: Page, email: string) {
   await page.goto("/login");
   await page.getByLabel("Email", { exact: true }).fill(email);
@@ -30,9 +62,10 @@ test("dump restores a private readable archive after destroying the source", asy
   }
   await login(page, owner);
   const url = `${fixture}/archive-fixture/${crypto.randomUUID()}`;
-  const saved = await page.request.post("/api/links", {
-    data: { url },
-    headers: { Origin: origin },
+  const saved = await browserRequest(page, "/api/links", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ url }),
   });
   expect(saved.status()).toBe(201);
   // Discover the ID through the real library rather than database fixtures.
@@ -46,7 +79,7 @@ test("dump restores a private readable archive after destroying the source", asy
   const readerPath = (await read.getAttribute("href"))!;
   const id = readerPath.split("/").at(-1)!;
   const documentPath = `/api/links/${id}/document`;
-  const beforeResponse = await page.request.get(documentPath);
+  const beforeResponse = await browserRequest(page, documentPath);
   expect(beforeResponse.status()).toBe(200);
   const before = await beforeResponse.json();
   await read.click();
@@ -61,7 +94,7 @@ test("dump restores a private readable archive after destroying the source", asy
     .evaluateAll((imgs) => imgs.map((img) => img.getAttribute("src")!));
   const hashes: string[] = [];
   for (const [i, codec] of ["png", "jpeg", "gif"].entries()) {
-    const response = await page.request.get(sources[i]);
+    const response = await browserRequest(page, sources[i]);
     expect(response.status()).toBe(200);
     const bytes = await response.body();
     expect(bytes).toEqual(
@@ -75,7 +108,7 @@ test("dump restores a private readable archive after destroying the source", asy
   await expect
     .poll(async () => {
       try {
-        return (await request.get("/api/users/me")).status();
+        return (await browserRequest(page, "/api/users/me")).status();
       } catch {
         return 0;
       }
@@ -85,10 +118,10 @@ test("dump restores a private readable archive after destroying the source", asy
   await expect(request.get(url, { timeout: 2000 })).rejects.toThrow();
   await page.context().clearCookies();
   await login(page, owner); // Fresh session validates the restored password hash.
-  expect((await (await page.request.get("/api/users/me")).json()).id).toBe(
+  expect((await (await browserRequest(page, "/api/users/me")).json()).id).toBe(
     ids[1],
   );
-  const restored = await page.request.get(documentPath);
+  const restored = await browserRequest(page, documentPath);
   expect(restored.status()).toBe(200);
   expect(await restored.json()).toEqual(before);
   const external: string[] = [];
@@ -123,7 +156,7 @@ test("dump restores a private readable archive after destroying the source", asy
         .poll(() => img.evaluate((el) => (el as HTMLImageElement).naturalWidth))
         .toBe(320);
       expect(await img.getAttribute("src")).toBe(sources[i]);
-      const response = await page.request.get(sources[i]);
+      const response = await browserRequest(page, sources[i]);
       expect(response.status()).toBe(200);
       expect(response.headers()["cache-control"]).toBe("no-store");
       expect(
@@ -145,13 +178,13 @@ test("dump restores a private readable archive after destroying the source", asy
   try {
     const p = await outsider.newPage();
     await login(p, other); // This user must also have survived the dump.
-    expect((await (await p.request.get("/api/users/me")).json()).id).toBe(
+    expect((await (await browserRequest(p, "/api/users/me")).json()).id).toBe(
       ids[0],
     );
     for (const path of [`/api/links/${id}`, documentPath, ...sources])
-      expect((await p.request.get(path)).status()).toBe(404);
+      expect((await browserRequest(p, path)).status()).toBe(404);
     expect(
-      JSON.stringify(await (await p.request.get("/api/links")).json()),
+      JSON.stringify(await (await browserRequest(p, "/api/links")).json()),
     ).not.toContain(id);
     await p.goto(readerPath);
     await expect(
@@ -164,7 +197,7 @@ test("dump restores a private readable archive after destroying the source", asy
       documentPath,
       ...sources,
     ])
-      expect((await p.request.get(path)).status()).toBe(401);
+      expect((await browserRequest(p, path)).status()).toBe(401);
     await p.goto(readerPath);
     await expect(p).toHaveURL(/\/login/);
     await expect(

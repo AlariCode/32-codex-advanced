@@ -1,0 +1,158 @@
+[
+  {
+    "article": "go-strings",
+    "kinds": {
+      "strong": {
+        "source": 0,
+        "archived": 0,
+        "missingSourceIndexes": []
+      },
+      "em": {
+        "source": 10,
+        "archived": 10,
+        "missingSourceIndexes": []
+      },
+      "inline_code": {
+        "source": 38,
+        "archived": 38,
+        "missingSourceIndexes": []
+      },
+      "link": {
+        "source": 6,
+        "archived": 6,
+        "missingSourceIndexes": []
+      }
+    },
+    "scope": "First copy, all 10 documents for this source independently verified identical; same source-main-body filter as issue-22/quality.mjs."
+  },
+  {
+    "article": "go-pipelines",
+    "kinds": {
+      "strong": {
+        "source": 0,
+        "archived": 0,
+        "missingSourceIndexes": []
+      },
+      "em": {
+        "source": 14,
+        "archived": 14,
+        "missingSourceIndexes": []
+      },
+      "inline_code": {
+        "source": 75,
+        "archived": 75,
+        "missingSourceIndexes": []
+      },
+      "link": {
+        "source": 11,
+        "archived": 11,
+        "missingSourceIndexes": []
+      }
+    },
+    "scope": "First copy, all 10 documents for this source independently verified identical; same source-main-body filter as issue-22/quality.mjs."
+  },
+  {
+    "article": "mdn",
+    "kinds": {
+      "strong": {
+        "source": 0,
+        "archived": 0,
+        "missingSourceIndexes": []
+      },
+      "em": {
+        "source": 4,
+        "archived": 4,
+        "missingSourceIndexes": []
+      },
+      "inline_code": {
+        "source": 9,
+        "archived": 9,
+        "missingSourceIndexes": []
+      },
+      "link": {
+        "source": 34,
+        "archived": 36,
+        "missingSourceIndexes": []
+      }
+    },
+    "scope": "First copy, all 10 documents for this source independently verified identical; same source-main-body filter as issue-22/quality.mjs."
+  },
+  {
+    "article": "cloudflare",
+    "kinds": {
+      "strong": {
+        "source": 5,
+        "archived": 5,
+        "missingSourceIndexes": []
+      },
+      "em": {
+        "source": 0,
+        "archived": 0,
+        "missingSourceIndexes": []
+      },
+      "inline_code": {
+        "source": 6,
+        "archived": 6,
+        "missingSourceIndexes": []
+      },
+      "link": {
+        "source": 16,
+        "archived": 16,
+        "missingSourceIndexes": []
+      }
+    },
+    "scope": "First copy, all 10 documents for this source independently verified identical; same source-main-body filter as issue-22/quality.mjs."
+  },
+  {
+    "article": "habr-gc",
+    "kinds": {
+      "strong": {
+        "source": 0,
+        "archived": 0,
+        "missingSourceIndexes": []
+      },
+      "em": {
+        "source": 8,
+        "archived": 8,
+        "missingSourceIndexes": []
+      },
+      "inline_code": {
+        "source": 51,
+        "archived": 51,
+        "missingSourceIndexes": []
+      },
+      "link": {
+        "source": 7,
+        "archived": 7,
+        "missingSourceIndexes": []
+      }
+    },
+    "scope": "First copy, all 10 documents for this source independently verified identical; same source-main-body filter as issue-22/quality.mjs."
+  },
+  {
+    "article": "habr-avito",
+    "kinds": {
+      "strong": {
+        "source": 5,
+        "archived": 5,
+        "missingSourceIndexes": []
+      },
+      "em": {
+        "source": 7,
+        "archived": 7,
+        "missingSourceIndexes": []
+      },
+      "inline_code": {
+        "source": 0,
+        "archived": 0,
+        "missingSourceIndexes": []
+      },
+      "link": {
+        "source": 10,
+        "archived": 10,
+        "missingSourceIndexes": []
+      }
+    },
+    "scope": "First copy, all 10 documents for this source independently verified identical; same source-main-body filter as issue-22/quality.mjs."
+  }
+]

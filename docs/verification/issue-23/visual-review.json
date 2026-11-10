@@ -1,0 +1,368 @@
+{
+  "reviewedAt": "2026-11-10T11:03:39.826048+00:00",
+  "pages": ["library", "reader", "login", "register"],
+  "viewports": [
+    [375, 812],
+    [768, 1024],
+    [1440, 900]
+  ],
+  "captures": [
+    {
+      "width": 375,
+      "height": 812,
+      "name": "library",
+      "scrollWidth": 375
+    },
+    {
+      "width": 375,
+      "height": 812,
+      "name": "delete-confirmation",
+      "scrollWidth": 375
+    },
+    {
+      "width": 375,
+      "height": 812,
+      "name": "empty-library",
+      "scrollWidth": 375
+    },
+    {
+      "width": 375,
+      "height": 812,
+      "name": "draft-error",
+      "scrollWidth": 375
+    },
+    {
+      "width": 375,
+      "height": 812,
+      "name": "reader",
+      "scrollWidth": 375
+    },
+    {
+      "width": 375,
+      "height": 812,
+      "name": "login",
+      "scrollWidth": 375
+    },
+    {
+      "width": 375,
+      "height": 812,
+      "name": "login-error",
+      "scrollWidth": 375
+    },
+    {
+      "width": 375,
+      "height": 812,
+      "name": "register",
+      "scrollWidth": 375
+    },
+    {
+      "width": 375,
+      "height": 812,
+      "name": "register-error",
+      "scrollWidth": 375
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "name": "library",
+      "scrollWidth": 768
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "name": "delete-confirmation",
+      "scrollWidth": 768
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "name": "empty-library",
+      "scrollWidth": 768
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "name": "draft-error",
+      "scrollWidth": 768
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "name": "reader",
+      "scrollWidth": 768
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "name": "login",
+      "scrollWidth": 768
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "name": "login-error",
+      "scrollWidth": 768
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "name": "register",
+      "scrollWidth": 768
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "name": "register-error",
+      "scrollWidth": 768
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "name": "library",
+      "scrollWidth": 1440
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "name": "delete-confirmation",
+      "scrollWidth": 1440
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "name": "empty-library",
+      "scrollWidth": 1440
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "name": "draft-error",
+      "scrollWidth": 1440
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "name": "reader",
+      "scrollWidth": 1440
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "name": "login",
+      "scrollWidth": 1440
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "name": "login-error",
+      "scrollWidth": 1440
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "name": "register",
+      "scrollWidth": 1440
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "name": "register-error",
+      "scrollWidth": 1440
+    }
+  ],
+  "files": [
+    {
+      "path": "tmp/issue-23/visual/1440-delete-confirmation.png",
+      "bytes": 62460,
+      "sha256": "b13fabc09437e349e84deac7dd8690466c55d393720afbaf6365ed1e81131fab"
+    },
+    {
+      "path": "tmp/issue-23/visual/1440-draft-error.png",
+      "bytes": 50684,
+      "sha256": "0c383a02f1d82377b2640281276edbaa11700b80deaed6d07f643c4f8ce52609"
+    },
+    {
+      "path": "tmp/issue-23/visual/1440-empty-library.png",
+      "bytes": 41836,
+      "sha256": "6c78dadb760e9c0b95fe39e9b7d104aac4d5a6d32c79338f4fc9ff5a6724557b"
+    },
+    {
+      "path": "tmp/issue-23/visual/1440-library.png",
+      "bytes": 50078,
+      "sha256": "19530d553aa45c2d7c3e09be260b3bd1de88059d761d773478ae49ecaefd4a05"
+    },
+    {
+      "path": "tmp/issue-23/visual/1440-login-error.png",
+      "bytes": 76256,
+      "sha256": "8314d8e208082ebf9c680c2ff229a19387a888efcb8c9bffc5cd938d662131a5"
+    },
+    {
+      "path": "tmp/issue-23/visual/1440-login.png",
+      "bytes": 72153,
+      "sha256": "058681d62a41e5e093aea39237e85eb91a31e051294076ad252de7d6fc297865"
+    },
+    {
+      "path": "tmp/issue-23/visual/1440-reader.png",
+      "bytes": 3052822,
+      "sha256": "7bb701b11327c85858d02494f7ba1a51af5b96c0cac3fb39ffbe57d2c26de37f"
+    },
+    {
+      "path": "tmp/issue-23/visual/1440-register-error.png",
+      "bytes": 87746,
+      "sha256": "adcbf258729844940d9a75577989dffb96c491d244a19f44cfe57a0ec96f4414"
+    },
+    {
+      "path": "tmp/issue-23/visual/1440-register.png",
+      "bytes": 84796,
+      "sha256": "2c2752f18dd14ab27ba248174afe61837c30a0f5768e75815e5af3499ff3fcb0"
+    },
+    {
+      "path": "tmp/issue-23/visual/1440-sheet.jpg",
+      "bytes": 114328,
+      "sha256": "5718f4743b269bb824ae83262fa0a2a3d07fac8d4428994c05f3bfddeb02983c"
+    },
+    {
+      "path": "tmp/issue-23/visual/375-delete-confirmation.png",
+      "bytes": 53095,
+      "sha256": "891a22a2077cd37fc46a18d9b0a7e1b12f03f61cdd8f4f25d32d330d7b83ec24"
+    },
+    {
+      "path": "tmp/issue-23/visual/375-draft-error.png",
+      "bytes": 39910,
+      "sha256": "0f60ffc70d02401bf619407ef2342bd1dae009e3f661332524f0ee1379b584cc"
+    },
+    {
+      "path": "tmp/issue-23/visual/375-empty-library.png",
+      "bytes": 31470,
+      "sha256": "81e4f2c29f32d000241c5f55ffb4be61ebde18e46350c72fadabc1d9f6e51a4e"
+    },
+    {
+      "path": "tmp/issue-23/visual/375-library.png",
+      "bytes": 39121,
+      "sha256": "08f9c52b7fcb30c4353a73059ebf5627fc34905d1a6d82e7eac497f71bf6d310"
+    },
+    {
+      "path": "tmp/issue-23/visual/375-login-error.png",
+      "bytes": 41118,
+      "sha256": "9cdf5307a9ecbce613518d9c5b381730caa74629d0893d7edda84dd297fb1ab9"
+    },
+    {
+      "path": "tmp/issue-23/visual/375-login.png",
+      "bytes": 37350,
+      "sha256": "5b5d1578f74126751d2ab4aa2f9acb6277d6a26ca2b62caf4d21f738854982a4"
+    },
+    {
+      "path": "tmp/issue-23/visual/375-reader.png",
+      "bytes": 1328712,
+      "sha256": "a88014c38f076fc7fcc793fbed9ff02e96ed49c84ddb38f2c88fb243f5d14960"
+    },
+    {
+      "path": "tmp/issue-23/visual/375-register-error.png",
+      "bytes": 50320,
+      "sha256": "eae01e8d4bd250cdb13f7baed47ebe99c1330ff020ad84b4c1acb05076874ed2"
+    },
+    {
+      "path": "tmp/issue-23/visual/375-register.png",
+      "bytes": 48592,
+      "sha256": "f029bf600c3fbac3e920091c3b076d147da927e1e769f2760c2bac6a3ab305bb"
+    },
+    {
+      "path": "tmp/issue-23/visual/375-sheet.jpg",
+      "bytes": 318280,
+      "sha256": "ea87b8ee64e076f01b947cfc44b70fd49347146c1045e31b61bc13cbc8404f38"
+    },
+    {
+      "path": "tmp/issue-23/visual/768-delete-confirmation.png",
+      "bytes": 57395,
+      "sha256": "4601cb530e30388a172b432fdfb55f76a83916443320ee691f487b2d0828e302"
+    },
+    {
+      "path": "tmp/issue-23/visual/768-draft-error.png",
+      "bytes": 44992,
+      "sha256": "a2a13916a9808ef76a809583123a767c90f44712efa0c48bb8d05ab2f7538f5e"
+    },
+    {
+      "path": "tmp/issue-23/visual/768-empty-library.png",
+      "bytes": 37234,
+      "sha256": "ab505131d203831d5cf88a150d37d93cd544fcd9b25e1b2d644ed13584a19e36"
+    },
+    {
+      "path": "tmp/issue-23/visual/768-library.png",
+      "bytes": 43887,
+      "sha256": "bfd24e83cb843939cc0fb79c52fe66d3b3251c36e447431439d2bbb97c994d9e"
+    },
+    {
+      "path": "tmp/issue-23/visual/768-login-error.png",
+      "bytes": 66593,
+      "sha256": "03672139cd8ef304c8623c740e6535e0b0498f4d6de5d9a34601991f3b175ab7"
+    },
+    {
+      "path": "tmp/issue-23/visual/768-login.png",
+      "bytes": 63055,
+      "sha256": "0b731abab8c6256bc1c051df3c5497ef37a4c5fbe77405075459a06677f157f9"
+    },
+    {
+      "path": "tmp/issue-23/visual/768-reader.png",
+      "bytes": 2556568,
+      "sha256": "f737ba47d3bee98384b02bd11912e91e3721fab6f21672e9dfad104ef578b073"
+    },
+    {
+      "path": "tmp/issue-23/visual/768-register-error.png",
+      "bytes": 75896,
+      "sha256": "a26bc5f8be0493d5ece2c3fe6447bb5a613538e741bd09a9d2f61d47fb5c4730"
+    },
+    {
+      "path": "tmp/issue-23/visual/768-register.png",
+      "bytes": 73345,
+      "sha256": "c06c0b28d96777eb532be7211cd192d5dbe9bd33fb9f73ad5a88c7aa650ca1c3"
+    },
+    {
+      "path": "tmp/issue-23/visual/768-sheet.jpg",
+      "bytes": 256736,
+      "sha256": "ee33d2f575a63c5fc8d2f595d68a861141e060805db2a07fec877c1926bd7eda"
+    },
+    {
+      "path": "tmp/issue-23/visual/corpus-0.jpg",
+      "bytes": 171226,
+      "sha256": "0a9d89137d077bff3de04acb94360f86bc35c119697026c7a69ad99b7c6db637"
+    },
+    {
+      "path": "tmp/issue-23/visual/corpus-3.jpg",
+      "bytes": 174839,
+      "sha256": "8c5f5d320183c69219bf6b6d9fde3f04c29a9baeac1dbf5389d153dd174190d6"
+    },
+    {
+      "path": "tmp/issue-23/visual/habr-avito-tail.png",
+      "bytes": 212846,
+      "sha256": "79c4ccc2017d2f407c1657aa4611ecb49aa73f75bf0181b0ed68739f43092d17"
+    },
+    {
+      "path": "tmp/issue-23/visual/media-0.jpg",
+      "bytes": 144764,
+      "sha256": "61c707afc09f9819a9a7efe1590c77cc05bc3566b363e5e2337574653bd74b31"
+    },
+    {
+      "path": "tmp/issue-23/visual/media-13.jpg",
+      "bytes": 163022,
+      "sha256": "f7e1d40a0eddac372041bd4a7a76903c82121bc0b2698e378351c424b25e7160"
+    },
+    {
+      "path": "tmp/issue-23/visual/media-26.jpg",
+      "bytes": 160431,
+      "sha256": "1724855f1e72d9123606003981e72829c044ed313d12d34f2e6ca0aa310cbab8"
+    }
+  ],
+  "visualReview": "All 27 captures reviewed, including error/empty/draft/delete states; mobile delete controls below fold remain reachable by scrolling; no overlap or document horizontal overflow. Reader uses final exported Habr Avito archive and all 25 images.",
+  "uxReview": {
+    "skill": ".agents/skills/ui-ux-pro-max/SKILL.md",
+    "searches": [
+      "destructive action confirmation --domain ux",
+      "error summary validation --domain ux"
+    ],
+    "findings": [
+      "Explicit irreversible-delete confirmation and cancel; focus returns after cancel; error messages with role=alert, inline field associations and keyboard focus; pending buttons and status feedback; empty state directs to save form; safe return and retry available.",
+      "No UI layout blocker found. Corpus cleaning blocker is documented separately."
+    ],
+    "limitation": "Visual replay mocks API; real authorization and persistence covered by 104 passing live E2E. D restore separately failed on empty rendered code; later restored access/media assertions not reached."
+  }
+}

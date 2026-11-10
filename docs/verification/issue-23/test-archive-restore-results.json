@@ -1,0 +1,69 @@
+{
+  "source": "tmp/issue-23/test-archive-restore.json",
+  "sourceSHA256": "865ede773faa46a9a75ecea806abb5db04b7a12d5a483c7043f7fa4a486ad397",
+  "stats": {
+    "startTime": "2026-11-10T10:59:53.846Z",
+    "duration": 13757.712,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  },
+  "errors": [],
+  "tests": [
+    {
+      "file": "restore.spec.ts",
+      "line": 48,
+      "title": "dump restores a private readable archive after destroying the source",
+      "project": "archive-restore",
+      "expectedStatus": "passed",
+      "status": "unexpected",
+      "results": [
+        {
+          "status": "failed",
+          "durationMS": 8860,
+          "retry": 0,
+          "attachments": [
+            {
+              "name": "screenshot",
+              "contentType": "image/png",
+              "path": "tmp/playwright/videos/backup-restore/restore-dump-restores-a-pr-8470e-after-destroying-the-source-archive-restore/test-failed-1.png",
+              "exists": true,
+              "bytes": 53941,
+              "sha256": "b2e299afeba5d46203fe7af8770081bd32fc96f7472b937bdc61770af1f687c5"
+            },
+            {
+              "name": "video",
+              "contentType": "video/webm",
+              "path": "tmp/playwright/videos/backup-restore/restore-dump-restores-a-pr-8470e-after-destroying-the-source-archive-restore/video.webm",
+              "exists": true,
+              "bytes": 283929,
+              "sha256": "5c67e5420eec7d26366f4b59bb70f1a5212ab0d216967780da979807948bed66"
+            },
+            {
+              "name": "error-context",
+              "contentType": "text/markdown",
+              "path": "tmp/playwright/videos/backup-restore/restore-dump-restores-a-pr-8470e-after-destroying-the-source-archive-restore/error-context.md",
+              "exists": true,
+              "bytes": 10757,
+              "sha256": "3e34342865b8e5001430d5bba9eda1cf01c0890afddee54660a689782bf3baef"
+            },
+            {
+              "name": "trace",
+              "contentType": "application/zip",
+              "path": "tmp/playwright/videos/backup-restore/restore-dump-restores-a-pr-8470e-after-destroying-the-source-archive-restore/trace.zip",
+              "exists": true,
+              "bytes": 958296,
+              "sha256": "abb6a861d0818076c54dee776062e8aeb13bdc241afc954c7527479d3c9257f9"
+            }
+          ],
+          "errors": [
+            "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('article', { name: 'Сохранённая статья', exact: true }).locator('pre code')\nExpected substring: \u001b[32m\"backup_code = 42\"\u001b[39m\nReceived string:    \u001b[31m\"\"\u001b[39m\nTimeout: 5000ms\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" getByRole('article', { name: 'Сохранённая статья', exact: true }).locator('pre code') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('article', { name: 'Сохранённая статья', exact: true }).locator('pre code')\u001b[22m\n\u001b[2m    14 × locator resolved to <code></code>\u001b[22m\n\u001b[2m       - unexpected value \"\"\u001b[22m\n\n\n  146 |     );\n  147 |     await expect(article.locator(\"li\")).toContainText(\"Backup list marker\");\n> 148 |     await expect(article.locator(\"pre code\")).toContainText(\"backup_code = 42\");\n      |                                               ^\n  149 |     await expect(article.locator(\"figcaption\")).toHaveText(\n  150 |       [1, 2, 3].map((i) => `Backup caption ${i}`),\n  151 |     );\n    at /Users/alaricode/Documents/1 - Code/4 - Tutorials/32-codex-advanced-wt-23/web/tests/e2e/backup/restore.spec.ts:148:47"
+          ]
+        }
+      ]
+    }
+  ],
+  "videoCount": 1,
+  "videosAllValid": true
+}
