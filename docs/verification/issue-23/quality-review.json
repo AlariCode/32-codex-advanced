@@ -2,7 +2,7 @@
   "reviewedAt": "2026-11-10T11:03:39.860290+00:00",
   "corpusSourcesRead": 6,
   "copiesCompared": 60,
-  "method": "Read all six source main bodies in full, compared ordered paragraphs/headings/lists/quotes/cells/captions and exact code with all ten archives using issue-22/quality.mjs; inspected all 39 exported images in contact sheets and loaded all in real production renderer using issue-22/renderer.mjs; reviewed reader layouts and Habr Avito tail. Excludes source menus/forms/hidden playground scaffolding. Automated equality aids manual review, does not prove semantic completeness.",
+  "method": "Read all six source main bodies in full, compared ordered paragraphs/headings/lists/quotes/cells/captions and exact code with all ten archives using issue-22/quality.mjs; inspected all 39 exported images in contact sheets and loaded all in real production renderer using issue-22/renderer.mjs; reviewed reader layouts and Habr Avito tail. Excludes source menus/forms/hidden playground scaffolding. Automated equality aids manual review, does not prove semantic completeness. Independent Ralph review found that exact API code equality and visual excerpts missed empty rendered code blocks; visible code fidelity remains blocked by K02.",
   "assetsMatchedToSource": 39,
   "assetsVisuallyInspected": 39,
   "rendererDecodedAssets": 39,
@@ -25,7 +25,13 @@
         "8a1665bb9f9df6d89be49303a8c3731e49ae0fffe02c347ea8f3ce3cb7aafed3",
         "8a1665bb9f9df6d89be49303a8c3731e49ae0fffe02c347ea8f3ce3cb7aafed3",
         "8a1665bb9f9df6d89be49303a8c3731e49ae0fffe02c347ea8f3ce3cb7aafed3"
-      ]
+      ],
+      "renderedCodeReview": {
+        "total": 21,
+        "empty": 5,
+        "blocker": "K02",
+        "source": "independent Ralph review of issue 23"
+      }
     },
     {
       "article": "go-pipelines",
@@ -105,7 +111,13 @@
         "a26f9e9c652ac8a5646371cadbe0bff0a37af3a3ed76447bbd865865589937fa",
         "a26f9e9c652ac8a5646371cadbe0bff0a37af3a3ed76447bbd865865589937fa",
         "a26f9e9c652ac8a5646371cadbe0bff0a37af3a3ed76447bbd865865589937fa"
-      ]
+      ],
+      "renderedCodeReview": {
+        "total": 13,
+        "empty": 2,
+        "blocker": "K02",
+        "source": "independent Ralph review of issue 23"
+      }
     },
     {
       "article": "habr-avito",
@@ -136,6 +148,13 @@
       "observed": "MDN retains a Previous/Next navigation list at the end of its document; Habr extraction includes difficulty/read-time/view-count/type metadata; Habr Avito also contains a related previous-publication link at document.blocks[111]. Production renderer confirms these remain visible.",
       "occurrences": "all 10 copies of each affected article; 10/10 MDN copies contain Previous/Next and 10/10 Avito copies contain related block",
       "status": "OPEN: no extraction fix or recheck in this task; feature completion blocked."
+    },
+    {
+      "id": "K02",
+      "requirement": "Readable code in corpus and restored archive",
+      "articles": ["go-strings", "habr-gc"],
+      "observed": "Independent Ralph review found 5/21 go-strings and 2/13 habr-gc code blocks rendered empty despite exact API code bytes. The same empty highlightAuto children defect blocks backup/restore. Earlier API equality and visual excerpts missed these losses.",
+      "status": "OPEN: fix renderer fallback, then verify every rendered code block in all six corpus articles, backup/restore and affected regressions."
     }
   ],
   "acceptedPartialResults": [
