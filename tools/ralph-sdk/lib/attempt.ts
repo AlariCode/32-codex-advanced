@@ -32,11 +32,18 @@ export function addUsage(total: Usage, usage: Usage) {
 }
 export const tokens = (usage: Usage) =>
   usage.input_tokens + usage.output_tokens;
-export const workerOptions = (root: string): ThreadOptions => ({
-  workingDirectory: root,
-  sandboxMode: "workspace-write",
-  approvalPolicy: "never",
-});
+export function workerOptions(root: string): ThreadOptions {
+  const sandboxMode = process.env.RALPH_WORKER_SANDBOX ?? "workspace-write";
+  if (sandboxMode !== "workspace-write" && sandboxMode !== "danger-full-access")
+    throw new Error(
+      "RALPH_WORKER_SANDBOX: ожидается workspace-write или danger-full-access",
+    );
+  return {
+    workingDirectory: root,
+    sandboxMode,
+    approvalPolicy: "never",
+  };
+}
 export const agentRules = `Работай в текущем репозитории и выполни задачу ниже.
 Изучи AGENTS.md и относящийся к задаче код. Сохраняй изменения пользователя.
 Не запускай make check: эту проверку выполняет внешний раннер после твоего ответа.

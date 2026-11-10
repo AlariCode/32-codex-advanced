@@ -9,11 +9,31 @@ import {
   addUsage,
   emptyUsage,
   tokens,
+  workerOptions,
 } from "./lib/attempt.ts";
 import { mkdir, mkdtemp, rm } from "node:fs/promises";
 import { join } from "node:path";
 const testTmp = join(process.cwd(), "tmp");
 await mkdir(testTmp, { recursive: true });
+
+test("режим исполнителя по умолчанию ограничен; полный доступ включается явно", () => {
+  const saved = process.env.RALPH_WORKER_SANDBOX;
+  try {
+    delete process.env.RALPH_WORKER_SANDBOX;
+    assert.equal(workerOptions("/repo").sandboxMode, "workspace-write");
+    process.env.RALPH_WORKER_SANDBOX = "danger-full-access";
+    assert.deepEqual(workerOptions("/repo"), {
+      workingDirectory: "/repo",
+      sandboxMode: "danger-full-access",
+      approvalPolicy: "never",
+    });
+    process.env.RALPH_WORKER_SANDBOX = "invalid";
+    assert.throws(() => workerOptions("/repo"), /RALPH_WORKER_SANDBOX/);
+  } finally {
+    if (saved === undefined) delete process.env.RALPH_WORKER_SANDBOX;
+    else process.env.RALPH_WORKER_SANDBOX = saved;
+  }
+});
 
 // Keep the original behavioural cases while exercising the extracted attempt.
 async function solve(
