@@ -9,12 +9,7 @@ import {
 import { basename, dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { z } from "zod";
-import {
-  command,
-  issueSchema,
-  parseIssueNumber,
-  readCommand,
-} from "./lib/io.ts";
+import { command, issueSchema, parseRunArgs, readCommand } from "./lib/io.ts";
 import {
   positiveEnv,
   ralph,
@@ -162,18 +157,14 @@ function report(rows: Row[]) {
 export async function main(args = process.argv.slice(2)) {
   if (args.includes("--help")) {
     console.log(
-      "Использование: npm run phase -- <номер> [<номер> ...] [--dry-run]",
+      "Использование: npm run phase -- <номер> [<номер> ...] [--dry-run] [--resume <номер> --extra-review-rounds <число>]",
     );
     return;
   }
-  const dryRun = args.includes("--dry-run");
-  const numbers = args
-    .filter((a) => a !== "--dry-run")
-    .map((a) => parseIssueNumber([a]));
-  if (!numbers.length || new Set(numbers).size !== numbers.length)
-    throw new Error(
-      "Нужны уникальные номера задач; npm run phase -- 21 22 23 [--dry-run]",
-    );
+  const { numbers, resume, extraReviewRounds, dryRun } = parseRunArgs(
+    args,
+    true,
+  );
   // Derive the primary checkout from this package, never from a worktree or cwd.
   const root = await readCommand(
     "git",
@@ -201,6 +192,8 @@ export async function main(args = process.argv.slice(2)) {
       `Журнал фазы относится к ветке ${journalBase}, текущая ветка — ${baseBranch || "detached HEAD"}. Для продолжения переключитесь на ${journalBase}; для новой фазы архивируйте .ralph/ и повторите запуск.`,
     );
   journal.baseBranch = baseBranch;
+  if (resume !== undefined && journal.merged.includes(resume))
+    throw new Error(`Задача #${resume} уже слита`);
   const load = async (n: number) =>
     issueSchema
       .extend({ state: z.enum(["OPEN", "CLOSED"]) })
@@ -243,18 +236,47 @@ export async function main(args = process.argv.slice(2)) {
     console.log(`#${n}: не запущена — ${reason}`);
   if (dryRun) return;
 
+  // Include saved usage before scheduling, even when a crash preceded journaling.
+  const usage = new Map<number, number>(
+    Object.entries(journal.tasks).map(([n, result]) => [
+      Number(n),
+      result.tokens,
+    ]),
+  );
+  const savedResults = new Map<number, RalphResult>();
+  for (const n of numbers) {
+    const saved = await readJson<RalphResult | null>(
+      join(runtimeDirectory, `result-${n}.json`),
+      null,
+    );
+    const result =
+      journal.tasks[n]?.status === "committed" ? journal.tasks[n] : saved;
+    if (result) savedResults.set(n, result);
+    const state = await readJson<{ tokens: number } | null>(
+      join(runtimeDirectory, `state-${n}.json`),
+      null,
+    );
+    usage.set(
+      n,
+      Math.max(usage.get(n) ?? 0, saved?.tokens ?? 0, state?.tokens ?? 0),
+    );
+  }
   await mkdir(join(runtimeDirectory, "logs"), { recursive: true });
   await saveJournal(journal);
   const rows: Row[] = numbers.map((number) => ({
     number,
     stage: "ожидает",
     rounds: journal.tasks[number]?.rounds ?? 0,
-    tokens: journal.tasks[number]?.tokens ?? 0,
+    tokens: usage.get(number) ?? 0,
     last: "",
     elapsed: 0,
   }));
   const rowByNumber = new Map(rows.map((row) => [row.number, row]));
-  const total = () => rows.reduce((sum, row) => sum + row.tokens, 0);
+  const total = () =>
+    [...usage].reduce(
+      (sum, [n, tokens]) => sum + (rowByNumber.get(n)?.tokens ?? tokens),
+      0,
+    );
   const log = async (row: Row, event: RalphEvent) => {
     row.stage = event.stage;
     row.rounds = event.round;
@@ -349,12 +371,14 @@ export async function main(args = process.argv.slice(2)) {
     let path = join(dirname(root), `${basename(root)}-wt-${row.number}`);
     const branch = `ralph/${row.number}`;
     try {
+      const diskResult = await readJson<RalphResult | null>(
+        join(runtimeDirectory, `result-${row.number}.json`),
+        null,
+      );
       const saved =
-        journal.tasks[row.number] ??
-        (await readJson<RalphResult | null>(
-          join(runtimeDirectory, `result-${row.number}.json`),
-          null,
-        ));
+        journal.tasks[row.number]?.status === "committed"
+          ? journal.tasks[row.number]
+          : (diskResult ?? journal.tasks[row.number]);
       const result =
         saved?.status === "committed" &&
         saved.issue === row.number &&
@@ -422,12 +446,20 @@ export async function main(args = process.argv.slice(2)) {
         result ??
         (await ralph(row.number, {
           workingDirectory: path,
+          extraReviewRounds:
+            row.number === resume ? extraReviewRounds : undefined,
           onEvent: (event) => log(row, event),
         }));
       row.rounds = outcome.rounds;
       row.tokens = outcome.tokens;
       if (outcome.status !== "committed") {
         row.outcome = "остановлена";
+        const queued = mergeQueue.then(async () => {
+          journal.tasks[row.number] = outcome;
+          await saveJournal(journal);
+        });
+        mergeQueue = queued.catch(() => {});
+        await queued;
         throw new Error(outcome.reason ?? "Ralph остановился");
       }
       // Only this queue mutates the base branch and the phase journal.
@@ -494,7 +526,20 @@ export async function main(args = process.argv.slice(2)) {
           const missing = graph
             .find((i) => i.number === row.number)!
             .dependencies.filter((n) => !completed.has(n));
-          if (missing.length || total() >= maxTokens) {
+          const saved = savedResults.get(row.number);
+          // Budget exhaustion must not prevent recovery of an already merged commit.
+          const cleanupOnly =
+            total() >= maxTokens &&
+            saved?.status === "committed" &&
+            saved.commit &&
+            (
+              await command(
+                "git",
+                ["merge-base", "--is-ancestor", saved.commit, baseBranch],
+                root,
+              )
+            ).code === 0;
+          if (missing.length || (total() >= maxTokens && !cleanupOnly)) {
             row.outcome = "не запущена";
             row.reason = missing.length
               ? `Не слиты зависимости: ${missing.map((n) => `#${n}`).join(", ")}`

@@ -22,6 +22,37 @@ export function parseIssueNumber(args: string[]): number {
     .parse(args);
 }
 
+export function parseRunArgs(args: string[], phase = false) {
+  const numbers: number[] = [];
+  let resume: number | undefined;
+  let extraReviewRounds: number | undefined;
+  let dryRun = false;
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i];
+    if (arg === "--resume" || arg === "--extra-review-rounds") {
+      const value = parseIssueNumber([args[++i]]);
+      if (arg === "--resume" && resume === undefined) resume = value;
+      else if (
+        arg === "--extra-review-rounds" &&
+        extraReviewRounds === undefined
+      )
+        extraReviewRounds = value;
+      else throw new Error(`Повторный параметр ${arg}`);
+    } else if (arg === "--dry-run" && phase) dryRun = true;
+    else numbers.push(parseIssueNumber([arg]));
+  }
+  if ((resume === undefined) !== (extraReviewRounds === undefined))
+    throw new Error(
+      "Укажите вместе --resume <номер> и --extra-review-rounds <число>",
+    );
+  if (!numbers.length && resume !== undefined && !phase) numbers.push(resume);
+  if (!numbers.length || new Set(numbers).size !== numbers.length)
+    throw new Error("Нужны уникальные номера задач");
+  if (resume !== undefined && !numbers.includes(resume))
+    throw new Error("Возобновляемая задача должна входить в список задач");
+  return { numbers, resume, extraReviewRounds, dryRun };
+}
+
 export function command(program: string, args: string[], cwd: string) {
   return new Promise<{ code: number; output: string }>((accept, reject) => {
     const child = spawn(program, args, {

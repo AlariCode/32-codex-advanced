@@ -1,19 +1,19 @@
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { ralph } from "./lib/ralph.ts";
-import { parseIssueNumber, readCommand } from "./lib/io.ts";
+import { parseRunArgs, readCommand } from "./lib/io.ts";
 export { blockers, reviewSchema, positiveEnv } from "./lib/ralph.ts";
 
 async function main() {
   if (process.argv.includes("--help")) {
-    console.log("Использование: npm run ralph -- <номер задачи> [<номер> ...]");
+    console.log(
+      "Использование: npm run ralph -- [<номер> ...] [--resume <номер> --extra-review-rounds <число>]",
+    );
     return;
   }
-  const numbers = process.argv.slice(2).map((arg) => parseIssueNumber([arg]));
-  if (!numbers.length)
-    throw new Error(
-      "Использование: npm run ralph -- <номер задачи> [<номер> ...]",
-    );
+  const { numbers, resume, extraReviewRounds } = parseRunArgs(
+    process.argv.slice(2),
+  );
   const root = await readCommand(
     "git",
     ["rev-parse", "--show-toplevel"],
@@ -21,7 +21,10 @@ async function main() {
   );
   for (const number of numbers) {
     try {
-      const state = await ralph(number, { workingDirectory: root });
+      const state = await ralph(number, {
+        workingDirectory: root,
+        extraReviewRounds: number === resume ? extraReviewRounds : undefined,
+      });
       console.log(
         `#${number} · ${state.commit ? "commit" : "stopped"} · раунды ${state.rounds} · токены ${state.tokens} · ${state.commit ?? "—"}`,
       );

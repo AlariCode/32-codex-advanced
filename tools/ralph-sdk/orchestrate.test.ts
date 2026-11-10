@@ -34,6 +34,36 @@ async function fixture(
     JSON.stringify({ type: "commonjs" }),
   );
   await cp(join(packageRoot, "lib"), join(pkg, "lib"), { recursive: true });
+  // Exercise the real Ralph state machine with an SDK stand-in, never a model.
+  const ralphPath = join(pkg, "lib", "ralph.ts");
+  await writeFile(
+    ralphPath,
+    (await readFile(ralphPath, "utf8")).replace(
+      'import { Codex, type ThreadEvent } from "@openai/codex-sdk";',
+      'import type { ThreadEvent } from "@openai/codex-sdk";\nimport { Codex } from "./fake-codex.ts";',
+    ),
+  );
+  await writeFile(
+    join(pkg, "lib", "fake-codex.ts"),
+    `
+import { appendFileSync, writeFileSync } from 'node:fs';
+export class Codex {
+  startThread(options) { return this.resumeThread('review-new', options); }
+  resumeThread(id, options) {
+    return { async runStreamed(prompt) {
+      appendFileSync(process.env.FIXTURE_BASE+'/model.jsonl', JSON.stringify({id,prompt})+'\\n');
+      const review = options.sandboxMode === 'read-only';
+      if (!review) writeFileSync(options.workingDirectory+'/task-22.txt', 'fixed');
+      return {events: (async function* () {
+        yield {type:'thread.started',thread_id:id};
+        yield {type:'item.completed',item:{type:'agent_message',id:'answer',text:JSON.stringify(review ? {findings:[]} : {summary:'Fixed',files:['task-22.txt']})}};
+        yield {type:'turn.completed',usage:{input_tokens:2,output_tokens:1}};
+      })()};
+    }};
+  }
+}
+`,
+  );
   await cp(join(packageRoot, "orchestrate.ts"), join(pkg, "orchestrate.ts"));
   await cp(join(packageRoot, "package.json"), join(pkg, "package.json"));
   await symlink(join(packageRoot, "node_modules"), join(pkg, "node_modules"));
@@ -97,11 +127,11 @@ process.exit(${JSON.stringify(failures)}.includes(number) ? 1 : 0);
     await writeFile(join(bin, name), `#!${process.execPath}\n${script}\n`, {
       mode: 0o755,
     });
-  async function run(env = {}) {
+  async function run(env = {}, args: string[] = []) {
     try {
       const result = await exec(
         process.execPath,
-        [join(pkg, "orchestrate.ts"), ...Object.keys(deps)],
+        [join(pkg, "orchestrate.ts"), ...Object.keys(deps), ...args],
         {
           cwd: pkg,
           env: {
@@ -324,6 +354,98 @@ test("detached HEAD, грязная копия и чужой старый жур
     await assert.rejects(readFile(join(f.base, "checks.jsonl")), {
       code: "ENOENT",
     });
+  } finally {
+    await f.clean();
+  }
+});
+
+test("явное возобновление остановленной задачи продолжает фазу с учётом слитых задач", async () => {
+  const f = await fixture({ 21: [], 22: [], 23: [22] });
+  try {
+    const path = join(f.base, "repo-wt-22");
+    await f.git(["reset", "--hard", "HEAD^"], path);
+    await writeFile(join(path, "task-22.txt"), "unfinished");
+    const stopped = {
+      issue: 22,
+      status: "stopped",
+      reason: "review limit",
+      rounds: 2,
+      tokens: 10,
+      branch: "ralph/22",
+    };
+    await writeFile(join(f.runtime, "result-22.json"), JSON.stringify(stopped));
+    await writeFile(
+      join(f.runtime, "state-22.json"),
+      JSON.stringify({
+        workingDirectory: path,
+        issue: 22,
+        stage: "stopped",
+        resumeStage: "fix",
+        round: 2,
+        workerThreadId: "original-worker",
+        tokens: 10,
+        maxTokens: 100,
+        timeoutMs: 60_000,
+        maxReviewRounds: 2,
+        reason: "review limit",
+        findings: [
+          {
+            priority: "P1",
+            file: "task-22.txt",
+            line: 1,
+            text: "latest blocker",
+          },
+        ],
+        report: { summary: "unfinished", files: ["task-22.txt"] },
+      }),
+    );
+    assert.equal((await f.run()).code, 1);
+    const journal = async () =>
+      JSON.parse(await readFile(join(f.runtime, "phase.json"), "utf8"));
+    assert.deepEqual((await journal()).merged, [21]);
+    assert.equal((await journal()).tasks[22].tokens, 10);
+    await assert.rejects(readFile(join(f.base, "model.jsonl")), {
+      code: "ENOENT",
+    });
+    assert.equal(
+      await readFile(join(path, "task-22.txt"), "utf8"),
+      "unfinished",
+    );
+    const budgetStopped = await f.run({ PHASE_MAX_TOKENS: "20" }, [
+      "--resume",
+      "22",
+      "--extra-review-rounds",
+      "1",
+    ]);
+    assert.equal(budgetStopped.code, 1);
+    assert.match(budgetStopped.stdout, /Бюджет фазы исчерпан/);
+    await assert.rejects(readFile(join(f.base, "model.jsonl")), {
+      code: "ENOENT",
+    });
+    assert.equal(
+      JSON.parse(await readFile(join(f.runtime, "state-22.json"), "utf8"))
+        .maxReviewRounds,
+      2,
+    );
+    const resumed = await f.run({}, [
+      "--resume",
+      "22",
+      "--extra-review-rounds",
+      "1",
+    ]);
+    assert.equal(resumed.code, 0, resumed.stderr + resumed.stdout);
+    assert.deepEqual((await journal()).merged, [21, 22, 23]);
+    assert.equal((await journal()).tasks[22].tokens, 16);
+    assert.equal((await journal()).tasks[22].rounds, 3);
+    const calls = (await readFile(join(f.base, "model.jsonl"), "utf8"))
+      .trim()
+      .split("\n")
+      .map((s) => JSON.parse(s));
+    assert.equal(calls.length, 2);
+    assert.equal(calls[0].id, "original-worker");
+    assert.match(calls[0].prompt, /latest blocker/);
+    assert.equal(await readFile(join(f.root, "task-23.txt"), "utf8"), "23");
+    assert.equal(await f.git(["branch", "--list", "ralph/*"]), "");
   } finally {
     await f.clean();
   }
