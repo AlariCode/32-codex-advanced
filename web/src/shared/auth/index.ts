@@ -4,7 +4,11 @@ import type { UserDTO } from "@/shared/api";
 export function safeReturnTo(value: string | null): string {
   if (!value || /[\\\s%]/u.test(value)) return "/";
   // Only implemented private routes are valid destinations.
-  return value === "/" || /^\/links\/[a-zA-Z0-9-]+$/.test(value) ? value : "/";
+  return value === "/" ||
+    value === "/profile" ||
+    /^\/links\/[a-zA-Z0-9-]+$/.test(value)
+    ? value
+    : "/";
 }
 export function loginPath() {
   return `/login?returnTo=${encodeURIComponent(safeReturnTo(window.location.pathname))}`;

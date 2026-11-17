@@ -1,7 +1,8 @@
-import type { InputHTMLAttributes, ReactNode } from "react";
+import type { InputHTMLAttributes, ReactNode, Ref } from "react";
 import styles from "./controls.module.css";
 
 interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
+  ref?: Ref<HTMLInputElement>;
   id: string;
   label: string;
   hint?: string;
@@ -9,16 +10,36 @@ interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   action?: ReactNode;
 }
 
-export function TextField({ id, label, hint, error, action, ...props }: TextFieldProps) {
+export function TextField({
+  id,
+  label,
+  hint,
+  error,
+  action,
+  ...props
+}: TextFieldProps) {
   const description = error || hint;
   return (
     <div className={styles.field}>
       <label htmlFor={id}>{label}</label>
       <div className={styles.inputRow}>
-        <input {...props} id={id} aria-invalid={Boolean(error)} aria-describedby={description ? `${id}-description` : undefined} />
+        <input
+          {...props}
+          id={id}
+          aria-invalid={Boolean(error)}
+          aria-describedby={description ? `${id}-description` : undefined}
+        />
         {action}
       </div>
-      {description && <p id={`${id}-description`} role={error ? "alert" : undefined} className={error ? styles.error : styles.hint}>{description}</p>}
+      {description && (
+        <p
+          id={`${id}-description`}
+          role={error ? "alert" : undefined}
+          className={error ? styles.error : styles.hint}
+        >
+          {description}
+        </p>
+      )}
     </div>
   );
 }

@@ -25,6 +25,10 @@ func NewHandler(db *sql.DB) http.Handler {
 	mux.HandleFunc("GET /api/links/{id}", library.get)
 	mux.HandleFunc("DELETE /api/links/{id}", library.delete)
 	mux.HandleFunc("POST /api/links/{id}/retry", library.retry)
+	mux.HandleFunc("GET /api/users/me/mcp-tokens", library.listMCPTokens)
+	mux.HandleFunc("POST /api/users/me/mcp-tokens", library.createMCPToken)
+	mux.HandleFunc("DELETE /api/users/me/mcp-tokens/{id}", library.revokeMCPToken)
+	mountMCP(mux, db, library.links)
 	return mux
 }
 

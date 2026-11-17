@@ -20,10 +20,20 @@ type Fetcher interface {
 	Fetch(context.Context, string) (safehttp.Page, error)
 }
 
-func Run(ctx context.Context) error { return RunWith(ctx, os.Getenv("DATABASE_URL"), safehttp.New()) }
+func Run(ctx context.Context) error {
+	client := safehttp.New()
+	switch os.Getenv("WORKER_DNS_OVER_HTTPS") {
+	case "", "false":
+	case "true":
+		client = safehttp.NewWithDNSOverHTTPS()
+	default:
+		return errors.New("WORKER_DNS_OVER_HTTPS must be true or false")
+	}
+	return RunWith(ctx, os.Getenv("DATABASE_URL"), client)
+}
 
 // RunWith is also the integration harness composition root. The production
-// command always constructs safehttp.New(), without network-policy overrides.
+// command always uses the production destination policy, with optional DoH.
 func RunWith(ctx context.Context, dsn string, client Fetcher) error {
 	if dsn == "" {
 		return errors.New("DATABASE_URL is required")

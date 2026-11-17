@@ -157,6 +157,22 @@ definitions:
       schema_version:
         type: integer
     type: object
+  user.CreatedMCPToken:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
+      token:
+        type: string
+    type: object
+  user.MCPToken:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
+    type: object
   user.User:
     properties:
       created_at:
@@ -574,6 +590,84 @@ paths:
       summary: Get current user
       tags:
       - users
+  /api/users/me/mcp-tokens:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/user.MCPToken'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+      summary: List current user's MCP tokens
+      tags:
+      - mcp
+    post:
+      description: Requires session cookie and matching PUBLIC_ORIGIN through loopback
+        proxy. Grants full MCP access to the owner's library until revoked. Response
+        is no-store.
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/user.CreatedMCPToken'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+      summary: Create an MCP token (secret returned once)
+      tags:
+      - mcp
+  /api/users/me/mcp-tokens/{id}:
+    delete:
+      parameters:
+      - description: Token UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: Revoked (also for missing or foreign IDs)
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+      summary: Revoke an MCP token
+      tags:
+      - mcp
   /api/users/register:
     post:
       consumes:
@@ -631,4 +725,42 @@ paths:
       summary: Check HTTP process health
       tags:
       - health
+  /mcp:
+    post:
+      consumes:
+      - application/json
+      description: Stateless Streamable HTTP JSON-RPC with save/list/get/retry/delete
+        tools and linkbook://links/{id} Markdown resources. Requires a profile-issued
+        MCP Bearer token; every request is authorized as its owner. All requests containing
+        Origin are forbidden. Tool errors use result.isError. See backend/api/mcp.md
+        for the MCP contract.
+      parameters:
+      - description: Bearer MCP token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+        "403":
+          description: Origin is not allowed
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httpapi.errorResponse'
+      summary: MCP server (Bearer token)
+      tags:
+      - mcp
 swagger: "2.0"

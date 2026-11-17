@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Button } from "@/shared/ui";
 import { useLibraryState } from "../model/use-library-state";
 import { useLibrarySync } from "../model/use-library-sync";
@@ -86,7 +87,13 @@ export function LibraryPage() {
     <main className={styles.library}>
       <header className={styles.header}>
         <span className={styles.brand}>Linkbook</span>
-        <span className={styles.account}>{user.email}</span>
+        <Link
+          href="/profile"
+          className={styles.account}
+          aria-label={`Профиль: ${user.email}`}
+        >
+          {user.email}
+        </Link>
       </header>
       <h1>Моя библиотека</h1>
       <p className={styles.intro}>

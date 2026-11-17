@@ -597,6 +597,122 @@
                 }
             }
         },
+        "/api/users/me/mcp-tokens": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "mcp"
+                ],
+                "summary": "List current user's MCP tokens",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/user.MCPToken"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.errorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Requires session cookie and matching PUBLIC_ORIGIN through loopback proxy. Grants full MCP access to the owner's library until revoked. Response is no-store.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "mcp"
+                ],
+                "summary": "Create an MCP token (secret returned once)",
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/user.CreatedMCPToken"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.errorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/users/me/mcp-tokens/{id}": {
+            "delete": {
+                "tags": [
+                    "mcp"
+                ],
+                "summary": "Revoke an MCP token",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token UUID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Revoked (also for missing or foreign IDs)"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.errorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.errorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/users/register": {
             "post": {
                 "description": "Email is trimmed and lowercased. Password accepts any characters, minimum 8 Unicode code points.\nRequest body is limited to 1 MiB. Passwords and password hashes are never returned.\nCreates the user and a 24-hour session atomically; issues the same secure session cookie as login. Responses are no-store.",
@@ -675,6 +791,57 @@
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/httpapi.healthResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/mcp": {
+            "post": {
+                "description": "Stateless Streamable HTTP JSON-RPC with save/list/get/retry/delete tools and linkbook://links/{id} Markdown resources. Requires a profile-issued MCP Bearer token; every request is authorized as its owner. All requests containing Origin are forbidden. Tool errors use result.isError. See backend/api/mcp.md for the MCP contract.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "mcp"
+                ],
+                "summary": "MCP server (Bearer token)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer MCP token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.errorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Origin is not allowed",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.errorResponse"
                         }
                     }
                 }
@@ -916,6 +1083,31 @@
                 },
                 "schema_version": {
                     "type": "integer"
+                }
+            }
+        },
+        "user.CreatedMCPToken": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "token": {
+                    "type": "string"
+                }
+            }
+        },
+        "user.MCPToken": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
                 }
             }
         },

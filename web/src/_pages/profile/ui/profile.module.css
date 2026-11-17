@@ -1,0 +1,48 @@
+.profile {
+  padding-top: 2rem;
+}
+.profile h1 {
+  margin-top: 2rem;
+}
+.profile h2 {
+  margin-top: 2.5rem;
+}
+.profile p {
+  overflow-wrap: anywhere;
+}
+.email {
+  color: #555;
+}
+.secret {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  border: 1px solid #777;
+  background: #f4f7f4;
+}
+.secret h3 {
+  margin-top: 0;
+}
+.secret input {
+  font-family: monospace;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+.tokens {
+  list-style: none;
+  padding: 0;
+}
+.tokens li {
+  border-top: 1px solid #d7d9d7;
+  padding: 1rem 0;
+}
+.confirm {
+  padding: 1rem;
+  border: 1px solid #8a2e18;
+}
+.profile [role="alert"] {
+  color: #8a2e18;
+}

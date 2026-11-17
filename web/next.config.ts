@@ -32,6 +32,10 @@ const nextConfig: NextConfig = {
         destination: `${apiOrigin}/api/users/login`,
       },
       { source: "/api/users/me", destination: `${apiOrigin}/api/users/me` },
+      {
+        source: "/api/users/me/mcp-tokens/:path*",
+        destination: `${apiOrigin}/api/users/me/mcp-tokens/:path*`,
+      },
       { source: "/api/links", destination: `${apiOrigin}/api/links` },
       {
         source: "/api/links/statuses",
