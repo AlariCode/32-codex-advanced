@@ -296,7 +296,7 @@ test("missing session and 401 list do not display private library", async ({
   );
   await page.goto("/");
   await expect(
-    page.getByText("Войдите, чтобы открыть личную библиотеку."),
+    page.getByRole("link", { name: "Уже есть аккаунт? Войти" }),
   ).toBeVisible();
   await authenticate(page);
   await page.route("**/api/links?*", (route) =>
@@ -304,7 +304,7 @@ test("missing session and 401 list do not display private library", async ({
   );
   await page.reload();
   await expect(
-    page.getByText("Войдите, чтобы открыть личную библиотеку."),
+    page.getByRole("link", { name: "Уже есть аккаунт? Войти" }),
   ).toBeVisible();
   await expect(page.getByText(identity.email)).toHaveCount(0);
 });

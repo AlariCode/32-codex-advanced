@@ -2,7 +2,7 @@
 
 import { announceSessionChange, safeReturnTo } from "@/shared/auth";
 import { useRouter } from "next/navigation";
-import { useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import {
   AccountForm,
   AccountFormNote,
@@ -27,6 +27,11 @@ export function RegistrationForm() {
   const [pending, setPending] = useState(false);
   const [errors, setErrors] = useState<RegistrationErrors>({});
   const submitting = useRef(false);
+  const errorRef = useRef<HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    if (errors.form) errorRef.current?.focus();
+  }, [errors.form]);
 
   function showErrors(next: RegistrationErrors, form: HTMLFormElement) {
     setErrors(next);
@@ -119,13 +124,12 @@ export function RegistrationForm() {
         }
       />
       {errors.form && (
-        <Notice tone="danger" role="alert">
+        <Notice tone="danger" role="alert" ref={errorRef} tabIndex={-1}>
           {errors.form}
         </Notice>
       )}
       <Button type="submit" disabled={pending} aria-busy={pending}>
         {pending ? "Создаём аккаунт…" : "Создать аккаунт"}
-        <span aria-hidden="true">↗</span>
       </Button>
       <AccountFormNote>
         Ваш email нужен только для аккаунта.

@@ -2,7 +2,7 @@ import type { ComponentProps } from "react";
 import styles from "./notice.module.css";
 
 type NoticeProps = ComponentProps<"p"> & {
-  tone: "danger" | "warning" | "success";
+  tone: "danger" | "warning" | "success" | "neutral";
 };
 
 export function Notice({ tone, className = "", ...props }: NoticeProps) {

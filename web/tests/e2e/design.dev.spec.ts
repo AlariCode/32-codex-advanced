@@ -42,6 +42,12 @@ test("каталог показывает токены и позволяет п�
 
   await navigation.getByRole("link", { name: "Компоненты" }).click();
   await expect(page).toHaveURL(/#components$/);
+  await expect(
+    page.getByRole("heading", { name: "Карточка библиотеки" }),
+  ).toBeVisible();
+  await expect(
+    page.getByText("Загружаем библиотеку…", { exact: true }),
+  ).toBeVisible();
   await expect(page.getByRole("button", { name: "Недоступна" })).toBeDisabled();
   await expect(page.getByLabel("Адрес статьи")).toHaveAccessibleDescription(
     "Введите полный URL статьи.",

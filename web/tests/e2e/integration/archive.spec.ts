@@ -84,10 +84,8 @@ test("real queue archives complete text and reader survives origin shutdown", as
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(
     page.viewportSize()!.width,
   );
-  await page.getByRole("link", { name: "Моя библиотека" }).focus();
-  await expect(
-    page.getByRole("link", { name: "Моя библиотека" }),
-  ).toBeFocused();
+  await page.getByRole("link", { name: "В библиотеку" }).focus();
+  await expect(page.getByRole("link", { name: "В библиотеку" })).toBeFocused();
   const original = article.getByRole("link", { name: "Открыть оригинал" });
   await expect(original).toHaveAttribute("href", url);
   await expect(original).toHaveAttribute("rel", "noopener noreferrer");
@@ -112,7 +110,7 @@ test("real queue archives complete text and reader survives origin shutdown", as
     path: testInfo.outputPath("reader-origin-off.png"),
     fullPage: true,
   });
-  await page.getByRole("link", { name: "Моя библиотека" }).click();
+  await page.getByRole("link", { name: "В библиотеку" }).click();
   await expect(
     page.getByRole("heading", { name: "Моя библиотека" }),
   ).toBeVisible();

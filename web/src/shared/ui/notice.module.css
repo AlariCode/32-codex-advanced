@@ -41,3 +41,20 @@
 .confirmation > p {
   margin: 0;
 }
+
+.neutral {
+  color: var(--color-text-secondary);
+  background: var(--color-bg-subtle);
+  border-color: var(--color-border-subtle);
+}
+
+.statusLabel {
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 0 var(--gap-field);
+  padding: var(--space-1) var(--gap-inline);
+  border-radius: var(--radius-card);
+  font-size: var(--text-label);
+  font-weight: var(--weight-label);
+  overflow-wrap: anywhere;
+}

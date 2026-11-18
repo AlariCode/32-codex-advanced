@@ -573,6 +573,41 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/users/logout": {
+            "post": {
+                "description": "Requires the configured PUBLIC_ORIGIN through the loopback proxy. localhost and 127.0.0.1 are interchangeable at the same scheme and port. Repeated logout succeeds. Other sessions and MCP tokens remain valid.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Log out the current browser session",
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "headers": {
+                            "Set-Cookie": {
+                                "type": "string",
+                                "description": "Expired linkbook_session; HttpOnly; Secure; SameSite=Lax; Path=/"
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "forbidden_origin",
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "internal_error",
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/users/me": {
             "get": {
                 "produces": [

@@ -2,10 +2,13 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { UserDTO } from "@/shared/api";
-import { subscribeSessionReset } from "@/shared/auth";
+import { announceSessionChange, subscribeSessionReset } from "@/shared/auth";
 import { flushSync } from "react-dom";
 import {
-  ActionLink,
+  ActionRow,
+  EmptyState,
+  PageFrame,
+  PageHeader,
   Button,
   ConfirmationPanel,
   Notice,
@@ -24,6 +27,11 @@ export function ProfilePage() {
   const [tokens, setTokens] = useState<MCPToken[]>([]);
   const [secret, setSecret] = useState<CreatedMCPToken | null>(null);
   const [loading, setLoading] = useState(true);
+  const [signingOut, setSigningOut] = useState(false);
+  const [signOutError, setSignOutError] = useState(false);
+  const signedOut = useRef(false);
+  const signOutInProgress = useRef(false);
+  const signOutButton = useRef<HTMLButtonElement>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
@@ -47,6 +55,7 @@ export function ProfilePage() {
   }, []);
 
   const load = useCallback(async () => {
+    if (signedOut.current) return;
     const version = ++epoch.current;
     setLoading(true);
     setBusy(false);
@@ -85,6 +94,7 @@ export function ProfilePage() {
         setUser(null);
         setTokens([]);
         setMessage("");
+        setSignOutError(false);
         setLoading(true);
       });
     };
@@ -153,31 +163,86 @@ export function ProfilePage() {
       if (version === epoch.current) setBusy(false);
     }
   }
+  function cancelRevocation(id: string) {
+    setConfirm(null);
+    requestAnimationFrame(() =>
+      document.getElementById(`revoke-${id}`)?.focus(),
+    );
+  }
+
+  async function signOut() {
+    if (signOutInProgress.current) return;
+    signOutInProgress.current = true;
+    setSigningOut(true);
+    setSignOutError(false);
+
+    try {
+      await profileRequest<void>("/api/users/logout", "POST");
+    } catch {
+      signOutInProgress.current = false;
+      setSigningOut(false);
+      setSignOutError(true);
+      requestAnimationFrame(() => signOutButton.current?.focus());
+      return;
+    }
+
+    signedOut.current = true;
+    announceSessionChange();
+    window.location.replace("/login");
+  }
+
   async function copy() {
     if (!secret) return;
+    setError("");
+    setMessage("");
     try {
       await navigator.clipboard.writeText(secret.token);
       setMessage("Токен скопирован.");
     } catch {
-      setMessage(
-        "Не удалось скопировать. Выделите токен и скопируйте вручную.",
-      );
+      setError("Не удалось скопировать. Выделите токен и скопируйте вручную.");
       secretInput.current?.select();
     }
   }
 
   return (
-    <main className={styles.profile}>
-      <ActionLink href="/">← В библиотеку</ActionLink>
+    <PageFrame className={styles.profile}>
+      <PageHeader back />
       <h1>Профиль</h1>
       {loading ? (
-        <p role="status">Проверяем вход…</p>
+        <Notice tone="neutral" role="status">
+          Проверяем вход…
+        </Notice>
       ) : (
         <>
           {user && (
             <>
-              <p className={styles.email}>{user.email}</p>
-              <section aria-labelledby="mcp-heading">
+              <div className={styles.account}>
+                <p className={styles.email}>{user.email}</p>
+                <Button
+                  ref={signOutButton}
+                  variant="secondary"
+                  disabled={busy || signingOut}
+                  aria-busy={signingOut}
+                  aria-label="Выйти из аккаунта"
+                  onClick={signOut}
+                >
+                  {signingOut ? "Выходим…" : "Выйти из аккаунта"}
+                </Button>
+              </div>
+              {signOutError && (
+                <Notice
+                  tone="danger"
+                  role="alert"
+                  className={styles.signOutError}
+                >
+                  Не удалось выйти из аккаунта. Проверьте соединение и
+                  повторите.
+                </Notice>
+              )}
+              <section
+                className={styles.tokensPanel}
+                aria-labelledby="mcp-heading"
+              >
                 <h2 id="mcp-heading">MCP-токены</h2>
                 <p>
                   Подключите агента к своей библиотеке. Токен даёт доступ к
@@ -190,7 +255,8 @@ export function ProfilePage() {
                 </p>
                 <Button
                   ref={createButton}
-                  disabled={busy || !!secret}
+                  disabled={busy || signingOut || !!secret}
+                  aria-busy={busy && !confirm}
                   onClick={create}
                 >
                   {busy && !confirm ? "Создаём…" : "Создать MCP-токен"}
@@ -212,7 +278,7 @@ export function ProfilePage() {
                       spellCheck={false}
                       onFocus={(event) => event.currentTarget.select()}
                     />
-                    <div className={styles.actions}>
+                    <ActionRow className={styles.actions}>
                       <Button onClick={copy}>Скопировать</Button>
                       <Button
                         variant="secondary"
@@ -226,11 +292,24 @@ export function ProfilePage() {
                       >
                         Я сохранил токен
                       </Button>
-                    </div>
+                    </ActionRow>
                   </div>
                 )}
+                {message && (
+                  <Notice
+                    tone="success"
+                    role="status"
+                    className={styles.feedback}
+                  >
+                    {message}
+                  </Notice>
+                )}
                 <h3>Активные токены</h3>
-                {!tokens.length && <p>Активных токенов пока нет.</p>}
+                {!tokens.length && (
+                  <EmptyState heading="h3" title="Активных токенов пока нет.">
+                    Создайте токен, когда понадобится подключить агента.
+                  </EmptyState>
+                )}
                 <ul className={styles.tokens}>
                   {tokens.map((token) => (
                     <li key={token.id}>
@@ -246,41 +325,39 @@ export function ProfilePage() {
                         <ConfirmationPanel
                           role="group"
                           aria-label="Подтверждение отзыва"
+                          onKeyDown={(event) => {
+                            if (event.key === "Escape" && !busy)
+                              cancelRevocation(token.id);
+                          }}
                         >
                           <p>
                             Отозвать токен? Подключённый агент потеряет доступ.
                             Для повторного подключения понадобится новый токен.
                           </p>
-                          <div className={styles.actions}>
+                          <ActionRow>
+                            <Button
+                              variant="secondary"
+                              autoFocus
+                              disabled={busy || signingOut}
+                              onClick={() => cancelRevocation(token.id)}
+                            >
+                              Отмена
+                            </Button>
                             <Button
                               variant="danger"
-                              autoFocus
-                              disabled={busy}
+                              disabled={busy || signingOut}
+                              aria-busy={busy}
                               onClick={() => revoke(token.id)}
                             >
                               {busy ? "Отзываем…" : "Подтвердить отзыв"}
                             </Button>
-                            <Button
-                              variant="secondary"
-                              disabled={busy}
-                              onClick={() => {
-                                setConfirm(null);
-                                requestAnimationFrame(() =>
-                                  document
-                                    .getElementById(`revoke-${token.id}`)
-                                    ?.focus(),
-                                );
-                              }}
-                            >
-                              Отмена
-                            </Button>
-                          </div>
+                          </ActionRow>
                         </ConfirmationPanel>
                       ) : (
                         <Button
                           variant="dangerText"
                           id={`revoke-${token.id}`}
-                          disabled={busy}
+                          disabled={busy || signingOut}
                           aria-label={`Отозвать токен ${token.id.slice(0, 8)}`}
                           onClick={() => {
                             setConfirm(token.id);
@@ -298,13 +375,19 @@ export function ProfilePage() {
           )}
         </>
       )}
-      <p role="status">{message}</p>
+
       {error && (
-        <div role="alert">
-          <Notice tone="danger">{error}</Notice>
-          {!user && <Button onClick={load}>Повторить</Button>}
+        <div className={styles.feedback}>
+          <Notice tone="danger" role="alert">
+            {error}
+          </Notice>
+          {!user && (
+            <Button variant="secondary" onClick={load}>
+              Повторить
+            </Button>
+          )}
         </div>
       )}
-    </main>
+    </PageFrame>
   );
 }

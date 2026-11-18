@@ -26,6 +26,20 @@ func newLibraryHandler(db *sql.DB) libraryHandler {
 	}
 	return libraryHandler{user.NewService(db), link.NewService(db), origin}
 }
+func (h libraryHandler) browserMutationAllowed(w http.ResponseWriter, r *http.Request) bool {
+	return allowBrowserMutation(w, r, r.Header.Get("Origin") == h.origin)
+}
+
+func allowBrowserMutation(w http.ResponseWriter, r *http.Request, originAllowed bool) bool {
+	host, _, err := net.SplitHostPort(r.RemoteAddr)
+	peer := net.ParseIP(host)
+	if err != nil || peer == nil || !peer.IsLoopback() || !originAllowed {
+		writeJSON(w, 403, errorResponse{"forbidden_origin"})
+		return false
+	}
+	return true
+}
+
 func (h libraryHandler) authenticated(w http.ResponseWriter, r *http.Request) (user.User, bool) {
 	w.Header().Set("Cache-Control", "no-store")
 	cookie, err := r.Cookie("linkbook_session")

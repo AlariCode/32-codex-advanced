@@ -1,7 +1,7 @@
 .button {
   display: inline-flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   gap: var(--gap-inline);
   max-width: 100%;
   min-height: var(--height-control);
@@ -12,7 +12,7 @@
   color: var(--button-text, var(--color-text-link));
   font: var(--weight-label) var(--text-body) / var(--leading-label)
     var(--font-ui);
-  text-align: start;
+  text-align: center;
   text-decoration: none;
   overflow-wrap: anywhere;
   cursor: pointer;
@@ -53,6 +53,7 @@
   --button-active: var(--color-action-secondary-active);
   min-height: var(--size-touch-target);
   padding: var(--gap-inline);
+  text-align: start;
   text-decoration: underline;
   text-underline-offset: var(--space-1);
 }

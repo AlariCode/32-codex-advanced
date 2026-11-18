@@ -204,9 +204,7 @@ test("reader retries initial and background outage and clears content on owner c
   await page.evaluate(() => window.dispatchEvent(new Event("pageshow")));
   await expect(page.getByText("Статья не найдена.")).toBeVisible();
   await expect(page.getByRole("article")).toHaveCount(0);
-  await expect(
-    page.getByRole("link", { name: "Моя библиотека" }),
-  ).toBeVisible();
+  await expect(page.getByRole("link", { name: "В библиотеку" })).toBeVisible();
 });
 
 for (const destination of [
@@ -498,7 +496,7 @@ test("late document from the previous article cannot replace the next article", 
   );
   await page.goto(`/links/${id}`);
   await seen;
-  await page.getByRole("link", { name: "Моя библиотека" }).click();
+  await page.getByRole("link", { name: "В библиотеку" }).click();
   await page
     .locator(`#link-${second}`)
     .getByRole("link", { name: "Читать статью" })

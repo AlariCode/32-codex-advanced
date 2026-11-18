@@ -59,9 +59,9 @@ test("profile creates a one-time secret, copies, confirms and revokes", async ({
   await expect(page.getByLabel("Новый MCP-токен")).toHaveCount(0);
   await page.getByRole("button", { name: "Отозвать токен" }).click();
   await expect(
-    page.getByRole("button", { name: "Подтвердить отзыв" }),
+    page.getByRole("button", { name: "Отмена", exact: true }),
   ).toBeFocused();
-  await page.getByRole("button", { name: "Отмена", exact: true }).click();
+  await page.keyboard.press("Escape");
   await expect(
     page.getByRole("button", { name: "Отозвать токен" }),
   ).toBeFocused();

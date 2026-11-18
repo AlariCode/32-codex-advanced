@@ -8,7 +8,14 @@ import {
   resetSession,
   subscribeSessionReset,
 } from "@/shared/auth";
-import { ActionLink, Button, Notice } from "@/shared/ui";
+import {
+  ActionLink,
+  ExternalActionLink,
+  Button,
+  Notice,
+  PageFrame,
+  PageHeader,
+} from "@/shared/ui";
 import { useEffect, useState, useRef } from "react";
 import {
   readArticle,
@@ -145,72 +152,85 @@ export function ReaderPage({ id }: { id: string }) {
         unsupported_document: "Эта версия статьи не поддерживается.",
       } as Record<string, string>
     )[error] ?? "Не удалось загрузить статью.";
+  const archiveWarnings = [
+    [
+      "images_omitted",
+      "Часть изображений или оформления не сохранена. Пропущенные изображения отмечены в тексте.",
+    ],
+    [
+      "html_truncated",
+      "Сохранена часть статьи: HTML страницы превысил предел 3 MiB после распаковки. Текст после этого предела не сохранён.",
+    ],
+    [
+      "text_incomplete",
+      "Часть основного текста не удалось сохранить при извлечении статьи. Можно открыть оригинал и прочитать полную версию.",
+    ],
+    [
+      "text_only_archive",
+      "Часть оформления основного содержимого не поддерживается и не сохранена.",
+    ],
+  ].filter(([key]) => article?.warnings?.includes(key));
+
   if (historyHidden)
     return (
-      <main className={styles.reader}>
-        <p role="status">Проверяем вход…</p>
-        {error && (
-          <>
-            <p role="alert">Не удалось проверить вход.</p>
-            <Button onClick={() => reload.current()}>Повторить</Button>
-          </>
-        )}
-      </main>
+      <PageFrame className={styles.reader}>
+        <PageHeader back />
+        <div className={styles.feedback}>
+          <Notice tone="neutral" role="status">
+            Проверяем вход…
+          </Notice>
+          {error && (
+            <>
+              <Notice tone="danger" role="alert">
+                Не удалось проверить вход.
+              </Notice>
+              <Button variant="secondary" onClick={() => reload.current()}>
+                Повторить
+              </Button>
+            </>
+          )}
+        </div>
+      </PageFrame>
     );
+
   return (
-    <main className={styles.reader}>
-      <nav aria-label="Навигация читалки">
-        <ActionLink href="/">← Моя библиотека</ActionLink>
-        <span>Linkbook</span>
-      </nav>
-      {checking && <p role="status">Открываем статью…</p>}
+    <PageFrame className={styles.reader}>
+      <PageHeader back />
+      {checking && (
+        <Notice tone="neutral" role="status">
+          Открываем статью…
+        </Notice>
+      )}
       {error && (
-        <>
+        <div className={styles.feedback}>
           {!article && <h1>Статья недоступна</h1>}
-          <p role="alert">{message}</p>
+          <Notice tone="danger" role="alert">
+            {message}
+          </Notice>
           {error === "internal_error" && (
-            <Button onClick={() => reload.current()}>Повторить</Button>
+            <Button variant="secondary" onClick={() => reload.current()}>
+              Повторить
+            </Button>
           )}
           {error === "unauthorized" && (
             <ActionLink href={loginPath()}>Войти</ActionLink>
           )}
-        </>
+        </div>
       )}
       {!checking && article && (
-        <article aria-label="Сохранённая статья">
-          <p className={styles.eyebrow}>Сохранённая версия</p>
-          <h1>{article.title}</h1>
-          <a
-            className={styles.original}
-            href={article.submitted_url}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Открыть оригинал ↗
-          </a>
-          {article.warnings?.includes("images_omitted") && (
+        <article className={styles.paper} aria-label="Сохранённая статья">
+          <header className={styles.articleHeader}>
+            <p className={styles.eyebrow}>Сохранённая версия</p>
+            <h1>{article.title}</h1>
+            <ExternalActionLink href={article.submitted_url}>
+              Открыть оригинал
+            </ExternalActionLink>
+          </header>
+          {archiveWarnings.length > 0 && (
             <Notice tone="warning" className={styles.warning} role="note">
-              Часть изображений или оформления не сохранена. Пропущенные
-              изображения отмечены в тексте.
-            </Notice>
-          )}
-          {article.warnings?.includes("html_truncated") && (
-            <Notice tone="warning" className={styles.warning} role="note">
-              Сохранена часть статьи: HTML страницы превысил предел 3 MiB после
-              распаковки. Текст после этого предела не сохранён.
-            </Notice>
-          )}
-          {article.warnings?.includes("text_incomplete") && (
-            <Notice tone="warning" className={styles.warning} role="note">
-              Часть основного текста не удалось сохранить при извлечении статьи.
-              Доступный текст сохранён; полную версию можно проверить в
-              оригинале.
-            </Notice>
-          )}
-          {article.warnings?.includes("text_only_archive") && (
-            <Notice tone="warning" className={styles.warning} role="note">
-              Часть оформления основного содержимого не поддерживается и не
-              сохранена.
+              {archiveWarnings.map(([key, description]) => (
+                <span key={key}>{description}</span>
+              ))}
             </Notice>
           )}
           <div className={styles.body}>
@@ -229,6 +249,6 @@ export function ReaderPage({ id }: { id: string }) {
           </div>
         </article>
       )}
-    </main>
+    </PageFrame>
   );
 }

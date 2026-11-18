@@ -86,7 +86,7 @@ test("real archive deletion cascades media and closes another tab reader on retu
     "Статья не найдена",
   );
   await expect(
-    reader.getByRole("link", { name: "Моя библиотека" }),
+    reader.getByRole("link", { name: "В библиотеку" }),
   ).toBeVisible();
   await reader.screenshot({
     path: testInfo.outputPath("reader-deleted.png"),

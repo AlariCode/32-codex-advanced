@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { Button, Notice, TextField } from "@/shared/ui";
+import { Button, Notice, StatusLabel, TextField } from "@/shared/ui";
 import type { Draft } from "../model/library";
 import styles from "./library.module.css";
 
@@ -23,10 +23,12 @@ export function DraftCard({
       aria-label="Предварительная карточка"
       aria-busy={draft.state === "sending"}
     >
-      <p className={styles.eyebrow}>Ещё не сохранено</p>
+      <StatusLabel tone="warning">Ещё не сохранено</StatusLabel>
       <p className={styles.address}>{draft.url || "Пустой адрес"}</p>
       {draft.state === "sending" ? (
-        <p role="status">Сохраняем ссылку…</p>
+        <Notice tone="neutral" role="status">
+          Сохраняем ссылку…
+        </Notice>
       ) : (
         <>
           <Notice tone="danger" id={`draft-${draft.id}-error`} role="alert">

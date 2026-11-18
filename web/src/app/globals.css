@@ -69,6 +69,8 @@
   --size-48: 3rem;
   --measure-reading: 68ch;
   --measure-form: 28rem;
+  --measure-page-narrow: 52rem;
+  --measure-library: 56rem;
   --measure-content: 72rem;
   --shadow-none: none;
   --shadow-soft: 0 8px 24px rgb(23 23 28 / 8%);
@@ -101,6 +103,11 @@
   --color-text-disabled: var(--palette-paper-600);
   --color-selection-bg: var(--palette-paper-300);
   --color-selection-text: var(--palette-ink-900);
+  --color-code-keyword: var(--palette-ink-700);
+  --color-code-literal: var(--palette-green-700);
+  --color-code-value: var(--palette-red-700);
+  --color-code-comment: var(--palette-paper-600);
+  --color-code-name: var(--palette-amber-700);
   --color-status-success: var(--palette-green-700);
   --color-status-success-bg: var(--palette-green-50);
   --color-status-warning: var(--palette-amber-700);
@@ -153,6 +160,8 @@
   --gutter-page: clamp(var(--space-4), 4vw, var(--space-12));
   --padding-page-block: clamp(var(--space-8), 6vw, var(--space-20));
   --width-content: var(--measure-content);
+  --width-library: var(--measure-library);
+  --width-page-narrow: var(--measure-page-narrow);
   --width-reading: var(--measure-reading);
   --width-form: var(--measure-form);
   --height-control: var(--size-48);
@@ -186,40 +195,63 @@
 
 :root {
   color-scheme: light;
-  font-family: system-ui, sans-serif;
-  color: #111;
-  background: #fff;
+  font: var(--weight-body) var(--text-body) / var(--leading-body) var(--font-ui);
+  color: var(--color-text-primary);
+  background: var(--color-bg-page);
 }
 
 * {
   box-sizing: border-box;
 }
-
-a:focus-visible {
-  outline: var(--width-focus-ring) solid var(--color-focus-ring);
-  outline-offset: var(--offset-focus-ring);
-}
-
 body {
   margin: 0;
 }
 
-main {
-  max-width: 48rem;
-  margin: 0 auto;
-  padding: 6rem 1.5rem;
+::selection {
+  color: var(--color-selection-text);
+  background: var(--color-selection-bg);
+}
+
+a {
+  color: var(--color-text-link);
+  text-underline-offset: var(--space-1);
+}
+
+:focus-visible {
+  outline: var(--width-focus-ring) solid var(--color-focus-ring);
+  outline-offset: var(--offset-focus-ring);
+}
+
+h1,
+h2,
+h3 {
+  margin: 0 0 var(--gap-field);
+  font-family: var(--font-heading);
+  letter-spacing: var(--tracking-title);
 }
 
 h1 {
-  margin: 0 0 1.5rem;
-  font-size: clamp(2.5rem, 8vw, 4rem);
-  letter-spacing: -0.04em;
+  font-size: var(--text-title-page);
+  font-weight: var(--weight-heading);
+  line-height: var(--leading-title);
 }
 
+h2,
+h3 {
+  font-weight: var(--weight-label);
+  line-height: var(--leading-label);
+}
+
+h2 {
+  font-size: var(--text-title-section);
+}
+h3 {
+  font-size: var(--text-title-card);
+}
 p {
-  line-height: 1.6;
+  margin: 0 0 var(--gap-stack);
 }
-
-.note {
-  color: #636967;
+code,
+pre {
+  font-family: var(--font-code);
 }

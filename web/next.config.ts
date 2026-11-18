@@ -31,6 +31,10 @@ const nextConfig: NextConfig = {
         source: "/api/users/login",
         destination: `${apiOrigin}/api/users/login`,
       },
+      {
+        source: "/api/users/logout",
+        destination: `${apiOrigin}/api/users/logout`,
+      },
       { source: "/api/users/me", destination: `${apiOrigin}/api/users/me` },
       {
         source: "/api/users/me/mcp-tokens/:path*",

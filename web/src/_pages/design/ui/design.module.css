@@ -6,11 +6,6 @@
   overflow-wrap: anywhere;
 }
 
-.page ::selection {
-  color: var(--color-selection-text);
-  background: var(--color-selection-bg);
-}
-
 .header,
 .main {
   width: 100%;
@@ -35,12 +30,6 @@
   flex-wrap: wrap;
   align-items: center;
   gap: var(--gap-inline);
-}
-
-.brand {
-  font-size: var(--text-title-card);
-  font-weight: var(--weight-emphasis);
-  letter-spacing: var(--tracking-title);
 }
 
 .main {
@@ -193,4 +182,15 @@
 .footer {
   border-top: var(--width-divider) solid var(--color-border-control);
   padding-top: var(--gap-stack);
+}
+
+.cardTitle {
+  margin: 0 0 var(--gap-field);
+  font: var(--weight-label) var(--text-title-card) / var(--leading-label)
+    var(--font-heading);
+}
+
+.cardAddress {
+  color: var(--color-text-secondary);
+  font-size: var(--text-label);
 }

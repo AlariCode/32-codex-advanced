@@ -50,6 +50,16 @@ export const colorGroups = [
       ["Фон ошибки", "status-danger-bg"],
     ],
   ],
+  [
+    "Подсветка кода",
+    [
+      ["Ключевые слова", "code-keyword"],
+      ["Строки и литералы", "code-literal"],
+      ["Числа и атрибуты", "code-value"],
+      ["Комментарии", "code-comment"],
+      ["Имена и теги", "code-name"],
+    ],
+  ],
 ] as const;
 
 export const typeScale = [

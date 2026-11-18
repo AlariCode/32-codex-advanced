@@ -1,6 +1,11 @@
 import type { CSSProperties } from "react";
 import {
   ActionLink,
+  ActionRow,
+  Brand,
+  EmptyState,
+  FieldAction,
+  StatusLabel,
   Button,
   ConfirmationPanel,
   Notice,
@@ -15,7 +20,7 @@ export function DesignPage() {
   return (
     <div className={styles.page} id="top">
       <header className={styles.header}>
-        <span className={styles.brand}>Linkbook</span>
+        <Brand />
         <nav aria-label="Разделы дизайн-системы">
           <ActionLink href="#colors">Цвета</ActionLink>
           <ActionLink href="#typography">Типографика</ActionLink>
@@ -159,8 +164,45 @@ export function DesignPage() {
             </div>
           </div>
           <div>
-            <h3>Уведомления</h3>
+            <h3>Поле рядом с действием</h3>
             <div className={styles.preview}>
+              <FieldAction>
+                <TextField
+                  id="design-save-url"
+                  label="Ссылка на статью"
+                  type="url"
+                  placeholder="https://example.com/article"
+                  hint="Адрес с http:// или https://"
+                />
+                <Button>Сохранить ссылку</Button>
+              </FieldAction>
+            </div>
+          </div>
+          <div>
+            <h3>Карточка библиотеки</h3>
+            <article className={styles.preview}>
+              <div>
+                <StatusLabel tone="success">Готово</StatusLabel>
+                <h4 className={styles.cardTitle}>
+                  Как устроены цифровые библиотеки
+                </h4>
+                <p className={styles.cardAddress}>
+                  https://example.com/articles/digital-libraries
+                </p>
+                <ActionRow>
+                  <ActionLink href="#typography" variant="secondary">
+                    Читать статью
+                  </ActionLink>
+                  <ActionLink href="#colors">Открыть оригинал</ActionLink>
+                  <Button variant="dangerText">Удалить</Button>
+                </ActionRow>
+              </div>
+            </article>
+          </div>
+          <div>
+            <h3>Состояния и уведомления</h3>
+            <div className={styles.preview}>
+              <Notice tone="neutral">Загружаем библиотеку…</Notice>
               <Notice tone="success">Ссылка сохранена в библиотеке.</Notice>
               <Notice tone="warning">
                 Архив статьи доступен без некоторых изображений.
@@ -168,6 +210,9 @@ export function DesignPage() {
               <Notice tone="danger">
                 Не удалось сохранить ссылку. Повторите попытку.
               </Notice>
+              <EmptyState heading="h3" title="Здесь будут ваши ссылки">
+                Сохраните первую ссылку с помощью формы выше.
+              </EmptyState>
             </div>
           </div>
           <div>
@@ -195,7 +240,7 @@ export function DesignPage() {
           </div>
         </section>
         <footer className={styles.footer}>
-          <ActionLink href="#top">К началу страницы ↑</ActionLink>
+          <ActionLink href="#top">К началу страницы</ActionLink>
         </footer>
       </main>
     </div>

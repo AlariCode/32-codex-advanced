@@ -3,7 +3,10 @@ package httpapi
 import (
 	"errors"
 	"log/slog"
+	"net"
 	"net/http"
+	"net/url"
+	"time"
 
 	"linkbook/api/internal/user"
 )
@@ -61,8 +64,68 @@ func (handler loginHandler) login(w http.ResponseWriter, r *http.Request) {
 }
 
 func setSessionCookie(w http.ResponseWriter, token string) {
-	http.SetCookie(w, &http.Cookie{
+	http.SetCookie(w, sessionCookie(token))
+}
+
+func sessionCookie(token string) *http.Cookie {
+	return &http.Cookie{
 		Name: "linkbook_session", Value: token, Path: "/",
 		HttpOnly: true, Secure: true, SameSite: http.SameSiteLaxMode,
-	})
+	}
+}
+
+// logoutOriginAllowed accepts the configured origin and its equivalent local
+// browser address. Public hosts still require an exact match.
+func logoutOriginAllowed(configured, requested string) bool {
+	if requested == configured {
+		return true
+	}
+	origin, err := url.Parse(configured)
+	if err != nil || (origin.Scheme != "http" && origin.Scheme != "https") ||
+		configured != origin.Scheme+"://"+origin.Host {
+		return false
+	}
+
+	var alias string
+	switch origin.Hostname() {
+	case "localhost":
+		alias = "127.0.0.1"
+	case "127.0.0.1":
+		alias = "localhost"
+	default:
+		return false
+	}
+	if port := origin.Port(); port != "" {
+		alias = net.JoinHostPort(alias, port)
+	}
+	return requested == origin.Scheme+"://"+alias
+}
+
+// logout revokes the current browser session and clears its cookie.
+// @Summary Log out the current browser session
+// @Description Requires the configured PUBLIC_ORIGIN through the loopback proxy. localhost and 127.0.0.1 are interchangeable at the same scheme and port. Repeated logout succeeds. Other sessions and MCP tokens remain valid.
+// @Tags users
+// @Produce json
+// @Success 204
+// @Header 204 {string} Set-Cookie "Expired linkbook_session; HttpOnly; Secure; SameSite=Lax; Path=/"
+// @Failure 403 {object} errorResponse "forbidden_origin"
+// @Failure 500 {object} errorResponse "internal_error"
+// @Router /api/users/logout [post]
+func (h libraryHandler) logout(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Cache-Control", "no-store")
+	if !allowBrowserMutation(w, r, logoutOriginAllowed(h.origin, r.Header.Get("Origin"))) {
+		return
+	}
+	if cookie, err := r.Cookie("linkbook_session"); err == nil {
+		if err := h.users.Logout(r.Context(), cookie.Value); err != nil {
+			slog.Error("Logout failed", "error", err)
+			writeJSON(w, http.StatusInternalServerError, errorResponse{Code: "internal_error"})
+			return
+		}
+	}
+	cookie := sessionCookie("")
+	cookie.MaxAge = -1
+	cookie.Expires = time.Unix(0, 0).UTC()
+	http.SetCookie(w, cookie)
+	w.WriteHeader(http.StatusNoContent)
 }

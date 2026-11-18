@@ -1,7 +1,13 @@
 "use client";
 
-import Link from "next/link";
-import { Button } from "@/shared/ui";
+import {
+  ActionLink,
+  Button,
+  EmptyState,
+  Notice,
+  PageFrame,
+  PageHeader,
+} from "@/shared/ui";
 import { useLibraryState } from "../model/use-library-state";
 import { useLibrarySync } from "../model/use-library-sync";
 import { useLibraryActions } from "../model/use-library-actions";
@@ -43,78 +49,75 @@ export function LibraryPage() {
     repeatRef,
   } = library;
 
-  if (historyHidden)
+  if (historyHidden || status === "checking" || status === "error") {
+    const initialError = historyHidden
+      ? error
+      : status === "error"
+        ? "Не удалось загрузить библиотеку."
+        : "";
     return (
-      <main>
+      <PageFrame className={styles.library}>
+        <PageHeader />
         <h1>Linkbook</h1>
-        <p role="status">Проверяем вход…</p>
-        {error && (
-          <>
-            <p role="alert">{error}</p>
-            <Button onClick={() => reloadRef.current()}>Повторить</Button>
-          </>
-        )}
-      </main>
+        <div className={styles.loadError}>
+          {(historyHidden || status === "checking") && (
+            <Notice tone="neutral" role="status">
+              Проверяем вход…
+            </Notice>
+          )}
+          {initialError && (
+            <>
+              <Notice tone="danger" role="alert">
+                {initialError}
+              </Notice>
+              <Button variant="secondary" onClick={() => reloadRef.current()}>
+                Повторить
+              </Button>
+            </>
+          )}
+        </div>
+      </PageFrame>
     );
+  }
 
-  if (status === "checking")
-    return (
-      <main aria-busy="true">
-        <h1>Linkbook</h1>
-        <p className="note" role="status">
-          Проверяем вход…
-        </p>
-      </main>
-    );
-
-  if (status === "error")
-    return (
-      <main>
-        <h1>Linkbook</h1>
-        <p role="alert">Не удалось загрузить библиотеку.</p>
-        <Button onClick={() => reloadRef.current()}>Повторить</Button>
-      </main>
-    );
-
-  if (status !== "ready" || !user)
-    return (
-      <LibraryWelcome>
-        <p className="note">Войдите, чтобы открыть личную библиотеку.</p>
-      </LibraryWelcome>
-    );
+  if (status !== "ready" || !user) return <LibraryWelcome />;
 
   return (
-    <main className={styles.library}>
-      <header className={styles.header}>
-        <span className={styles.brand}>Linkbook</span>
-        <Link
+    <PageFrame className={styles.library}>
+      <PageHeader>
+        <ActionLink
           href="/profile"
           className={styles.account}
           aria-label={`Профиль: ${user.email}`}
         >
           {user.email}
-        </Link>
-      </header>
+        </ActionLink>
+      </PageHeader>
       <h1>Моя библиотека</h1>
       <p className={styles.intro}>
         Сохраните ссылку, чтобы вернуться к ней позже.
       </p>
-      <SaveLinkForm url={url} onURLChange={setURL} onSubmit={submit} />
-      {storageError && (
-        <p role="status">
-          Восстановление черновиков недоступно. Вы можете сохранять ссылки, пока
-          страница открыта.
-        </p>
-      )}
-      <p role="status" className={styles.message}>
-        {message}
-      </p>
-      <section aria-label="Библиотека ссылок">
+      <div className={styles.savePanel}>
+        <SaveLinkForm url={url} onURLChange={setURL} onSubmit={submit} />
+      </div>
+      <div className={styles.feedback}>
+        {storageError && (
+          <Notice tone="warning" role="status">
+            Восстановление черновиков недоступно. Вы можете сохранять ссылки,
+            пока страница открыта.
+          </Notice>
+        )}
+        {message && (
+          <Notice tone="success" role="status">
+            {message}
+          </Notice>
+        )}
+      </div>
+      <section className={styles.collection} aria-label="Библиотека ссылок">
         {!cards.length && !drafts.length && (
-          <div className={styles.empty}>
-            <h2>Здесь будут ваши ссылки</h2>
-            <p>Сохраните первую ссылку с помощью формы выше.</p>
-          </div>
+          <EmptyState title="Здесь будут ваши ссылки">
+            Сохраните первую ссылку с помощью формы выше.
+          </EmptyState>
         )}
         {drafts.map((draft) => (
           <DraftCard
@@ -154,9 +157,11 @@ export function LibraryPage() {
         {/* eslint-enable react-hooks/refs */}
       </section>
       {error && (
-        <div>
-          <p role="alert">{error}</p>
-          <Button onClick={() => repeatRef.current()}>
+        <div className={styles.loadError}>
+          <Notice tone="danger" role="alert">
+            {error}
+          </Notice>
+          <Button variant="secondary" onClick={() => repeatRef.current()}>
             Повторить загрузку
           </Button>
         </div>
@@ -167,10 +172,13 @@ export function LibraryPage() {
             void more();
           }}
           disabled={loadingMore}
+          aria-busy={loadingMore}
+          variant="text"
+          className={styles.pagination}
         >
           {loadingMore ? "Загружаем…" : "Показать ещё"}
         </Button>
       )}
-    </main>
+    </PageFrame>
   );
 }

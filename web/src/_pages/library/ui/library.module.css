@@ -1,109 +1,92 @@
 .library {
-  max-width: 56rem;
-  padding-top: 2rem;
-  padding-bottom: 4rem;
+  --page-measure: var(--width-library);
 }
-.header {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 1rem;
-  padding-bottom: 3.5rem;
+
+.welcome,
+.savePanel,
+.collection {
+  background: var(--color-bg-surface);
+  border-radius: var(--radius-panel);
+  border: var(--width-divider) solid var(--color-border-subtle);
+  padding: var(--padding-panel);
 }
-.brand {
-  font-size: 1.25rem;
-  font-weight: 700;
-  letter-spacing: -0.04em;
+
+.welcome {
+  padding: clamp(var(--gap-stack), 6vw, var(--space-16));
 }
-.account {
-  font-size: 0.875rem;
-  color: #555;
-  overflow-wrap: anywhere;
-  text-align: right;
+.welcome h1 {
+  font-size: var(--text-title-feature);
 }
-.library h1 {
-  font-size: clamp(2rem, 6vw, 3.5rem);
-  margin-bottom: 0.75rem;
-}
+
+.welcome p,
 .intro {
-  color: #555;
-  margin: 0 0 2rem;
+  max-width: var(--width-form);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--gap-content);
 }
-.saveForm {
+
+.account {
+  font-size: var(--text-label);
+}
+.feedback,
+.loadError {
   display: grid;
-  gap: 1rem;
-  align-items: end;
+  gap: var(--gap-stack);
 }
-.message {
-  min-height: 1.6em;
-  margin: 1rem 0;
-  color: #285536;
+.loadError > button {
+  justify-self: start;
 }
-.empty {
-  border-top: 1px solid #d7d9d7;
-  padding: 2rem 0;
+.feedback:not(:empty),
+.collection,
+.loadError,
+.pagination {
+  margin-top: var(--gap-stack);
 }
-.empty h2 {
-  font-size: 1.25rem;
-}
-.empty p {
-  color: #555;
-}
+
 .card,
 .draft {
-  border-top: 1px solid #d7d9d7;
-  padding: 1.5rem 0;
-  scroll-margin: 1rem;
+  padding-block: var(--gap-content);
+  scroll-margin: var(--gap-stack);
 }
+
+.card:first-child,
+.draft:first-child {
+  padding-top: 0;
+}
+.card:last-child,
+.draft:last-child {
+  padding-bottom: 0;
+}
+
+.card:not(:first-child),
+.draft:not(:first-child) {
+  border-top: var(--width-divider) solid var(--color-border-subtle);
+}
+
 .card:focus {
-  outline: 2px solid #111;
-  outline-offset: 6px;
+  outline: var(--width-focus-ring) solid var(--color-focus-ring);
+  outline-offset: var(--offset-focus-ring);
 }
-.eyebrow {
-  font-size: 0.875rem;
-  font-weight: 600;
-  margin: 0 0 0.5rem;
-  color: #555;
+
+.card h2 {
+  font-size: var(--text-title-card);
 }
 .address {
+  margin-bottom: var(--gap-stack);
+  font-size: var(--text-label);
+  color: var(--color-text-secondary);
   overflow-wrap: anywhere;
-  margin: 0 0 0.75rem;
-  line-height: 1.6;
 }
-.card h2 {
-  font-size: 1.25rem;
+
+.card :where([role="alert"], [role="status"]) {
+  margin-block: var(--gap-field);
 }
-.actions {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.5rem 1.5rem;
-}
-.draft {
-  border-top-color: var(--color-status-warning);
-}
+
 .draft form {
   display: grid;
   gap: var(--gap-stack);
   margin-top: var(--gap-stack);
 }
-@media (min-width: 641px) {
-  .saveForm {
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: start;
-  }
-  .saveForm > button {
-    margin-top: calc(
-      var(--text-label) * var(--leading-label) + var(--gap-field)
-    );
-  }
-}
-@media (max-width: 640px) {
-  .header {
-    padding-bottom: 2.5rem;
-  }
-}
-
 .deleteConfirmation {
   margin-block: var(--gap-stack);
 }

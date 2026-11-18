@@ -1,5 +1,13 @@
 import { useRef, useState } from "react";
-import { ActionLink, Button, ConfirmationPanel, Notice } from "@/shared/ui";
+import {
+  ActionLink,
+  ExternalActionLink,
+  ActionRow,
+  Button,
+  ConfirmationPanel,
+  Notice,
+  StatusLabel,
+} from "@/shared/ui";
 import type { LinkCard } from "../model/library";
 import styles from "./library.module.css";
 
@@ -54,6 +62,12 @@ export function SavedLinkCard({
     setConfirming(false);
     requestAnimationFrame(() => deleteButton.current?.focus());
   }
+  const tone = {
+    processing: "neutral",
+    ready: "success",
+    unavailable: "warning",
+    failed: "danger",
+  } as const;
   return (
     <article
       id={`link-${card.id}`}
@@ -61,7 +75,7 @@ export function SavedLinkCard({
       className={styles.card}
       aria-label={`Сохранённая ссылка ${card.submitted_url}`}
     >
-      <p className={styles.eyebrow} role="status">
+      <StatusLabel tone={tone[card.state]} role="status">
         {
           {
             processing:
@@ -73,7 +87,7 @@ export function SavedLinkCard({
             failed: "Ошибка обработки",
           }[card.state]
         }
-      </p>
+      </StatusLabel>
       {card.title && <h2>{card.title}</h2>}
       <p className={styles.address}>{card.submitted_url}</p>
       {(card.state === "failed" || card.state === "unavailable") && (
@@ -95,7 +109,9 @@ export function SavedLinkCard({
         </Notice>
       )}
       {deleting && (
-        <p role="status">Удаляем… Проверяем результат на сервере.</p>
+        <Notice tone="neutral" role="status">
+          Удаляем… Проверяем результат на сервере.
+        </Notice>
       )}
       {confirming && !deleting && (
         <ConfirmationPanel
@@ -110,7 +126,7 @@ export function SavedLinkCard({
             Удалить ссылку и сохранённую статью навсегда? Обработка остановится.
             Восстановить их не получится.
           </p>
-          <div className={styles.actions}>
+          <ActionRow>
             <Button variant="secondary" autoFocus onClick={cancel}>
               Отмена
             </Button>
@@ -123,27 +139,31 @@ export function SavedLinkCard({
             >
               Удалить навсегда
             </Button>
-          </div>
+          </ActionRow>
         </ConfirmationPanel>
       )}
-      <div className={styles.actions}>
+      <ActionRow>
         {(card.state === "failed" || card.state === "unavailable") && (
           <Button
             variant="text"
             disabled={!!retrying || deleting}
+            aria-busy={retrying}
             onClick={() => void retry(card)}
           >
             {retrying ? "Отправляем повтор…" : "Повторить"}
           </Button>
         )}
         {card.state === "ready" && card.can_read !== false && (
-          <ActionLink href={`/links/${card.id}`}>Читать статью</ActionLink>
+          <ActionLink variant="secondary" href={`/links/${card.id}`}>
+            Читать статью
+          </ActionLink>
         )}
 
         {card.state !== "ready" && (
           <Button
             variant="text"
             disabled={opening !== null || deleting}
+            aria-busy={opening === card.id}
             onClick={() => {
               void openCard(card.id);
             }}
@@ -151,6 +171,9 @@ export function SavedLinkCard({
             {opening === card.id ? "Открываем…" : "Открыть карточку"}
           </Button>
         )}
+        <ExternalActionLink href={card.submitted_url}>
+          Открыть оригинал
+        </ExternalActionLink>
         <Button
           variant="dangerText"
           ref={deleteButton}
@@ -163,14 +186,7 @@ export function SavedLinkCard({
               ? "Повторить удаление"
               : "Удалить"}
         </Button>
-        <ActionLink
-          href={card.submitted_url}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Открыть оригинал <span aria-hidden="true">↗</span>
-        </ActionLink>
-      </div>
+      </ActionRow>
     </article>
   );
 }

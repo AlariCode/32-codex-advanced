@@ -3,19 +3,8 @@ package httpapi
 import (
 	"linkbook/api/internal/link"
 	"linkbook/api/internal/user"
-	"net"
 	"net/http"
 )
-
-func (h libraryHandler) tokenMutationAllowed(w http.ResponseWriter, r *http.Request) bool {
-	host, _, err := net.SplitHostPort(r.RemoteAddr)
-	peer := net.ParseIP(host)
-	if err != nil || peer == nil || !peer.IsLoopback() || r.Header.Get("Origin") != h.origin {
-		writeJSON(w, 403, errorResponse{"forbidden_origin"})
-		return false
-	}
-	return true
-}
 
 // listMCPTokens returns metadata, never secrets or hashes.
 // @Summary List current user's MCP tokens
@@ -50,7 +39,7 @@ func (h libraryHandler) listMCPTokens(w http.ResponseWriter, r *http.Request) {
 // @Router /api/users/me/mcp-tokens [post]
 func (h libraryHandler) createMCPToken(w http.ResponseWriter, r *http.Request) {
 	current, ok := h.authenticated(w, r)
-	if !ok || !h.tokenMutationAllowed(w, r) {
+	if !ok || !h.browserMutationAllowed(w, r) {
 		return
 	}
 	token, err := h.users.CreateMCPToken(r.Context(), current.ID)
@@ -73,7 +62,7 @@ func (h libraryHandler) createMCPToken(w http.ResponseWriter, r *http.Request) {
 // @Router /api/users/me/mcp-tokens/{id} [delete]
 func (h libraryHandler) revokeMCPToken(w http.ResponseWriter, r *http.Request) {
 	current, ok := h.authenticated(w, r)
-	if !ok || !h.tokenMutationAllowed(w, r) {
+	if !ok || !h.browserMutationAllowed(w, r) {
 		return
 	}
 	id := r.PathValue("id")

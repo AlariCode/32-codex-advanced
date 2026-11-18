@@ -1,9 +1,9 @@
 import Link from "next/link";
-import type { ComponentProps } from "react";
+import type { ComponentProps, ReactNode } from "react";
 import styles from "./controls.module.css";
 
 type ActionLinkProps = ComponentProps<typeof Link> & {
-  variant?: "primary" | "text";
+  variant?: "primary" | "secondary" | "text";
 };
 
 export function ActionLink({
@@ -16,5 +16,19 @@ export function ActionLink({
       className={`${styles.button} ${styles[variant]} ${className}`}
       {...props}
     />
+  );
+}
+
+export function ExternalActionLink({
+  href,
+  children,
+}: {
+  href: string;
+  children: ReactNode;
+}) {
+  return (
+    <ActionLink href={href} target="_blank" rel="noopener noreferrer">
+      {children}
+    </ActionLink>
   );
 }

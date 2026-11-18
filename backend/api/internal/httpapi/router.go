@@ -16,6 +16,7 @@ func NewHandler(db *sql.DB) http.Handler {
 	login := loginHandler{users: users}
 	mux.HandleFunc("POST /api/users/login", login.login)
 	library := newLibraryHandler(db)
+	mux.HandleFunc("POST /api/users/logout", library.logout)
 	mux.HandleFunc("GET /api/users/me", library.me)
 	mux.HandleFunc("GET /api/links", library.list)
 	mux.HandleFunc("POST /api/links", library.save)

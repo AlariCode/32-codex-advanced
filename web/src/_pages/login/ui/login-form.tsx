@@ -126,7 +126,6 @@ export function LoginForm() {
       )}
       <Button type="submit" disabled={pending} aria-busy={pending}>
         {pending ? "Входим…" : "Войти"}
-        <span aria-hidden="true">↗</span>
       </Button>
       <AccountFormNote>
         Нет аккаунта? <ActionLink href="/register">Создать аккаунт</ActionLink>

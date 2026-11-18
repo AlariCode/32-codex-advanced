@@ -142,7 +142,7 @@ test("real reader return rechecks ownership and Back never reveals former accoun
       path,
     ),
   ).toBe(404);
-  await page.getByRole("link", { name: "Моя библиотека" }).click();
+  await page.getByRole("link", { name: "В библиотеку" }).click();
   await expect(input(page)).toHaveValue("");
   await expect(page.getByRole("article")).toHaveCount(0);
   await page.goBack();
@@ -208,7 +208,7 @@ test("return after login to an absent article shows a library exit", async ({
     page.getByText("Статья не найдена.", { exact: true }),
   ).toBeVisible();
   await expect(page.getByRole("article")).toHaveCount(0);
-  await page.getByRole("link", { name: "Моя библиотека" }).click();
+  await page.getByRole("link", { name: "В библиотеку" }).click();
   await expect(input(page)).toBeVisible();
   await expect(page.getByRole("article")).toHaveCount(0);
 });

@@ -1,7 +1,7 @@
 -include .env
 export
 
-.PHONY: setup db-up db-down db-logs db-shell test test-db-up test-db-down test-integration test-login openapi web api worker worker-dev build check ralph
+.PHONY: setup dev db-up db-down db-logs db-shell test test-db-up test-db-down test-integration test-login openapi web api worker worker-dev build check ralph
 
 TEST_DATABASE_URL ?= postgres://linkbook_test:linkbook_test_local@127.0.0.1:15433/linkbook_test?sslmode=disable
 
@@ -9,6 +9,9 @@ setup:
 	@test -f .env || cp .env.example .env
 	npm ci
 	npm ci --prefix web
+
+dev:
+	node scripts/dev.mjs
 
 db-up:
 	docker compose up -d --wait postgres
