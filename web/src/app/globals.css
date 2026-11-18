@@ -1,4 +1,4 @@
-/* Design tokens: see /DESIGN.md. Definitions only; migration is a separate task. */
+/* Design tokens: see /DESIGN.md. Shared UI and the catalog consume the semantic roles. */
 :root {
   /* Layer 1 — primitives. Reference values are approximate, not source assets. */
   --palette-paper-50: #fffef9;
@@ -22,7 +22,7 @@
   --palette-red-800: #713024;
   --palette-red-900: #59251c;
 
-  --font-family-sans: "Inter", "Arial", sans-serif;
+  --font-family-sans: "Inter Variable", "Arial", sans-serif;
   --font-family-mono: ui-monospace, "SFMono-Regular", Consolas, monospace;
   --font-size-12: 0.75rem;
   --font-size-14: 0.875rem;
@@ -196,8 +196,8 @@
 }
 
 a:focus-visible {
-  outline: 2px solid #111;
-  outline-offset: 5px;
+  outline: var(--width-focus-ring) solid var(--color-focus-ring);
+  outline-offset: var(--offset-focus-ring);
 }
 
 body {
@@ -222,37 +222,4 @@ p {
 
 .note {
   color: #636967;
-}
-
-.registration-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  min-height: 48px;
-  padding: 12px 20px;
-  border: 1px solid #111;
-  color: #fff;
-  background: #111;
-  text-decoration: none;
-  font-weight: 600;
-}
-
-.registration-link:hover {
-  background: #333;
-}
-.registration-link:active {
-  background: #555;
-}
-
-.login-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 16px;
-  min-height: 44px;
-  color: #111;
-  text-underline-offset: 4px;
-}
-.login-link:hover {
-  color: #555;
 }

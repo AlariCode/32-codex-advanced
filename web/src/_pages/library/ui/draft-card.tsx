@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { Button } from "@/shared/ui";
+import { Button, Notice, TextField } from "@/shared/ui";
 import type { Draft } from "../model/library";
 import styles from "./library.module.css";
 
@@ -29,13 +29,13 @@ export function DraftCard({
         <p role="status">Сохраняем ссылку…</p>
       ) : (
         <>
-          <p id={`draft-${draft.id}-error`} role="alert">
+          <Notice tone="danger" id={`draft-${draft.id}-error`} role="alert">
             {draft.state === "invalid"
               ? "Проверьте адрес. Нужна ссылка с http:// или https:// без логина и пароля."
               : draft.state === "unknown"
                 ? "Исход отправки неизвестен. Повторите отправку для подтверждения сохранения."
                 : "Не удалось подтвердить сохранение. Повторите отправку."}
-          </p>
+          </Notice>
           <form
             noValidate
             onSubmit={(event) => {
@@ -43,8 +43,8 @@ export function DraftCard({
               send(draft.id, url);
             }}
           >
-            <label htmlFor={`draft-${draft.id}`}>Исправить URL</label>
-            <input
+            <TextField
+              label="Исправить URL"
               ref={input}
               id={`draft-${draft.id}`}
               value={url}

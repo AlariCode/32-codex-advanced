@@ -1,0 +1,196 @@
+.page {
+  min-height: 100svh;
+  background: var(--color-bg-page);
+  color: var(--color-text-primary);
+  font: var(--weight-body) var(--text-body) / var(--leading-body) var(--font-ui);
+  overflow-wrap: anywhere;
+}
+
+.page ::selection {
+  color: var(--color-selection-text);
+  background: var(--color-selection-bg);
+}
+
+.header,
+.main {
+  width: 100%;
+  max-width: var(--width-content);
+  margin-inline: auto;
+  padding-inline: var(--gutter-page);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--gap-inline);
+  padding-block: var(--gap-stack);
+}
+
+.header nav,
+.actions {
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-inline);
+}
+
+.brand {
+  font-size: var(--text-title-card);
+  font-weight: var(--weight-emphasis);
+  letter-spacing: var(--tracking-title);
+}
+
+.main {
+  padding-block: 0 var(--padding-page-block);
+}
+.intro {
+  padding-block: var(--padding-page-block);
+  border-top: var(--width-divider) solid var(--color-border-control);
+}
+
+.intro h1 {
+  margin: 0;
+  font: var(--weight-heading) var(--text-title-feature) / var(--leading-title)
+    var(--font-heading);
+  letter-spacing: var(--tracking-title);
+}
+
+.intro p,
+.familyGrid p {
+  margin: var(--gap-field) 0 0;
+  color: var(--color-text-secondary);
+}
+
+.section {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--gap-content);
+  padding-block: var(--gap-section);
+  border-top: var(--width-divider) solid var(--color-border-control);
+}
+
+.section h2,
+.section h3 {
+  margin: 0;
+  font: var(--weight-label) var(--text-title-section) / var(--leading-label)
+    var(--font-heading);
+  letter-spacing: var(--tracking-title);
+}
+
+.section h3 {
+  margin-bottom: var(--gap-stack);
+  font-size: var(--text-title-card);
+}
+
+.page code {
+  font: var(--weight-body) var(--text-caption) / var(--leading-label)
+    var(--font-code);
+  color: var(--color-text-secondary);
+}
+
+.swatches,
+.scale {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.swatches,
+.familyGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+  gap: var(--gap-stack);
+}
+
+.swatches li {
+  padding: var(--gap-field);
+  border-radius: var(--radius-card);
+  background: var(--color-bg-surface);
+  font-size: var(--text-label);
+}
+
+.swatches code,
+.scale code {
+  display: block;
+  margin-top: var(--space-1);
+}
+
+.swatch {
+  min-height: var(--size-48);
+  margin-bottom: var(--gap-field);
+  border: var(--width-divider) solid var(--color-border-subtle);
+  border-radius: var(--radius-card);
+}
+
+.familyGrid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+}
+
+.familyGrid h3 {
+  margin: 0;
+}
+.weights span {
+  font-weight: var(--weight-label);
+}
+.weights strong {
+  font-weight: var(--weight-emphasis);
+}
+
+.scale li {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+  align-items: baseline;
+  gap: var(--gap-stack);
+  padding-block: var(--gap-stack);
+  border-top: var(--width-divider) solid var(--color-border-subtle);
+}
+
+.scale span {
+  font-size: var(--text-label);
+}
+.scale p {
+  margin: 0;
+  font-size: var(--example-size);
+}
+.title {
+  font-family: var(--font-heading);
+  font-weight: var(--weight-heading);
+  line-height: var(--leading-title);
+  letter-spacing: var(--tracking-title);
+}
+.label {
+  font-weight: var(--weight-label);
+  line-height: var(--leading-label);
+}
+.caption {
+  line-height: var(--leading-label);
+}
+.body {
+  line-height: var(--leading-body);
+}
+.reading {
+  font-family: var(--font-reading);
+  line-height: var(--leading-reading);
+}
+
+.preview {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--gap-stack);
+  padding: var(--padding-panel);
+  border: var(--width-divider) solid var(--color-border-subtle);
+  border-radius: var(--radius-panel);
+  background: var(--color-bg-surface);
+}
+
+.fieldGrid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+}
+
+.footer {
+  border-top: var(--width-divider) solid var(--color-border-control);
+  padding-top: var(--gap-stack);
+}

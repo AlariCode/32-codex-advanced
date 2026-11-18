@@ -1,0 +1,43 @@
+.notice {
+  margin: 0;
+  padding: var(--gap-stack);
+  border: var(--width-control-border) solid currentColor;
+  border-radius: var(--radius-panel);
+  font: var(--weight-body) var(--text-label) / var(--leading-body)
+    var(--font-ui);
+  overflow-wrap: anywhere;
+}
+
+.notice:focus {
+  outline: var(--width-focus-ring) solid var(--color-focus-ring);
+  outline-offset: var(--offset-focus-ring);
+}
+
+.danger {
+  color: var(--color-status-danger);
+  background: var(--color-status-danger-bg);
+}
+
+.warning {
+  color: var(--color-status-warning);
+  background: var(--color-status-warning-bg);
+}
+
+.success {
+  color: var(--color-status-success);
+  background: var(--color-status-success-bg);
+}
+
+.confirmation {
+  display: grid;
+  gap: var(--gap-field);
+  padding: var(--gap-stack);
+  border: var(--width-control-border) solid var(--color-status-danger);
+  border-radius: var(--radius-panel);
+  font: var(--weight-body) var(--text-body) / var(--leading-body) var(--font-ui);
+  overflow-wrap: anywhere;
+}
+
+.confirmation > p {
+  margin: 0;
+}

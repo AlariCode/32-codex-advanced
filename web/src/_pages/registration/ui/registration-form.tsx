@@ -1,17 +1,23 @@
 "use client";
 
-import Link from "next/link";
 import { announceSessionChange, safeReturnTo } from "@/shared/auth";
 import { useRouter } from "next/navigation";
 import { useRef, useState, type FormEvent } from "react";
-import { Button, PasswordVisibilityToggle, TextField } from "@/shared/ui";
+import {
+  AccountForm,
+  AccountFormNote,
+  ActionLink,
+  Button,
+  Notice,
+  PasswordVisibilityToggle,
+  TextField,
+} from "@/shared/ui";
 import { registerUser, RegistrationError } from "../api/register-user";
 import {
   registrationErrors,
   validateRegistration,
   type RegistrationErrors,
 } from "../model/registration";
-import styles from "./registration.module.css";
 
 export function RegistrationForm() {
   const router = useRouter();
@@ -60,12 +66,7 @@ export function RegistrationForm() {
   }
 
   return (
-    <form
-      className={styles.form}
-      onSubmit={handleSubmit}
-      noValidate
-      aria-busy={pending}
-    >
+    <AccountForm onSubmit={handleSubmit} noValidate aria-busy={pending}>
       <TextField
         id="registration-email"
         name="email"
@@ -118,25 +119,22 @@ export function RegistrationForm() {
         }
       />
       {errors.form && (
-        <p className={styles.formError} role="alert">
+        <Notice tone="danger" role="alert">
           {errors.form}
-        </p>
+        </Notice>
       )}
-      <Button type="submit" disabled={pending}>
+      <Button type="submit" disabled={pending} aria-busy={pending}>
         {pending ? "Создаём аккаунт…" : "Создать аккаунт"}
         <span aria-hidden="true">↗</span>
       </Button>
-      <p className={styles.formNote}>
+      <AccountFormNote>
         Ваш email нужен только для аккаунта.
         <br />
         Пароль хранится в защищённом виде.
-      </p>
-      <p className={styles.formNote}>
-        Уже есть аккаунт?{" "}
-        <Link href="/login" className={styles.accountLink}>
-          Войти
-        </Link>
-      </p>
-    </form>
+      </AccountFormNote>
+      <AccountFormNote>
+        Уже есть аккаунт? <ActionLink href="/login">Войти</ActionLink>
+      </AccountFormNote>
+    </AccountForm>
   );
 }

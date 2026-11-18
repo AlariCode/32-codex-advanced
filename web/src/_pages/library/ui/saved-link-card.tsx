@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import Link from "next/link";
+import { ActionLink, Button, ConfirmationPanel, Notice } from "@/shared/ui";
 import type { LinkCard } from "../model/library";
 import styles from "./library.module.css";
 
@@ -84,13 +84,21 @@ export function SavedLinkCard({
           )}
         </p>
       )}
-      {retryError && <p role="alert">{retryError}</p>}
-      {deleteError && <p role="alert">{deleteError}</p>}
+      {retryError && (
+        <Notice tone="danger" role="alert">
+          {retryError}
+        </Notice>
+      )}
+      {deleteError && (
+        <Notice tone="danger" role="alert">
+          {deleteError}
+        </Notice>
+      )}
       {deleting && (
         <p role="status">Удаляем… Проверяем результат на сервере.</p>
       )}
       {confirming && !deleting && (
-        <div
+        <ConfirmationPanel
           className={styles.deleteConfirmation}
           role="group"
           aria-label="Подтверждение удаления"
@@ -103,47 +111,49 @@ export function SavedLinkCard({
             Восстановить их не получится.
           </p>
           <div className={styles.actions}>
-            <button autoFocus onClick={cancel}>
+            <Button variant="secondary" autoFocus onClick={cancel}>
               Отмена
-            </button>
-            <button
-              className={styles.danger}
+            </Button>
+            <Button
+              variant="danger"
               onClick={() => {
                 setConfirming(false);
                 void remove(card.id);
               }}
             >
               Удалить навсегда
-            </button>
+            </Button>
           </div>
-        </div>
+        </ConfirmationPanel>
       )}
       <div className={styles.actions}>
         {(card.state === "failed" || card.state === "unavailable") && (
-          <button
+          <Button
+            variant="text"
             disabled={!!retrying || deleting}
             onClick={() => void retry(card)}
           >
             {retrying ? "Отправляем повтор…" : "Повторить"}
-          </button>
+          </Button>
         )}
         {card.state === "ready" && card.can_read !== false && (
-          <Link href={`/links/${card.id}`}>Читать статью</Link>
+          <ActionLink href={`/links/${card.id}`}>Читать статью</ActionLink>
         )}
 
         {card.state !== "ready" && (
-          <button
+          <Button
+            variant="text"
             disabled={opening !== null || deleting}
             onClick={() => {
               void openCard(card.id);
             }}
           >
             {opening === card.id ? "Открываем…" : "Открыть карточку"}
-          </button>
+          </Button>
         )}
-        <button
+        <Button
+          variant="dangerText"
           ref={deleteButton}
-          className={styles.danger}
           disabled={deleting || confirming}
           onClick={() => setConfirming(true)}
         >
@@ -152,10 +162,14 @@ export function SavedLinkCard({
             : deleteError
               ? "Повторить удаление"
               : "Удалить"}
-        </button>
-        <a href={card.submitted_url} target="_blank" rel="noopener noreferrer">
+        </Button>
+        <ActionLink
+          href={card.submitted_url}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           Открыть оригинал <span aria-hidden="true">↗</span>
-        </a>
+        </ActionLink>
       </div>
     </article>
   );

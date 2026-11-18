@@ -2,7 +2,7 @@ import { defineConfig } from "@playwright/test";
 
 export default defineConfig({
   testDir: "./tests/e2e",
-  testIgnore: ["**/integration/**", "**/backup/**"],
+  testIgnore: ["**/integration/**", "**/backup/**", "**/*.dev.spec.ts"],
   outputDir: "../tmp/playwright/videos/ui",
   workers: 1,
   reporter: "list",

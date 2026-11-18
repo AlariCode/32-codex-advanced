@@ -23,7 +23,7 @@
   margin-top: 0;
 }
 .secret input {
-  font-family: monospace;
+  font-family: var(--font-code);
 }
 .actions {
   display: flex;
@@ -38,11 +38,4 @@
 .tokens li {
   border-top: 1px solid #d7d9d7;
   padding: 1rem 0;
-}
-.confirm {
-  padding: 1rem;
-  border: 1px solid #8a2e18;
-}
-.profile [role="alert"] {
-  color: #8a2e18;
 }

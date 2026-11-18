@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import {
   usePrivateHistory,
   verifySession,
@@ -9,7 +8,7 @@ import {
   resetSession,
   subscribeSessionReset,
 } from "@/shared/auth";
-import { Button } from "@/shared/ui";
+import { ActionLink, Button, Notice } from "@/shared/ui";
 import { useEffect, useState, useRef } from "react";
 import {
   readArticle,
@@ -161,7 +160,7 @@ export function ReaderPage({ id }: { id: string }) {
   return (
     <main className={styles.reader}>
       <nav aria-label="Навигация читалки">
-        <Link href="/">← Моя библиотека</Link>
+        <ActionLink href="/">← Моя библиотека</ActionLink>
         <span>Linkbook</span>
       </nav>
       {checking && <p role="status">Открываем статью…</p>}
@@ -172,7 +171,9 @@ export function ReaderPage({ id }: { id: string }) {
           {error === "internal_error" && (
             <Button onClick={() => reload.current()}>Повторить</Button>
           )}
-          {error === "unauthorized" && <Link href={loginPath()}>Войти</Link>}
+          {error === "unauthorized" && (
+            <ActionLink href={loginPath()}>Войти</ActionLink>
+          )}
         </>
       )}
       {!checking && article && (
@@ -188,29 +189,29 @@ export function ReaderPage({ id }: { id: string }) {
             Открыть оригинал ↗
           </a>
           {article.warnings?.includes("images_omitted") && (
-            <p className={styles.warning} role="note">
+            <Notice tone="warning" className={styles.warning} role="note">
               Часть изображений или оформления не сохранена. Пропущенные
               изображения отмечены в тексте.
-            </p>
+            </Notice>
           )}
           {article.warnings?.includes("html_truncated") && (
-            <p className={styles.warning} role="note">
+            <Notice tone="warning" className={styles.warning} role="note">
               Сохранена часть статьи: HTML страницы превысил предел 3 MiB после
               распаковки. Текст после этого предела не сохранён.
-            </p>
+            </Notice>
           )}
           {article.warnings?.includes("text_incomplete") && (
-            <p className={styles.warning} role="note">
+            <Notice tone="warning" className={styles.warning} role="note">
               Часть основного текста не удалось сохранить при извлечении статьи.
               Доступный текст сохранён; полную версию можно проверить в
               оригинале.
-            </p>
+            </Notice>
           )}
           {article.warnings?.includes("text_only_archive") && (
-            <p className={styles.warning} role="note">
+            <Notice tone="warning" className={styles.warning} role="note">
               Часть оформления основного содержимого не поддерживается и не
               сохранена.
-            </p>
+            </Notice>
           )}
           <div className={styles.body}>
             {article.document.blocks.map((block, index) =>

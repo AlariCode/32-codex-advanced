@@ -19,6 +19,10 @@ export function TextField({
   ...props
 }: TextFieldProps) {
   const description = error || hint;
+  const descriptionId = description ? `${id}-description` : undefined;
+  const describedBy = [props["aria-describedby"], descriptionId]
+    .filter(Boolean)
+    .join(" ");
   return (
     <div className={styles.field}>
       <label htmlFor={id}>{label}</label>
@@ -26,14 +30,14 @@ export function TextField({
         <input
           {...props}
           id={id}
-          aria-invalid={Boolean(error)}
-          aria-describedby={description ? `${id}-description` : undefined}
+          aria-invalid={error ? true : (props["aria-invalid"] ?? false)}
+          aria-describedby={describedBy || undefined}
         />
         {action}
       </div>
       {description && (
         <p
-          id={`${id}-description`}
+          id={descriptionId}
           role={error ? "alert" : undefined}
           className={error ? styles.error : styles.hint}
         >

@@ -1,11 +1,16 @@
 "use client";
 
-import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { UserDTO } from "@/shared/api";
 import { subscribeSessionReset } from "@/shared/auth";
 import { flushSync } from "react-dom";
-import { Button, TextField } from "@/shared/ui";
+import {
+  ActionLink,
+  Button,
+  ConfirmationPanel,
+  Notice,
+  TextField,
+} from "@/shared/ui";
 import {
   profileRequest,
   tokenPath,
@@ -163,9 +168,7 @@ export function ProfilePage() {
 
   return (
     <main className={styles.profile}>
-      <Link className="login-link" href="/">
-        ← В библиотеку
-      </Link>
+      <ActionLink href="/">← В библиотеку</ActionLink>
       <h1>Профиль</h1>
       {loading ? (
         <p role="status">Проверяем вход…</p>
@@ -212,6 +215,7 @@ export function ProfilePage() {
                     <div className={styles.actions}>
                       <Button onClick={copy}>Скопировать</Button>
                       <Button
+                        variant="secondary"
                         onClick={() => {
                           setSecret(null);
                           setMessage("Токен скрыт.");
@@ -239,13 +243,17 @@ export function ProfilePage() {
                         </time>
                       </p>
                       {confirm === token.id ? (
-                        <div className={styles.confirm}>
+                        <ConfirmationPanel
+                          role="group"
+                          aria-label="Подтверждение отзыва"
+                        >
                           <p>
                             Отозвать токен? Подключённый агент потеряет доступ.
                             Для повторного подключения понадобится новый токен.
                           </p>
                           <div className={styles.actions}>
                             <Button
+                              variant="danger"
                               autoFocus
                               disabled={busy}
                               onClick={() => revoke(token.id)}
@@ -253,6 +261,7 @@ export function ProfilePage() {
                               {busy ? "Отзываем…" : "Подтвердить отзыв"}
                             </Button>
                             <Button
+                              variant="secondary"
                               disabled={busy}
                               onClick={() => {
                                 setConfirm(null);
@@ -266,9 +275,10 @@ export function ProfilePage() {
                               Отмена
                             </Button>
                           </div>
-                        </div>
+                        </ConfirmationPanel>
                       ) : (
                         <Button
+                          variant="dangerText"
                           id={`revoke-${token.id}`}
                           disabled={busy}
                           aria-label={`Отозвать токен ${token.id.slice(0, 8)}`}
@@ -291,7 +301,7 @@ export function ProfilePage() {
       <p role="status">{message}</p>
       {error && (
         <div role="alert">
-          <p>{error}</p>
+          <Notice tone="danger">{error}</Notice>
           {!user && <Button onClick={load}>Повторить</Button>}
         </div>
       )}

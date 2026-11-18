@@ -1,17 +1,17 @@
-import Link from "next/link";
+import { ActionLink } from "@/shared/ui";
 
 export function LibraryWelcome({ children }: { children?: React.ReactNode }) {
   return (
     <main>
       <h1>Linkbook</h1>
       <p>Сохраняйте статьи, чтобы вернуться к ним позже.</p>
-      <Link href="/register" className="registration-link">
+      <ActionLink href="/register" variant="primary">
         Создать аккаунт <span aria-hidden="true">→</span>
-      </Link>
+      </ActionLink>
       <p>
-        <Link href="/login" className="login-link">
+        <ActionLink href="/login">
           Уже есть аккаунт? Войти <span aria-hidden="true">→</span>
-        </Link>
+        </ActionLink>
       </p>
       {children}
     </main>

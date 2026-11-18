@@ -1,13 +1,19 @@
 "use client";
 
-import Link from "next/link";
 import { announceSessionChange, safeReturnTo } from "@/shared/auth";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { Button, PasswordVisibilityToggle, TextField } from "@/shared/ui";
+import {
+  AccountForm,
+  AccountFormNote,
+  ActionLink,
+  Button,
+  Notice,
+  PasswordVisibilityToggle,
+  TextField,
+} from "@/shared/ui";
 import { loginUser, LoginError } from "../api/login-user";
 import { loginErrors, validateLogin, type LoginErrors } from "../model/login";
-import styles from "./login.module.css";
 
 export function LoginForm() {
   const router = useRouter();
@@ -62,12 +68,7 @@ export function LoginForm() {
   }
 
   return (
-    <form
-      className={styles.form}
-      onSubmit={handleSubmit}
-      noValidate
-      aria-busy={pending}
-    >
+    <AccountForm onSubmit={handleSubmit} noValidate aria-busy={pending}>
       <TextField
         id="login-email"
         name="email"
@@ -119,25 +120,17 @@ export function LoginForm() {
         }
       />
       {errors.form && (
-        <p
-          className={styles.formError}
-          role="alert"
-          tabIndex={-1}
-          ref={errorRef}
-        >
+        <Notice tone="danger" role="alert" tabIndex={-1} ref={errorRef}>
           {errors.form}
-        </p>
+        </Notice>
       )}
-      <Button type="submit" disabled={pending}>
+      <Button type="submit" disabled={pending} aria-busy={pending}>
         {pending ? "Входим…" : "Войти"}
         <span aria-hidden="true">↗</span>
       </Button>
-      <p className={styles.formNote}>
-        Нет аккаунта?{" "}
-        <Link href="/register" className={styles.accountLink}>
-          Создать аккаунт
-        </Link>
-      </p>
-    </form>
+      <AccountFormNote>
+        Нет аккаунта? <ActionLink href="/register">Создать аккаунт</ActionLink>
+      </AccountFormNote>
+    </AccountForm>
   );
 }

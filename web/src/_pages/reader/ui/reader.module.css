@@ -69,10 +69,7 @@
   margin-bottom: 0.5rem;
 }
 .warning {
-  padding: 1rem 0;
-  border-block: 1px solid #d7d9d7;
-  color: #555;
-  line-height: 1.6;
+  margin-block: var(--gap-stack);
 }
 @media (max-width: 640px) {
   .reader nav {

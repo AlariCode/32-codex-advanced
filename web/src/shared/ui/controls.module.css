@@ -1,39 +1,150 @@
 .button {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  min-height: 60px;
-  padding: 18px 24px;
-  border: 1px solid #111;
-  border-radius: 0;
-  background: #111;
-  color: #fff;
-  font: inherit;
-  font-weight: 600;
+  gap: var(--gap-inline);
+  max-width: 100%;
+  min-height: var(--height-control);
+  padding: var(--padding-control-block) var(--padding-control-inline);
+  border: var(--width-control-border) solid var(--button-border, transparent);
+  border-radius: var(--radius-button);
+  background: var(--button-bg, transparent);
+  color: var(--button-text, var(--color-text-link));
+  font: var(--weight-label) var(--text-body) / var(--leading-label)
+    var(--font-ui);
+  text-align: start;
+  text-decoration: none;
+  overflow-wrap: anywhere;
   cursor: pointer;
+  transition: background-color var(--motion-feedback) var(--motion-easing);
 }
-.button:hover:not(:disabled) { background: #333; }
-.button:disabled { opacity: .55; cursor: wait; }
-.button:focus-visible, .inputRow:focus-within { outline: 2px solid #111; outline-offset: 4px; }
-.field { display: grid; gap: 12px; }
-.field label { font-size: 14px; font-weight: 600; }
-.inputRow { display: flex; border: 1px solid #aaa; background: #fff; }
-.inputRow:has(input[aria-invalid="true"]) { border-color: #111; border-width: 2px; }
-.inputRow input {
-  width: 100%;
+
+.button:hover:not(:disabled) {
+  background: var(--button-hover);
+}
+.button:active:not(:disabled) {
+  background: var(--button-active);
+}
+
+.primary {
+  --button-bg: var(--color-action-primary);
+  --button-hover: var(--color-action-primary-hover);
+  --button-active: var(--color-action-primary-active);
+  --button-text: var(--color-text-on-action);
+}
+
+.secondary {
+  --button-bg: var(--color-action-secondary);
+  --button-hover: var(--color-action-secondary-hover);
+  --button-active: var(--color-action-secondary-active);
+  --button-border: var(--color-border-control);
+}
+
+.danger {
+  --button-bg: var(--color-action-danger);
+  --button-hover: var(--color-action-danger-hover);
+  --button-active: var(--color-action-danger-active);
+  --button-text: var(--color-text-on-action);
+}
+
+.text,
+.dangerText {
+  --button-hover: var(--color-action-secondary-hover);
+  --button-active: var(--color-action-secondary-active);
+  min-height: var(--size-touch-target);
+  padding: var(--gap-inline);
+  text-decoration: underline;
+  text-underline-offset: var(--space-1);
+}
+
+.dangerText {
+  --button-text: var(--color-status-danger);
+}
+
+.button:disabled {
+  background: var(--color-action-disabled);
+  border-color: transparent;
+  color: var(--color-text-disabled);
+  cursor: default;
+}
+
+.button[aria-busy="true"]:disabled {
+  cursor: wait;
+}
+
+.button:focus-visible,
+.inputRow:has(input:focus-visible) {
+  outline: var(--width-focus-ring) solid var(--color-focus-ring);
+  outline-offset: var(--offset-focus-ring);
+}
+
+.field {
+  display: grid;
+  gap: var(--gap-field);
   min-width: 0;
-  min-height: 58px;
-  padding: 16px 18px;
+  text-align: start;
+  color: var(--color-text-primary);
+  font: var(--weight-body) var(--text-body) / var(--leading-label)
+    var(--font-ui);
+}
+
+.field label {
+  font-size: var(--text-label);
+  font-weight: var(--weight-label);
+}
+
+.inputRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  border: var(--width-control-border) solid var(--color-border-control);
+  border-radius: var(--radius-input);
+  background: var(--color-bg-surface);
+}
+
+.inputRow:has(input[aria-invalid="true"]) {
+  border-color: var(--color-status-danger);
+}
+.inputRow:has(input:disabled) {
+  background: var(--color-action-disabled);
+}
+
+.inputRow input {
+  flex: 1 1 8ch;
+  width: 0;
+  min-width: 0;
+  min-height: calc(var(--height-control) - 2 * var(--width-control-border));
+  padding: var(--padding-control-block) var(--padding-control-inline);
   border: 0;
-  border-radius: 0;
+  border-radius: inherit;
   outline: none;
   background: transparent;
-  color: #111;
+  color: inherit;
   font: inherit;
 }
-.inputRow input::placeholder { color: #777; }
-.inputRow input:disabled { opacity: .65; }
-.hint, .error { margin: 0; font-size: 13px; line-height: 1.5; }
-.hint { color: #666; }
-.error { color: #111; font-weight: 500; }
+
+.inputRow input[readonly] {
+  background: var(--color-bg-subtle);
+}
+.inputRow input::placeholder {
+  color: var(--color-text-muted);
+  opacity: 1;
+}
+.inputRow input:disabled {
+  color: var(--color-text-disabled);
+}
+
+.hint,
+.error {
+  margin: 0;
+  font-size: var(--text-label);
+  line-height: var(--leading-body);
+  overflow-wrap: anywhere;
+}
+
+.hint {
+  color: var(--color-text-muted);
+}
+.error {
+  color: var(--color-status-danger);
+}

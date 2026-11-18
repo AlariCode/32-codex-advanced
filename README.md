@@ -139,6 +139,16 @@ Worker подключается к PostgreSQL и до 60 секунд ожида
 или окружении процесса и перезапустите Next.js. При production-сборке задайте
 тот же адрес перед `npm run build`: rewrites сохраняются при сборке.
 
+## Каталог дизайн-системы
+
+При запуске `npm run dev` откройте [каталог /design](http://localhost:3000/design).
+В нём показаны цветовые токены, шрифты, шкала типографики и рабочие примеры
+компонентов из `shared/ui`. Правила использования токенов описаны в
+[DESIGN.md](DESIGN.md). В production маршрут возвращает HTTP 404.
+
+Проверки каталога запускаются командой `npm run test:e2e:design`. Видео
+сохраняются в `tmp/playwright/videos/design/`.
+
 ## MCP для агентов
 
 API предоставляет `/mcp` через официальный Go SDK `github.com/modelcontextprotocol/go-sdk`
