@@ -41,6 +41,10 @@ export function ProfilePage() {
   const secretInput = useRef<HTMLInputElement>(null);
   const createButton = useRef<HTMLButtonElement>(null);
 
+  useEffect(() => {
+    if (signOutError) signOutButton.current?.focus();
+  }, [signOutError]);
+
   const fail = useCallback((err: unknown) => {
     if (err instanceof Error && err.message === "unauthorized") {
       epoch.current++;
@@ -182,7 +186,6 @@ export function ProfilePage() {
       signOutInProgress.current = false;
       setSigningOut(false);
       setSignOutError(true);
-      requestAnimationFrame(() => signOutButton.current?.focus());
       return;
     }
 

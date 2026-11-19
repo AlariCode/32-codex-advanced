@@ -11,16 +11,25 @@
 }
 
 .main {
+  --account-inset: clamp(var(--gap-stack), 4vw, var(--space-8));
+  --account-width: calc(
+    var(--width-form) + 2 * var(--account-inset) + 2 * var(--width-divider)
+  );
+
   display: grid;
-  gap: var(--gap-content);
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "account" "story";
+  gap: var(--space-8);
   align-items: start;
-  margin-top: var(--gap-content);
+  max-width: var(--account-width);
+  margin: var(--padding-page-block) auto 0;
   overflow-wrap: anywhere;
 }
 
 .account {
+  grid-area: account;
   min-width: 0;
-  padding: clamp(var(--gap-stack), 4vw, var(--space-10));
+  padding: var(--account-inset);
   border: var(--width-divider) solid var(--color-border-subtle);
   border-radius: var(--radius-panel);
   background: var(--color-bg-surface);
@@ -37,19 +46,21 @@
 }
 
 .story {
-  padding: var(--gap-content) var(--gap-stack);
-  border-top: var(--width-divider) solid var(--color-border-control);
+  grid-area: story;
+  padding: 0 calc(var(--account-inset) + var(--width-divider));
 }
 
 .story h2 {
   text-wrap: balance;
-  font: var(--weight-heading) var(--text-title-feature) / var(--leading-title)
-    var(--font-heading);
+  font: inherit;
+  font-weight: var(--weight-label);
+  letter-spacing: var(--tracking-body);
+  margin-bottom: var(--gap-field);
 }
 
 .story p {
   max-width: var(--width-form);
-  margin: var(--gap-stack) 0 0;
+  margin: 0;
 }
 
 .form {
@@ -65,18 +76,23 @@
   font-size: var(--text-label);
 }
 
-@media (min-width: 761px) {
+@media (min-width: 64rem) {
   .main {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, var(--account-width));
     grid-template-areas: "story account";
     gap: var(--gap-section);
-    margin-top: var(--padding-page-block);
+    max-width: none;
   }
 
   .story {
-    grid-area: story;
+    padding: calc(var(--account-inset) + var(--width-divider)) 0 0;
   }
-  .account {
-    grid-area: account;
+
+  .story h2 {
+    font-size: var(--text-title-feature);
+    font-weight: var(--weight-heading);
+    line-height: var(--leading-title);
+    letter-spacing: var(--tracking-title);
+    margin-bottom: var(--gap-stack);
   }
 }

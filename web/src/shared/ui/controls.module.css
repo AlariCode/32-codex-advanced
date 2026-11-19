@@ -70,7 +70,9 @@
 }
 
 .button[aria-busy="true"]:disabled {
+  color: var(--color-text-secondary);
   cursor: wait;
+  transition: none;
 }
 
 .button:focus-visible,

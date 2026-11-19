@@ -88,15 +88,49 @@ test("login layout fits the viewport and controls have comfortable touch targets
 }) => {
   await page.goto("/login");
   const viewport = page.viewportSize()!;
+  const main = page.getByRole("main");
+  const title = main.getByRole("heading", { name: "Вход", exact: true });
+  const intro = main.getByRole("complementary");
+  const submit = main.getByRole("button", { name: "Войти", exact: true });
+  const email = main.getByLabel("Email", { exact: true });
+  const register = main.getByRole("link", {
+    name: "Создать аккаунт",
+    exact: true,
+  });
+  await expect(title).toBeInViewport();
+  await expect(submit).toBeInViewport();
+  const fieldRadius = await email.evaluate(
+    (input) => getComputedStyle(input.parentElement!).borderRadius,
+  );
+  await expect(submit).toHaveCSS("border-radius", fieldRadius);
+  const titleBox = (await title.boundingBox())!;
+  const submitBox = (await submit.boundingBox())!;
+  const registerBox = (await register.boundingBox())!;
+  const introBox = (await intro.boundingBox())!;
+  expect(titleBox.x).toBeCloseTo(submitBox.x, 0);
+  if (viewport.width >= 1024) {
+    const introTitle = intro.getByRole("heading");
+    const introTitleBox = (await introTitle.boundingBox())!;
+    expect(introBox.x + introBox.width).toBeLessThan(titleBox.x);
+    expect(introTitleBox.y).toBeCloseTo(titleBox.y, 0);
+    expect(introTitleBox.height).toBeGreaterThan(titleBox.height);
+  } else {
+    expect(submitBox.x + submitBox.width / 2).toBeCloseTo(
+      viewport.width / 2,
+      0,
+    );
+    expect(registerBox.y + registerBox.height).toBeLessThan(introBox.y);
+  }
+
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(
     viewport.width,
   );
   for (const control of [
-    page.getByLabel("Email", { exact: true }),
+    email,
     page.getByLabel("Пароль", { exact: true }),
-    page.getByRole("button", { name: "Войти", exact: true }),
+    submit,
     page.getByRole("button", { name: "Показать пароль" }),
-    page.getByRole("link", { name: "Создать аккаунт", exact: true }),
+    register,
   ]) {
     const box = (await control.boundingBox())!;
     expect(box.height).toBeGreaterThanOrEqual(44);
@@ -104,12 +138,7 @@ test("login layout fits the viewport and controls have comfortable touch targets
     expect(box.x).toBeGreaterThanOrEqual(0);
     expect(box.x + box.width).toBeLessThanOrEqual(viewport.width);
   }
-  if (viewport.width <= 760) {
-    const box = (await page
-      .getByRole("button", { name: "Войти", exact: true })
-      .boundingBox())!;
-    expect(box.y + box.height).toBeLessThanOrEqual(viewport.height);
-  }
+  expect(submitBox.y + submitBox.height).toBeLessThanOrEqual(viewport.height);
 });
 
 test("small screens, breakpoint widths and landscape have no horizontal overflow", async ({
@@ -120,6 +149,8 @@ test("small screens, breakpoint widths and landscape have no horizontal overflow
     [760, 812],
     [761, 812],
     [812, 375],
+    [1023, 812],
+    [1024, 812],
   ]) {
     await page.setViewportSize({ width, height });
     await page.goto("/login");

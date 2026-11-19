@@ -34,28 +34,28 @@ test("registration layout fits each viewport and the mobile submit stays above t
     expect(box!.x).toBeGreaterThanOrEqual(0);
     expect(box!.x + box!.width).toBeLessThanOrEqual(viewport.width);
   }
-  if (viewport.width <= 760) {
-    const box = await page
-      .getByRole("button", { name: "Создать аккаунт" })
-      .boundingBox();
-    expect(box!.y + box!.height).toBeLessThanOrEqual(viewport.height);
-  }
+  const submit = page.getByRole("button", { name: "Создать аккаунт" });
+  await expect(submit).toBeInViewport();
 });
 
-test("small mobile and both sides of the breakpoint have no overflow", async ({
+test("registration puts the form first until the desktop breakpoint", async ({
   page,
 }) => {
-  for (const width of [320, 760, 761]) {
+  for (const width of [320, 1023, 1024]) {
     await page.setViewportSize({ width, height: 812 });
     await page.goto("/register");
     expect(
       await page.evaluate(() => document.documentElement.scrollWidth),
     ).toBe(width);
-    if (width <= 760) {
-      const box = await page
-        .getByRole("button", { name: "Создать аккаунт" })
-        .boundingBox();
-      expect(box!.y + box!.height).toBeLessThanOrEqual(812);
+    const intro = page.getByRole("complementary");
+    const submit = page.getByRole("button", { name: "Создать аккаунт" });
+    const introBox = (await intro.boundingBox())!;
+    const submitBox = (await submit.boundingBox())!;
+    if (width < 1024) {
+      expect(submitBox.y + submitBox.height).toBeLessThan(introBox.y);
+      expect(submitBox.y + submitBox.height).toBeLessThanOrEqual(812);
+    } else {
+      expect(introBox.x + introBox.width).toBeLessThan(submitBox.x);
     }
   }
 });

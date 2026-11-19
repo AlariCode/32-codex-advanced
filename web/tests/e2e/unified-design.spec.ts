@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("рабочие страницы используют общую типографику и помещаются в экран", async ({
+test("рабочие страницы используют общие стили и помещаются в экран", async ({
   page,
 }) => {
   const articleID = "12345678-1234-4234-8234-123456789abc";
@@ -43,23 +43,25 @@ test("рабочие страницы используют общую типог
     }),
   );
 
-  for (const [url, title] of [
-    ["/", "Хорошие ссылки. В одном месте."],
-    ["/login", "Вход"],
-    ["/register", "Регистрация"],
-    ["/", "Моя библиотека"],
-    ["/profile", "Профиль"],
-    [`/links/${articleID}`, "Цифровые библиотеки"],
-  ]) {
+  for (const [url, title, actionRole, actionName] of [
+    ["/", "Хорошие ссылки. В одном месте.", "link", "Создать аккаунт"],
+    ["/login", "Вход", "button", "Войти"],
+    ["/register", "Регистрация", "button", "Создать аккаунт"],
+    ["/", "Моя библиотека", "button", "Сохранить ссылку"],
+    ["/profile", "Профиль", "button", "Выйти из аккаунта"],
+    [`/links/${articleID}`, "Цифровые библиотеки", "link", "Открыть оригинал"],
+  ] as const) {
     guest = title === "Хорошие ссылки. В одном месте.";
     await page.goto(url);
     const heading = page.getByRole("heading", { level: 1, name: title });
     await expect(heading).toBeVisible();
-    if (title === "Моя библиотека") {
-      await expect(
-        page.getByRole("button", { name: "Сохранить ссылку" }),
-      ).toHaveText("Сохранить ссылку");
-    }
+    const action = page.getByRole(actionRole, {
+      name: actionName,
+      exact: true,
+    });
+    await expect(action).toHaveCSS("border-radius", "8px");
+    const box = (await action.boundingBox())!;
+    expect(box.height).toBeGreaterThanOrEqual(44);
     await expect(heading).toHaveCSS("font-weight", "400");
     expect(
       await heading.evaluate((element) => getComputedStyle(element).fontFamily),

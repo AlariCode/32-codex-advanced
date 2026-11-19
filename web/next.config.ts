@@ -4,6 +4,9 @@ const apiOrigin = (
   process.env.API_ORIGIN ?? `http://127.0.0.1:${process.env.API_PORT ?? "8080"}`
 ).replace(/\/$/, "");
 
+const impeccableLiveDev =
+  process.env.NODE_ENV === "development" ? " http://localhost:8400" : "";
+
 const nextConfig: NextConfig = {
   async headers() {
     return [
@@ -14,8 +17,7 @@ const nextConfig: NextConfig = {
           { key: "X-Content-Type-Options", value: "nosniff" },
           {
             key: "Content-Security-Policy",
-            value:
-              "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self'; font-src 'self'; connect-src 'self'; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'",
+            value: `default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'${impeccableLiveDev}; style-src 'self' 'unsafe-inline'; img-src 'self'; font-src 'self'; connect-src 'self'${impeccableLiveDev}; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'`,
           },
         ],
       },

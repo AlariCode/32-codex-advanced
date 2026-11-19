@@ -142,6 +142,11 @@ Worker подключается к PostgreSQL и до 60 секунд ожида
 Проверки каталога запускаются командой `npm run test:e2e:design`. Видео
 сохраняются в `tmp/playwright/videos/design/`.
 
+Продуктовый контекст собран в [PRODUCT.md](PRODUCT.md). Для визуальной
+итерации используйте `$impeccable live web/src/app/page.tsx` с запущенным
+сервером разработки. CSP читалки разрешает подключение инструмента с
+`http://localhost:8400` только в режиме разработки.
+
 ## MCP для агентов
 
 API предоставляет `/mcp` через официальный Go SDK `github.com/modelcontextprotocol/go-sdk`
